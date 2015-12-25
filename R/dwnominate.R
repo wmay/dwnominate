@@ -1,8 +1,10 @@
 # an interface to Keith Poole's DW-NOMINATE FORTRAN77 program.
 
-## library(pscl)
-## library(wnominate)
-## dyn.load("dwnom3.so")
+# limitations:
+
+# 600 legislators / session
+
+# 3600 votes / session
 
 write_rc_data_file = function(rc_list) {
   all_lines = vector()
@@ -14,9 +16,9 @@ write_rc_data_file = function(rc_list) {
     leg_ids = sprintf("%5.0f", rc$legis.data$ID)
     state_num = sprintf("%2.0f", 1)
     district = sprintf("%1.0f", 0)
-    state_name = sprintf("%-10s", "Vermont")
-    parties = sprintf("%1.1s", rc$legis.data[["party"]])
-    leg_names = sprintf("%-10.10s",
+    state_name = sprintf("%-7s", "Vermont")
+    parties = sprintf("%4d", rc$legis.data[["party"]])
+    leg_names = sprintf("%-11.11s",
         gsub("[^A-Za-z -]", "", rownames(rc$votes)))
     
     # a dictionary to translate votes into the appropriate numbers
@@ -27,12 +29,12 @@ write_rc_data_file = function(rc_list) {
     # directly:
 
     # a vector of very long lists of numbers, one for each legislator
-    vote_nums = apply(votes, 1, FUN = function(x) paste0(vote_dict[x],
+    vote_nums = apply(votes, 1, FUN = function(x) paste(vote_dict[x],
                                     collapse = ""))
 
     # the lines to be written to the file
     lines = paste(sessions, leg_ids, state_num, district, state_name,
-        parties, leg_names, vote_nums)
+        parties, paste0(leg_names, vote_nums))
     all_lines = c(all_lines,  lines)
     session = session + 1
   }
@@ -77,9 +79,9 @@ write_leg_file = function(rc_list, wnom_list) {
     leg_ids = sprintf("%5d", rc$legis.data$ID)
     state_num = sprintf("%2d", 1)
     district = sprintf("%1d", 0)
-    state_name = sprintf("%-10s", "Vermont")
-    parties = sprintf("%1.1s", rc$legis.data[["party"]])
-    leg_names = sprintf("%-10.10s",
+    state_name = sprintf("%-7s", "Vermont")
+    parties = sprintf("%4d", rc$legis.data[["party"]])
+    leg_names = sprintf("%-11.11s",
         gsub("[^A-Za-z -]", "", rownames(rc$votes)))
     # DW-NOMINATE does not like NA's
     wnom$legislators[is.na(wnom$legislators)] = 0
@@ -92,7 +94,7 @@ write_leg_file = function(rc_list, wnom_list) {
 
     # the lines to be written to the file
     lines = paste(sessions, leg_ids, state_num, district, state_name,
-        parties, leg_names, "", coord1, coord2,
+        parties, leg_names, coord1, coord2,
         " 0.000  0.000  0.000  0.000     0.00000     0.00000",
         votes, votes, errors, errors, gmp, gmp)
     all_lines = c(all_lines, lines)
@@ -160,12 +162,12 @@ write_input_files = function(rc_list, wnom_list) {
   write_start_file(rc_list, wnom_list)
 }
 
-read_output_files = function() {
-  legwidths = c(4, 6, 3, 2, 11, 2, 12, 7, 7,
+read_output_files = function(party_dict) {
+  legwidths = c(4, 6, 3, 2, 8, 5, 12, 7, 7,
       7, 7, 7, 7, 12, 12, 5, 5, 5, 5, 7, 7)
   # column names based on info found here:
   # http://voteview.com/rohde.htm
-  legnames = c("session", "legislatorID", "stateID", "districtID",
+  legnames = c("session", "ID", "stateID", "districtID",
       "state", "partyID", "name", "coord1D", "coord2D",
       "se1D", "se2D", "var1D", "var2D", "loglikelihood",
       "loglikelihood_check", "numVotes", "numVotes_check",
@@ -174,32 +176,34 @@ read_output_files = function() {
       col.names = legnames)
 
   # get rid of first 3 iterations
-  legs = legs[(3 * nrow(legs) / 4):nrow(legs), ]
+  legs = legs[(3 * nrow(legs) / 4 + 1):nrow(legs), ]
   if (class(legs$var2D) == "factor")
     legs$var2D = as.numeric(as.character(legs$var2D))
 
+  legs$party = names(party_dict)[legs$partyID]
+
   rcwidths = c(3, 5, 7, 7, 7, 7)
-  rcnames = c("session", "rollcallID", "midpoint1D", "spread1D",
+  rcnames = c("session", "ID", "midpoint1D", "spread1D",
       "midpoint2D", "spread2D")
   rcs = read.fwf("rollcall_output.dat", widths = rcwidths,
       col.names = rcnames)
 
   # get rid of early iterations
-  rcs = rcs[(3 * nrow(rcs) / 4):nrow(rcs), ]
+  rcs = rcs[(3 * nrow(rcs) / 4 + 1):nrow(rcs), ]
 
-  nas = which(rcs$midpoint1D == 0 & rcs$spread1D == 0 &
-                rcs$midpoint2D == 0 & rcs$spread2D == 0)
-  rcs$midpoint1D[nas] == NA
-  rcs$spread1D[nas] == NA
-  rcs$midpoint2D[nas] == NA
-  rcs$spread2D[nas] == NA
+  nas = which(rcs$spread1D == 0 & rcs$midpoint1D == 0 &
+                rcs$spread2D == 0 & rcs$midpoint2D == 0)
+  rcs$midpoint1D[nas] = NA
+  rcs$spread1D[nas] = NA
+  rcs$midpoint2D[nas] = NA
+  rcs$spread2D[nas] = NA
 
   list(legislators = legs, rollcalls = rcs)
 }
 
 dwnominate = function(rc_list, wnom_list = NA) {
   if (length(rc_list) < 2)
-    stop("rc_list must contain at least 2 rolllcall objects")
+    stop("rc_list must contain at least 2 rollcall objects")
   
   parties = unique(unlist(lapply(rc_list,
       function(x) x$legis.data$party)))
@@ -258,5 +262,5 @@ dwnominate = function(rc_list, wnom_list = NA) {
             "minutes.\n"))
   
   # get the results
-  read_output_files()
+  read_output_files(party_dict)
 }

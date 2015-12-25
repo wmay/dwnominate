@@ -293,7 +293,7 @@ C
   575 READ(1,175,END=475)ICONG(I+1),INUM(I+1),DYN(I+1,1),
      C                   ZMID(I+1,1),DYN(I+1,2),ZMID(I+1,2)
       NP=MCONG(ICONG(I+1),3)
-      READ(25,240,END=475)JJJJ,J,(LVOTE(JJ),JJ=1,NP)
+      READ(25,240)JJJJ,J,(LVOTE(JJ),JJ=1,NP)
       I=I+1
       KYES=0
       KNO=0
@@ -722,7 +722,8 @@ C
       DO 41 I=1,NQTOT
       WRITE(30,175)ICONG(I),INUM(I),
      C          (DYN(I,K),ZMID(I,K),K=1,NS)
-  41  CONTINUE
+ 41   CONTINUE
+      Call FLUSH(30)
 C
 C
       CALL PLOG(XPLOG,WDERV,NFIRST,NLAST,
@@ -934,14 +935,15 @@ C
          SDX1=SQRT(ABS(VARX1))
          SDX2=SQRT(ABS(VARX2))
          WRITE(24,211)NCONG(I),ID1(I),ISTATE(I),IDIST(I),
-     C            (KSTA(I,JJ),JJ=1,7),IPARTY(I),
-     C            (MNAME(I,JJ),JJ=1,11),(XDATA(I,JJ),JJ=1,2),
-     C            SDX1,SDX2,VARX1,VARX2,
-     C            (XBIGLOG(I,JJ),JJ=1,2),
-     C            (KBIGLOG(I,JJ),JJ=1,4),
-     C            GMPA,GMPB
+     C        (KSTA(I,JJ),JJ=1,7),IPARTY(I),
+     C        (MNAME(I,JJ),JJ=1,11),(XDATA(I,JJ),JJ=1,2),
+     C        SDX1,SDX2,VARX1,VARX2,
+     C        (XBIGLOG(I,JJ),JJ=1,2),
+     C        (KBIGLOG(I,JJ),JJ=1,4),
+     C        GMPA,GMPB
       ENDIF
-  61  CONTINUE
+ 61   CONTINUE
+      Call FLUSH(24)
       WRITE(21,202)NXTOT,SUMLOG1,SUMLOG2
       WRITE(*,202)NXTOT,SUMLOG1,SUMLOG2
 C
