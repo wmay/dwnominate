@@ -1,0 +1,9 @@
+Package: dwnominate
+Type: Package
+Title: Compare legislator ideology over time, based on rollcall votes.
+Version: 1.0
+Date: 2015-03-14
+Author: William May
+Maintainer: William May <williamcmay@live.com>
+Description: Interface to Keith Poole's DW-NOMINATE Fortran program
+License: MIT
