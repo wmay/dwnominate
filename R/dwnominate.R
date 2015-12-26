@@ -262,5 +262,26 @@ dwnominate = function(rc_list, wnom_list = NA) {
             "minutes.\n"))
   
   # get the results
-  read_output_files(party_dict)
+  results = read_output_files(party_dict)
+  class(results) = "dwnominate"
+  results
+}
+
+plot.dwnominate = function(dw_results) {
+  pch = 18
+  legs = dw_results$legislators
+  uniq_parties = unique(legs$party)
+  col_dict = setNames(rainbow(length(uniq_parties)),
+      uniq_parties)
+  ts1 = aggregate(legs$coord1D,
+      by = list(legs$session, legs$party), FUN = mean)
+  plot(ts1$Group.1, ts1$x, ylim = c(-1, 1), type = "n",
+       ylab = "Mean Party Position", xlab = "Session")
+  grid(NA, ny = NULL, col = "#666666")
+  for (party in unique(ts1$Group.2)) {
+    ts2 = ts1[ts1$Group.2 == party, ]
+    points(ts2$Group.1, ts2$x, col = col_dict[party],
+           type = "o", pch = pch)
+  }
+  legend("topleft", names(col_dict), fill = col_dict, bg = "white")
 }
