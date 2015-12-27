@@ -723,7 +723,7 @@ C
       WRITE(30,175)ICONG(I),INUM(I),
      C          (DYN(I,K),ZMID(I,K),K=1,NS)
  41   CONTINUE
-      Call FLUSH(30)
+c$$$      Call FLUSH(30)
 C
 C
       CALL PLOG(XPLOG,WDERV,NFIRST,NLAST,
@@ -943,7 +943,7 @@ C
      C        GMPA,GMPB
       ENDIF
  61   CONTINUE
-      Call FLUSH(24)
+c$$$      Call FLUSH(24)
       WRITE(21,202)NXTOT,SUMLOG1,SUMLOG2
       WRITE(*,202)NXTOT,SUMLOG1,SUMLOG2
 C
@@ -956,7 +956,20 @@ c$$$      write(*,1000)itim1,itim2,itim3,itim4
 c$$$      write(*,1001)jtim1,jtim2,jtim3,jtim4
 c$$$      write(21,1000)itim1,itim2,itim3,itim4
 c$$$      write(21,1001)jtim1,jtim2,jtim3,jtim4
-C      stop
+C     stop
+      close(4)
+      close(21)
+      close(26)
+      close(28)
+      close(29)
+      close(40)
+      close(1)
+      close(30)
+      close(20)
+      close(24)
+      close(22)
+      close(23)
+      close(25)
       end
 C
 C  ***************************************************************************
