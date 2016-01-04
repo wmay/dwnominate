@@ -164,7 +164,8 @@ write_start_file = function(rc_list, wnom_list) {
       "legislator_input.dat", "legislator_output.dat",
       "session_info.num", "rollcall_matrix.vt3",
       "transposed_rollcall_matrix.vt3")
-  lines = file.path(getwd(), filenames)
+  ## lines = file.path(getwd(), filenames)
+  lines = filenames
   lines[8] = "NOMINAL DYNAMIC-WEIGHTED MULTIDIMENSIONAL UNFOLDING "
   lines[9] = paste("    2    1    1",
            sprintf("%4d", length(wnom_list)), "   2    5")
@@ -277,7 +278,7 @@ dwnominate = function(rc_list, wnom_list = NA) {
   # change line 40 of DW-NOMINATE.FOR !!
   nomstart = file.path(getwd(), "DW-NOMSTART.DAT")
   start = Sys.time()
-  .Fortran("dwnominate", startfile = nomstart)
+  .Fortran("dwnominate")
   runtime = Sys.time() - start
   units(runtime) = "mins"
   cat(paste("DW-NOMINATE took", round(runtime, 1),

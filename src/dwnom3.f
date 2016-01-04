@@ -8,7 +8,7 @@ C                        1 OCTOBER 2004
 C                 
 C ***********************************************************************
 C
-      SUBROUTINE dwnominate(startfile)
+      SUBROUTINE dwnominate()
       dimension ISTATE(54001),IDIST(54001),IPARTY(54001),
      C          ID1(54001),LVOTE(3600),YY(150000),
      C          CUMNML(150000),ZDF(150000,4),WDERV(99),
@@ -33,12 +33,13 @@ C
      C              KLASSYY,KLASSNY,KLASSYN,KLASSNN
       character*1 LNAME(54001,11),KSTA(54001,7),
      C            MNAME(54001,20),LSTA(20)
-      CHARACTER*255 FNAME1,FNAME2,FNAME3,FNAME4,FNAME5,FNAME6,FNAME7,
-     C             FTITLE,startfile
+      CHARACTER*64 FNAME1,FNAME2,FNAME3,FNAME4,FNAME5,FNAME6,FNAME7,
+     C             FTITLE
       INTEGER*2 ITIM1,ITIM2,ITIM3,ITIM4,JTIM1,JTIM2,JTIM3,JTIM4
 C
 C
-      OPEN(4,FILE=startfile,STATUS='OLD')
+      open(777, file='rsort.dat')
+      OPEN(4,FILE='DW-NOMSTART.DAT',STATUS='OLD')
       OPEN(21,FILE='DWNOM21.DAT')
       OPEN(26,FILE='DWNOM26.DAT')
       OPEN(28,FILE='DWNOM28.DAT')
@@ -98,7 +99,7 @@ C
 C
   101 format(I3,1x,i5,1x,i5,1x,i2,1x,i2,1x,7a1,1x,i4,1x,i1,1x,i1,1x,
      c       11a1,4f7.3)
-  102 FORMAT(A)
+  102 FORMAT(A64)
   103 FORMAT(10I5)
   104 FORMAT(15F8.4)
   150 FORMAT(6X,I5,41X,2F7.3)
@@ -970,6 +971,7 @@ C     stop
       close(22)
       close(23)
       close(25)
+      close(777)
       end
 C
 C  ***************************************************************************
@@ -3338,6 +3340,7 @@ C
 C
       SUBROUTINE RSORT(A,LA,IR)
       DIMENSION A(LA),IU(21),IL(21),IR(LA)
+c$$$      if (LA.gt.size(A)) write(*,*)'LA:',LA,size(A)
       IF (LA.LE.0) RETURN
       M = 1
       I = 1
@@ -3353,13 +3356,15 @@ C
 C SELECT A CENTRAL ELEMENT OF THE  
 C ARRAY AND SAVE IT IN LOCATION T  
 C
-      IJ = I+(J-I)*R 
+      IJ = I+(J-I)*R
+c$$$      if (IJ.ge.LA) write(*,*)'IJ:',IJ,LA
       T = A(IJ)   
       IT = IR(IJ) 
 C
 C FIRST ELEMENT OF ARRAY IS GREATER
 C THAN T, INTERCHANGE WITH T       
 C
+c$$$      if (I.ge.size(A)) write(*,*)'I:',I,size(A),LA
       IF (A(I).LE.T) GO TO 20  
       A(IJ) = A(I) 
       A(I) = T     
@@ -3437,6 +3442,8 @@ C
       IF (M.EQ.0) RETURN
       I = IL(M)
       J = IU(M)
+c$$$      if (M.ge.size(IL)) write(*,*)'M(IL):',M,size(IL),21
+c$$$      if (M.ge.size(IU)) write(*,*)'M(IU):',M,size(IU),21
    50 IF (J-I.GE.11) GO TO 15
       IF (I.EQ.1) GO TO 5
       I = I-1
@@ -3446,11 +3453,14 @@ C
       IT = IR(I+1)
       IF (A(I).LE.T) GO TO 55
       K = I
-   60 A(K+1) = A(K)
+ 60   A(K+1) = A(K)
+c$$$      if (K.ge.size(IR)) write(*,*)'K(IR):',K,size(IR),LA
       IR(K+1) = IR(K)
       K = K-1
+c$$$      if (K.ge.size(A)) write(*,*)'K(A):',K,size(A),LA
       IF (T.LT.A(K)) GO TO 60
       A(K+1) = T
+c$$$      if (K+1.ge.size(IR)) write(*,*)'K+1(IR):',K+1,size(IR),LA
       IR(K+1) = IT
       GO TO 55
       END
@@ -4326,7 +4336,7 @@ C
      C                  KITTY1,KITTY2,KYES,KNO,LDATA)
       DIMENSION XMAT(1001,25),ZVEC(2901,25),
      C          XPROJ(1001,2901),WS(5802),XXY(1001),XXX(2901),MM(1001),
-     C          LLL(1001),MVOTE(1001),LLM(1001),LLN(1001),
+     C          LLL(2901),MVOTE(2901),LLM(1001),LLN(1001),
      C          KKKCUT(1001),LLLCUT(1001),LLV(2901),
      C          LLVB(2901),LLE(2901),LLEB(2901),LERROR(1001,2901),
      C          XJCH(25),XJEH(25),XJCL(25),XJEL(25),
@@ -4360,6 +4370,7 @@ C
       DO 389 I=1,NP
       SUM=0.0
       DO 390 K=1,NS
+c$$$         if (K.ge.size(IR)) write(*,*)'K(IR):',K,size(IR),LA
       SUM=SUM+XMAT(I,K)*ZVEC(JX,K)
   390 CONTINUE
 C
