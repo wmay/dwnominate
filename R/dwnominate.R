@@ -220,6 +220,23 @@ read_output_files = function(party_dict) {
   list(legislators = legs, rollcalls = rcs)
 }
 
+#' Run DW-NOMINATE
+#'
+#' @useDynLib dwnominate dwnom
+#' @param rc_list A list of \code{rollcall} objects from the
+#'   \code{pscl} package, in chronological order.
+#' @param wnom_list a list of W-NOMINATE results (class
+#'   \code{nomObject}) from the \code{wnominate} package corresponding
+#'   to the rollcall objects in \code{rc_list}. If no W-NOMINATE
+#'   results are provided, W-NOMINATE will be run to get starting
+#'   values for DW-NOMINATE.
+#' @return A list of legislator and rollcall results of class \code{dwnominate}.
+#' @examples
+#' # US Senate data from voteview.com
+#' data(senate)
+#' results = dwnominate(senate)
+#' plot(results)
+#' @export
 dwnominate = function(rc_list, wnom_list = NA) {
   if (length(rc_list) < 2)
     stop("rc_list must contain at least 2 rollcall objects")
@@ -235,7 +252,7 @@ dwnominate = function(rc_list, wnom_list = NA) {
   if (is.na(wnom_list)[1]) {
     cat("Running W-NOMINATE to get starting values...")
     wnom_list = lapply(rc_list,
-        function(x) wnominate(x, polarity = 1:2))
+        function(x) wnominate::wnominate(x, polarity = 1:2))
   }
   for (n in 2:length(rc_list)) {
     id = ifelse("icpsrLegis" %in% names(rc_list[[n]]$legis.data),
@@ -278,7 +295,7 @@ dwnominate = function(rc_list, wnom_list = NA) {
   # change line 40 of DW-NOMINATE.FOR !!
   nomstart = file.path(getwd(), "DW-NOMSTART.DAT")
   start = Sys.time()
-  .Fortran("dwnominate")
+  .Fortran("dwnom")
   runtime = Sys.time() - start
   units(runtime) = "mins"
   cat(paste("DW-NOMINATE took", round(runtime, 1),
@@ -292,6 +309,15 @@ dwnominate = function(rc_list, wnom_list = NA) {
   results
 }
 
+#' Plot party means over time
+#'
+#' @param dw_results An object returned by \code{dwnominate()}.
+#' @examples
+#' # US Senate data from voteview.com
+#' data(senate)
+#' results = dwnominate(senate)
+#' plot(results)
+#' @export
 plot.dwnominate = function(dw_results) {
   pch = 18
   legs = dw_results$legislators

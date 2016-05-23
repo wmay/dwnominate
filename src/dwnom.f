@@ -8,7 +8,7 @@ C                        1 OCTOBER 2004
 C                 
 C ***********************************************************************
 C
-      SUBROUTINE dwnominate()
+      SUBROUTINE dwnom()
       dimension ISTATE(54001),IDIST(54001),IPARTY(54001),
      C          ID1(54001),LVOTE(3600),YY(150000),
      C          CUMNML(150000),ZDF(150000,4),WDERV(99),
