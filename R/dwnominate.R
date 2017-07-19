@@ -10,7 +10,7 @@ writeLines2 = function(lines, fname) {
   if (Sys.info()["sysname"] == "Darwin") {
     # R's default line endings seem to be confusing fortran on Macs
     f = file(fname, open = "wb")
-    writeLines(lines, f, sep = "\n", useBytes = T)
+    writeLines(lines, f, sep = "\r", useBytes = T)
     close(f)    
   } else {
     writeLines(lines, fname)
