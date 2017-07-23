@@ -420,9 +420,14 @@ plot.dwnominate = function(x, ...) {
 
 #' Merge rollcall objects
 #'
+#' Merge x and y rollcall objects, or a list of rollcall objects.
+#' 
 #' @param x An object of class \code{dwnominate()}.
 #' @param y An object of class \code{dwnominate()}.
 #' @param rc_list An list of object of \code{dwnominate()} objects.
+#' @param by The column in legis.data to use as an ID for matching
+#'   legislators. If not provided legislators are matched based on
+#'   name.
 #' @examples
 #' library(pscl) # for the rollcall summary method
 #' data(senate)

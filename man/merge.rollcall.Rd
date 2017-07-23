@@ -12,9 +12,13 @@
 \item{y}{An object of class \code{dwnominate()}.}
 
 \item{rc_list}{An list of object of \code{dwnominate()} objects.}
+
+\item{by}{The column in legis.data to use as an ID for matching
+legislators. If not provided legislators are matched based on
+name.}
 }
 \description{
-Merge rollcall objects
+Merge x and y rollcall objects, or a list of rollcall objects.
 }
 \examples{
 library(pscl) # for the rollcall summary method
