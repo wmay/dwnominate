@@ -6,6 +6,17 @@
 
 # 3600 votes per session
 
+writeLines2 = function(lines, fname) {
+  ## if (Sys.info()["sysname"] == "Darwin") {
+  ##   # R's default line endings seem to be confusing fortran on Macs
+  ##   f = file(fname, open = "wb")
+  ##   writeLines(lines, f, sep = "\r", useBytes = T)
+  ##   close(f)    
+  ## } else {
+    writeLines(lines, fname)
+  ## }
+}
+
 format_column = function(df, name, format, alternative) {
   if (name %in% names(df)) {
     x = df[, name]
@@ -52,7 +63,7 @@ write_rc_data_file = function(rc_list) {
     all_lines = c(all_lines,  lines)
   }
   
-  writeLines(all_lines, "rollcall_matrix.vt3")
+  writeLines2(all_lines, "rollcall_matrix.vt3")
 }
 
 write_transposed_rc_data_file = function(rc_list) {
@@ -76,7 +87,7 @@ write_transposed_rc_data_file = function(rc_list) {
     lines = paste0(sessions, vote_ids, " ", vote_nums)
     all_lines = c(all_lines, lines)
   }
-  writeLines(all_lines, "transposed_rollcall_matrix.vt3")
+  writeLines2(all_lines, "transposed_rollcall_matrix.vt3")
 }
 
 write_leg_file = function(rc_list, wnom_list) {
@@ -119,7 +130,7 @@ write_leg_file = function(rc_list, wnom_list) {
         ## votes, votes, errors, errors, gmp, gmp)
     all_lines = c(all_lines, lines)
   }
-  writeLines(all_lines, "legislator_input.dat")
+  writeLines2(all_lines, "legislator_input.dat")
 }
 
 write_bill_file = function(rc_list, wnom_list) {
@@ -141,7 +152,7 @@ write_bill_file = function(rc_list, wnom_list) {
     lines = paste0(sessions, bill_ids, spread1, mid1, spread2, mid2)
     all_lines = c(all_lines, lines)
   }
-  writeLines(all_lines, "rollcall_input.dat")
+  writeLines2(all_lines, "rollcall_input.dat")
 }
 
 write_session_file = function(rc_list, wnom_list) {
@@ -156,7 +167,7 @@ write_session_file = function(rc_list, wnom_list) {
     # the lines to be written to the file
     lines[session] = paste(session_num, rollcalls, legislators)
   }
-  writeLines(lines, "session_info.num")
+  writeLines2(lines, "session_info.num")
 }
 
 write_start_file = function(rc_list, wnom_list) {
@@ -170,7 +181,7 @@ write_start_file = function(rc_list, wnom_list) {
   lines[9] = paste("    2    1    1",
            sprintf("%4d", length(wnom_list)), "   2    5")
   lines[10] = "  5.9539  0.3463"
-  writeLines(lines, "DW-NOMSTART.DAT")
+  writeLines2(lines, "DW-NOMSTART.DAT")
 }
 
 write_input_files = function(rc_list, wnom_list) {
