@@ -223,7 +223,7 @@ read_output_files = function(party_dict, dims, iters, nunlegs,
   list(legislators=legs, rollcalls=rcs)
 }
 
-#' Run DW-NOMINATE Roll Call Scaling Method
+#' Run DW-NOMINATE
 #'
 #' @useDynLib dwnominate dwnom
 #' @param rc_list A list of \code{rollcall} objects from the
