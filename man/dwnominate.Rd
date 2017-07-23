@@ -4,7 +4,7 @@
 \alias{dwnominate}
 \title{Run DW-NOMINATE}
 \usage{
-dwnominate(rc_list, id = NULL, wnom = NULL, sessions = NULL, dims = 2,
+dwnominate(rc_list, id = NULL, start = NULL, sessions = NULL, dims = 2,
   model = 1, niter = 4, beta = 5.9539, w = 0.3463, polarity = NULL,
   ...)
 }
@@ -16,7 +16,7 @@ dwnominate(rc_list, id = NULL, wnom = NULL, sessions = NULL, dims = 2,
 data frames providing a unique legislator ID. If not specified
 legislator names will be used.}
 
-\item{wnom}{A \code{wnominate} or \code{oc} result object (class
+\item{start}{A \code{wnominate} or \code{oc} result object (class
 \code{nomObject} or \code{OCobject}) providing starting estimates
 of legislator ideologies. If not provided, dwnominate will run
 \code{wnominate} or \code{oc} to get starting values.}
@@ -53,7 +53,7 @@ ID. If unspecified the first legislator in the data is used.}
 A list of class \code{dwnominate} containing: \itemize{
   \item{legislators} {A data frame of legislator information}
   \item{rollcalls} {A data frame of rollcall information}
-  \item{wnom} {The \code{wnominate} or \code{oc} results used as
+  \item{start} {The \code{wnominate} or \code{oc} results used as
   starting points for DW-NOMINATE} }
 }
 \description{

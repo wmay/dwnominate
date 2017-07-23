@@ -79,7 +79,7 @@ write_transposed_rc_data_file = function(rc_list) {
   writeLines(all_lines, 'transposed_rollcall_matrix.vt3')
 }
 
-write_leg_file = function(rc_list, wnom, dims, lid) {
+write_leg_file = function(rc_list, start, dims, lid) {
   all_lines = vector()
   coordcols = paste0('coord', 1:dims, 'D')
   for (session in 1:length(rc_list)) {
@@ -94,8 +94,8 @@ write_leg_file = function(rc_list, wnom, dims, lid) {
     parties = format_column(rcl, 'party', '%4d', 0)
     leg_names = sprintf('%-11.11s', fix_string(rownames(rc$votes)))
     # find the corresponding starting coordinates for each legislator
-    matches = match(rcl[, lid], wnom$legislators[, lid])
-    coords = as.matrix(wnom$legislators[matches, coordcols])
+    matches = match(rcl[, lid], start$legislators[, lid])
+    coords = as.matrix(start$legislators[matches, coordcols])
     # DW-NOMINATE hates NA's
     coords[is.na(coords)] = 0
     coords = sprintf('%7.3f', coords)
@@ -112,7 +112,7 @@ write_leg_file = function(rc_list, wnom, dims, lid) {
   writeLines(all_lines, 'legislator_input.dat')
 }
 
-write_bill_file = function(rc_list, wnom, dims) {
+write_bill_file = function(rc_list, start, dims) {
   all_lines = vector()
   for (session in 1:length(rc_list)) {
     rc = rc_list[[session]]
@@ -159,14 +159,14 @@ write_start_file = function(rc_list, sessions, dims, model,
   writeLines(lines, 'DW-NOMSTART.DAT')
 }
 
-write_input_files = function(rc_list, wnom, sessions, dims,
+write_input_files = function(rc_list, start, sessions, dims,
                              model, niter, beta, w, lid) {
   # write the data files needed to run DW-NOMINATE
   message('Writing DW-NOMINATE input files...\n')
   write_rc_data_file(rc_list, lid)
   write_transposed_rc_data_file(rc_list)
-  write_leg_file(rc_list, wnom, dims, lid)
-  write_bill_file(rc_list, wnom, dims)
+  write_leg_file(rc_list, start, dims, lid)
+  write_bill_file(rc_list, start, dims)
   write_session_file(rc_list)
   write_start_file(rc_list, sessions, dims, model,
                    niter, beta, w)
@@ -230,7 +230,7 @@ read_output_files = function(party_dict, dims, iters, nunlegs,
 #' @param id Column name in the rollcall objects' \code{legis.data}
 #'   data frames providing a unique legislator ID. If not specified
 #'   legislator names will be used.
-#' @param wnom A \code{wnominate} or \code{oc} result object (class
+#' @param start A \code{wnominate} or \code{oc} result object (class
 #'   \code{nomObject} or \code{OCobject}) providing starting estimates
 #'   of legislator ideologies. If not provided, dwnominate will run
 #'   \code{wnominate} or \code{oc} to get starting values.
@@ -257,7 +257,7 @@ read_output_files = function(party_dict, dims, iters, nunlegs,
 #' @return A list of class \code{dwnominate} containing: \itemize{
 #'   \item{legislators} {A data frame of legislator information}
 #'   \item{rollcalls} {A data frame of rollcall information}
-#'   \item{wnom} {The \code{wnominate} or \code{oc} results used as
+#'   \item{start} {The \code{wnominate} or \code{oc} results used as
 #'   starting points for DW-NOMINATE} }
 #' @references Keith Poole. 2005. 'Spatial Models of Parliamentary
 #'   Voting.' New York: Cambridge University Press.
@@ -267,7 +267,7 @@ read_output_files = function(party_dict, dims, iters, nunlegs,
 #' results <- dwnominate(senate)
 #' plot(results)
 #' @export
-dwnominate = function(rc_list, id=NULL, wnom=NULL, sessions=NULL,
+dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
                       dims=2, model=1, niter=4, beta=5.9539,
                       w=0.3463, polarity=NULL, ...) {
   if (!is.null(id)) {
@@ -306,21 +306,21 @@ dwnominate = function(rc_list, id=NULL, wnom=NULL, sessions=NULL,
     rc_list[[n]]$legis.data$party =
       party_dict[as.character(rc_list[[n]]$legis.data$party)]
   }
-  run_wnom = is.null(wnom)
-  if (!is.null(wnom)) {
-    if (class(wnom) == 'OCobject' && wnom$dimensions == 1) {
+  get_start = is.null(start)
+  if (!is.null(start)) {
+    if (class(start) == 'OCobject' && start$dimensions == 1) {
       warning("Can't use optimal classification results if estimated with only one dimension. Getting new starting estimates...")
-      run_wnom = T
+      get_start = T
     }
-    if (wnom$dimensions < dims) {
+    if (start$dimensions < dims) {
       warning('Too few dimensions in oc/wnominate object. Getting new starting estimates...')
-      run_wnom = T
+      get_start = T
     }
   } else {
     scale_type = ifelse(dims > 1, 'Optimal Classification', 'W-NOMINATE')
     message(paste('Running', scale_type, 'to get starting estimates...'))
   }
-  if (run_wnom) {
+  if (get_start) {
     rc_all = merge.rollcall(rc_list=rc_list)
     scale_func = ifelse(dims > 1, oc::oc, wnominate::wnominate)
     if (!is.null(polarity)) {
@@ -337,10 +337,10 @@ dwnominate = function(rc_list, id=NULL, wnom=NULL, sessions=NULL,
       polarityn = rep(1, dims)
     }
     # phwew.
-    wnom = scale_func(rc_all, dims=dims, polarity=polarityn, ...)
+    start = scale_func(rc_all, dims=dims, polarity=polarityn, ...)
   }
   
-  write_input_files(rc_list, wnom, sessions, dims, model, iters,
+  write_input_files(rc_list, start, sessions, dims, model, iters,
                     beta, w, id)
   
   # run DW-NOMINATE
@@ -358,7 +358,7 @@ dwnominate = function(rc_list, id=NULL, wnom=NULL, sessions=NULL,
   nunrcs = sum(sapply(rc_list, function(x) x$m))
   results = read_output_files(party_dict, dims, iters, nunlegs,
                               nunrcs)
-  results$wnom = wnom
+  results$start = start
   class(results) = 'dwnominate'
   results
 }
