@@ -4,6 +4,7 @@
 # 600 legislators per session
 # 3600 votes per session
 
+<<<<<<< HEAD
 
 # get legislator names from rollcall objects
 get_leg_names = function(x) row.names(x$legis.data)
@@ -11,6 +12,20 @@ get_leg_names = function(x) row.names(x$legis.data)
 fix_string = function(string) gsub("[^A-Za-z ()'-]", '', string)
 
 format_column = function(df, name, format, alternative=NULL) {
+=======
+writeLines2 = function(lines, fname) {
+  ## if (Sys.info()["sysname"] == "Darwin") {
+  ##   # R's default line endings seem to be confusing fortran on Macs
+  ##   f = file(fname, open = "wb")
+  ##   writeLines(lines, f, sep = "\r", useBytes = T)
+  ##   close(f)    
+  ## } else {
+    writeLines(lines, fname)
+  ## }
+}
+
+format_column = function(df, name, format, alternative) {
+>>>>>>> master
   if (name %in% names(df)) {
     if (class(df[, name]) == 'character') {
       sprintf(format, fix_string(df[, name]))
@@ -52,7 +67,11 @@ write_rc_data_file = function(rc_list, lid) {
     all_lines = c(all_lines,  lines)
   }
   
+<<<<<<< HEAD
   writeLines(all_lines, 'rollcall_matrix.vt3')
+=======
+  writeLines2(all_lines, "rollcall_matrix.vt3")
+>>>>>>> master
 }
 
 write_transposed_rc_data_file = function(rc_list) {
@@ -76,7 +95,11 @@ write_transposed_rc_data_file = function(rc_list) {
     lines = paste0(sessions, vote_ids, ' ', vote_nums)
     all_lines = c(all_lines, lines)
   }
+<<<<<<< HEAD
   writeLines(all_lines, 'transposed_rollcall_matrix.vt3')
+=======
+  writeLines2(all_lines, "transposed_rollcall_matrix.vt3")
+>>>>>>> master
 }
 
 write_leg_file = function(rc_list, wnom, dims, lid) {
@@ -109,7 +132,11 @@ write_leg_file = function(rc_list, wnom, dims, lid) {
                    coords)
     all_lines = c(all_lines, lines)
   }
+<<<<<<< HEAD
   writeLines(all_lines, 'legislator_input.dat')
+=======
+  writeLines2(all_lines, "legislator_input.dat")
+>>>>>>> master
 }
 
 write_bill_file = function(rc_list, wnom, dims) {
@@ -125,8 +152,12 @@ write_bill_file = function(rc_list, wnom, dims) {
     lines = paste0(sessions, bill_ids, spreadmids)
     all_lines = c(all_lines, lines)
   }
+<<<<<<< HEAD
   ## all_lines = paste0(all_lines, spreadmids)
   writeLines(all_lines, 'rollcall_input.dat')
+=======
+  writeLines2(all_lines, "rollcall_input.dat")
+>>>>>>> master
 }
 
 write_session_file = function(rc_list) {
@@ -140,7 +171,11 @@ write_session_file = function(rc_list) {
     # the lines to be written to the file
     lines[session] = paste(session_num, rollcalls, legislators)
   }
+<<<<<<< HEAD
   writeLines(lines, 'session_info.num')
+=======
+  writeLines2(lines, "session_info.num")
+>>>>>>> master
 }
 
 write_start_file = function(rc_list, sessions, dims, model,
@@ -154,10 +189,18 @@ write_start_file = function(rc_list, sessions, dims, model,
   betas = sprintf('%8.4f', beta)
   ws = paste(sprintf('%8.4f', w), collapse='')
   lines = filenames
+<<<<<<< HEAD
   lines[8] = 'NOMINAL DYNAMIC-WEIGHTED MULTIDIMENSIONAL UNFOLDING '
   lines[9] = params1s
   lines[10] = paste0(betas, ws)
   writeLines(lines, 'DW-NOMSTART.DAT')
+=======
+  lines[8] = "NOMINAL DYNAMIC-WEIGHTED MULTIDIMENSIONAL UNFOLDING "
+  lines[9] = paste("    2    1    1",
+           sprintf("%4d", length(wnom_list)), "   2    5")
+  lines[10] = "  5.9539  0.3463"
+  writeLines2(lines, "DW-NOMSTART.DAT")
+>>>>>>> master
 }
 
 write_input_files = function(rc_list, wnom, sessions, dims,
