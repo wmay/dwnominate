@@ -258,8 +258,7 @@ read_output_files = function(party_dict, dims, iters, nunlegs,
 #'   \item{legislators} {A data frame of legislator information}
 #'   \item{rollcalls} {A data frame of rollcall information}
 #'   \item{wnom} {The \code{wnominate} or \code{oc} results used as
-#'   starting points for DW-NOMINATE} \item{rc_list} {The list of
-#'   rollcall objects} }
+#'   starting points for DW-NOMINATE} }
 #' @references Keith Poole. 2005. 'Spatial Models of Parliamentary
 #'   Voting.' New York: Cambridge University Press.
 #' @examples
