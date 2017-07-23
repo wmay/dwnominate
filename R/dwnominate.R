@@ -346,9 +346,9 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
   # run DW-NOMINATE
   # change line 40 of DW-NOMINATE.FOR !!
   nomstart = file.path(getwd(), 'DW-NOMSTART.DAT')
-  start = Sys.time()
+  start_time = Sys.time()
   .Fortran('dwnom')
-  runtime = Sys.time() - start
+  runtime = Sys.time() - start_time
   units(runtime) = 'mins'
   message(paste('DW-NOMINATE took', round(runtime, 1),
                 'minutes.\n'))
