@@ -235,9 +235,8 @@ read_output_files = function(party_dict, dims, iters, nunlegs,
 #'   \code{nomObject} or \code{OCobject}) providing starting estimates
 #'   of legislator ideologies. If not provided, dwnominate will run
 #'   \code{wnominate} or \code{oc} to get starting values.
-#' @param sessions A numeric or integer vector of length 2 providing
-#'   the first and last sessions to include. Defaults to \code{c(1,
-#'   length(rc_list))}.
+#' @param sessions A vector of length 2 providing the first and last
+#'   sessions to include. Defaults to \code{c(1, length(rc_list))}.
 #' @param dims The number of dimensions to estimate. Can be either 1
 #'   or 2.
 #' @param model The degree of the polynomial representing changes in
@@ -259,7 +258,7 @@ read_output_files = function(party_dict, dims, iters, nunlegs,
 #' @return A list of class \code{dwnominate} containing: \itemize{
 #'   \item{legislators} {A data frame of legislator information}
 #'   \item{rollcalls} {A data frame of rollcall information}
-#'   \item{wnom_list} {The list of \code{wnominate} results used as
+#'   \item{wnom} {The \code{wnominate} or \code{oc} results used as
 #'   starting points for DW-NOMINATE} \item{rc_list} {The list of
 #'   rollcall objects} }
 #' @references Keith Poole. 2005. 'Spatial Models of Parliamentary
@@ -429,11 +428,9 @@ plot.dwnominate = function(x, ...) {
 #' @examples
 #' library(pscl) # for the rollcall summary method
 #' data(senate)
+#' # merge using ICPSR legislator ID's
 #' combined_rcs = merge(senate[[1]], senate[[2]], by='icpsrLegis')
 #' summary(combined_rcs)
-#'
-#' all_rcs = merge.rollcall(rc_list=senate, by='icpsrLegis')
-#' summary(all_rcs)
 #' @export
 merge.rollcall = function(x=NULL, y=NULL, rc_list=NULL,
                           by=NULL) {
