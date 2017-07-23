@@ -9,10 +9,6 @@ Description: Interface to Keith Poole's DW-NOMINATE Fortran program.
 Depends:
     R (>= 2.10)
 Imports:
-    stats,
-    utils,
-    graphics,
-    grDevices,
     pscl,
     oc,
     wnominate
