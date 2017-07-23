@@ -1,20 +1,27 @@
 # dwnominate
-A convenient R interface to Keith Poole's DW-NOMINATE fortran program
+DW-NOMINATE dynamic roll call scaling in R
 
-To install:
+## Installation:
 
-```
+From R, run:
+
+```R
 library(devtools)
 install_github("wmay/dwnominate")
 ```
 
-To run DW-NOMINATE:
+The fortran code disagrees with some MacOS gfortran compilers, which can be fixed by following the instructions [here](https://stackoverflow.com/questions/23916219/os-x-package-installation-depends-on-gfortran-4-8).
 
+## DW-NOMINATE
+Running DW-NOMINATE:
+
+```R
+library(dwnominate)
+# get a list of `rollcall` objects
+data(senate)
+results = dwnominate(senate)
+plot(results)
 ```
-dwnominate(rc_list, wnom_list = NA)
-```
+![image](https://user-images.githubusercontent.com/4205859/28497526-9f421d4c-6f57-11e7-988d-0c4226eba992.png)
 
-- rc_list: a list of `rollcall` objects from the `pscl` package. Must contain an integer "ID" column in the legis.data data frame, where each legislator is assigned a unique ID, so DW-NOMINATE can keep track of legislators over multiple sessions.
-- wnom_list (optional): a list of corresponding W-NOMINATE results (class `nomObject`)  from the `wnominate` package. If no W-NOMINATE results are provided, W-NOMINATE will be run to get starting values for DW-NOMINATE.
-
-`dwnominate()` returns a list of legislator and rollcall results of class `dwnominate`. Plot the object with `plot(results)`.
+`dwnominate()` takes as its main argument a list of `rollcall` objects from the [`pscl`](https://cran.r-project.org/web/packages/pscl/index.html) package. The results are returned as a `dwnominate` object with estimates of legislator and roll call coordinates. Get detailed information about DW-NOMINATE options with `?dwnominate` and `help(package=dwnominate)`.
