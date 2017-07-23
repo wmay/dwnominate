@@ -8,6 +8,9 @@ C                        1 OCTOBER 2004
 C                 
 C ***********************************************************************
 C
+
+C     with minor changes by William May for use with R
+      
       SUBROUTINE dwnom()
       dimension ISTATE(54001),IDIST(54001),IPARTY(54001),
      C          ID1(54001),LVOTE(3600),YY(150000),
@@ -8070,7 +8073,7 @@ C
       SUBROUTINE M1VECH (STR1, LEN1, STR2, LEN2)
 C                                  SPECIFICATIONS FOR ARGUMENTS
       INTEGER    LEN1, LEN2
-      CHARACTER  STR1*(*), STR2*(*)
+      CHARACTER  STR1(*), STR2(*)
 C
       STR2(1:LEN2) = STR1(1:LEN1)
 C
