@@ -2,7 +2,7 @@
 % Please edit documentation in R/dwnominate.R
 \name{dwnominate}
 \alias{dwnominate}
-\title{Run DW-NOMINATE Roll Call Scaling Method}
+\title{Run DW-NOMINATE}
 \usage{
 dwnominate(rc_list, id = NULL, wnom = NULL, sessions = NULL, dims = 2,
   model = 1, niter = 4, beta = 5.9539, w = 0.3463, polarity = NULL,
@@ -21,9 +21,8 @@ legislator names will be used.}
 of legislator ideologies. If not provided, dwnominate will run
 \code{wnominate} or \code{oc} to get starting values.}
 
-\item{sessions}{A numeric or integer vector of length 2 providing
-the first and last sessions to include. Defaults to \code{c(1,
-length(rc_list))}.}
+\item{sessions}{A vector of length 2 providing the first and last
+sessions to include. Defaults to \code{c(1, length(rc_list))}.}
 
 \item{dims}{The number of dimensions to estimate. Can be either 1
 or 2.}
@@ -54,12 +53,12 @@ ID. If unspecified the first legislator in the data is used.}
 A list of class \code{dwnominate} containing: \itemize{
   \item{legislators} {A data frame of legislator information}
   \item{rollcalls} {A data frame of rollcall information}
-  \item{wnom_list} {The list of \code{wnominate} results used as
+  \item{wnom} {The \code{wnominate} or \code{oc} results used as
   starting points for DW-NOMINATE} \item{rc_list} {The list of
   rollcall objects} }
 }
 \description{
-Run DW-NOMINATE Roll Call Scaling Method
+Run DW-NOMINATE
 }
 \examples{
 # US Senate data originally from voteview.com

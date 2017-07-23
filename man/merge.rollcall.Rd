@@ -19,9 +19,7 @@ Merge rollcall objects
 \examples{
 library(pscl) # for the rollcall summary method
 data(senate)
+# merge using ICPSR legislator ID's
 combined_rcs = merge(senate[[1]], senate[[2]], by='icpsrLegis')
 summary(combined_rcs)
-
-all_rcs = merge.rollcall(rc_list=senate, by='icpsrLegis')
-summary(all_rcs)
 }
