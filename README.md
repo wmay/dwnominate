@@ -10,7 +10,7 @@ library(devtools)
 install_github("wmay/dwnominate")
 ```
 
-The fortran code disagrees with some MacOS gfortran compilers, which can be fixed by following the instructions [here](https://stackoverflow.com/questions/23916219/os-x-package-installation-depends-on-gfortran-4-8).
+The fortran code disagrees with some MacOS gfortran compilers, which can be fixed by following the instructions [here](https://stackoverflow.com/questions/23916219/os-x-package-installation-depends-on-gfortran-4-8). Sometimes issues can also occur when using R GUIs. For best results run the code in a command line terminal.
 
 ## DW-NOMINATE
 Running DW-NOMINATE:
