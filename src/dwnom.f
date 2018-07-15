@@ -11,7 +11,9 @@ C
 
 C     with minor changes by William May for use with R
       
-      SUBROUTINE dwnom()
+      SUBROUTINE dwnom(NOMSTART_IN, WEIGHTS_IN)
+      INTEGER NOMSTART_IN(6)
+      DOUBLE PRECISION WEIGHTS_IN(NOMSTART_IN(1) + 1)
       dimension ISTATE(54001),IDIST(54001),IPARTY(54001),
      C          ID1(54001),LVOTE(3600),YY(150000),
      C          CUMNML(150000),ZDF(150000,4),WDERV(99),
@@ -42,7 +44,6 @@ C     with minor changes by William May for use with R
 C
 C
       open(777, file='rsort.dat')
-      OPEN(4,FILE='DW-NOMSTART.DAT',STATUS='OLD')
       OPEN(21,FILE='DWNOM21.DAT')
       OPEN(26,FILE='DWNOM26.DAT')
       OPEN(28,FILE='DWNOM28.DAT')
@@ -51,7 +52,6 @@ C
 C
 C  READ ROLL CALL COORDINATE FILE -- INPUT
 C
-c$$$      READ(4,102)FNAME1
       FNAME1 = 'rollcall_input.dat'
       WRITE(21,102)FNAME1
       WRITE(*,102)FNAME1
@@ -59,7 +59,6 @@ c$$$      READ(4,102)FNAME1
 C
 C  READ ROLL CALL COORDINATE FILE -- OUTPUT
 C
-c$$$      READ(4,102)FNAME2
       FNAME2 = 'rollcall_output.dat'
       WRITE(21,102)FNAME2
       WRITE(*,102)FNAME2
@@ -67,7 +66,6 @@ c$$$      READ(4,102)FNAME2
 C
 C  READ LEGISLATOR COORDINATE FILE -- INPUT
 C
-c$$$      READ(4,102)FNAME3
       FNAME3 = 'legislator_input.dat'
       WRITE(21,102)FNAME3
       WRITE(*,102)FNAME3
@@ -75,7 +73,6 @@ c$$$      READ(4,102)FNAME3
 C
 C  READ LEGISLATOR COORDINATE FILE -- OUTPUT
 C
-c$$$      READ(4,102)FNAME4
       FNAME4 = 'legislator_output.dat'
       WRITE(21,102)FNAME4
       WRITE(*,102)FNAME4
@@ -83,7 +80,6 @@ c$$$      READ(4,102)FNAME4
 C
 C  READ ROLL CALL NUMBERS FILE -- *.NUM
 C
-c$$$      READ(4,102)FNAME5
       FNAME5 = 'session_info.num'
       WRITE(21,102)FNAME5
       WRITE(*,102)FNAME5
@@ -91,7 +87,6 @@ c$$$      READ(4,102)FNAME5
 C
 C  READ ROLL CALL VOTE FILE
 C
-c$$$      READ(4,102)FNAME6
       FNAME6 = 'rollcall_matrix.vt3'
       WRITE(21,102)FNAME6
       WRITE(*,102)FNAME6
@@ -99,7 +94,6 @@ c$$$      READ(4,102)FNAME6
 C
 C  READ TRANSPOSED ROLL CALL VOTE FILE
 C
-c$$$      READ(4,102)FNAME7
       FNAME7 = 'transposed_rollcall_matrix.vt3'
       WRITE(21,102)FNAME7
       WRITE(*,102)FNAME7
@@ -157,13 +151,18 @@ C
 C
 C  READ TITLE OF RUN
 C
-      READ(4,102)FTITLE
+      FTITLE = 'NOMINAL DYNAMIC-WEIGHTED MULTIDIMENSIONAL UNFOLDING '
       WRITE(21,102)FTITLE
       WRITE(*,102)FTITLE
-      READ(4,103)NS,NMODEL,NFIRST,NLAST,IHAPPY1,IHAPPY2
+      NS = NOMSTART_IN(1)
+      NMODEL = NOMSTART_IN(2)
+      NFIRST = NOMSTART_IN(3)
+      NLAST = NOMSTART_IN(4)
+      IHAPPY1 = NOMSTART_IN(5)
+      IHAPPY2 = NOMSTART_IN(6)
       WRITE(21,103)NS,NMODEL,NFIRST,NLAST,IHAPPY1,IHAPPY2
       WRITE(*,103)NS,NMODEL,NFIRST,NLAST,IHAPPY1,IHAPPY2
-      READ(4,104)WEIGHT(NS+1),(WEIGHT(K),K=2,NS)
+      WEIGHT = WEIGHTS_IN
       WRITE(21,104)WEIGHT(NS+1),(WEIGHT(K),K=2,NS)
       WRITE(*,104)WEIGHT(NS+1),(WEIGHT(K),K=2,NS)
 C
@@ -968,7 +967,6 @@ c$$$      write(*,1001)jtim1,jtim2,jtim3,jtim4
 c$$$      write(21,1000)itim1,itim2,itim3,itim4
 c$$$      write(21,1001)jtim1,jtim2,jtim3,jtim4
 C     stop
-      close(4)
       close(21)
       close(26)
       close(28)

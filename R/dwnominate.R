@@ -144,20 +144,11 @@ write_session_file = function(rc_list) {
 
 write_start_file = function(rc_list, sessions, dims, model,
                             iters, beta, w) {
-  ## filenames = c('rollcall_input.dat', 'rollcall_output.dat',
-  ##     'legislator_input.dat', 'legislator_output.dat',
-  ##     'session_info.num', 'rollcall_matrix.vt3',
-  ##     'transposed_rollcall_matrix.vt3')
-  params1 = c(dims, model, sessions, iters)
-  params1s = paste(sprintf('%5d', params1), collapse='')
-  betas = sprintf('%8.4f', beta)
-  ws = paste(sprintf('%8.4f', w), collapse='')
-  ## lines = filenames
-  lines = vector()
-  lines[1] = 'NOMINAL DYNAMIC-WEIGHTED MULTIDIMENSIONAL UNFOLDING '
-  lines[2] = params1s
-  lines[3] = paste0(betas, ws)
-  writeLines(lines, 'DW-NOMSTART.DAT')
+  ## Variables that would have been written to the DW-NOMSTART.DAT
+  ## file if I was still creating it
+  params1 = as.integer(c(dims, model, sessions, iters))
+  weights = c(1, w, beta)
+  list(nomstart_in=params1, weights=weights)
 }
 
 write_input_files = function(rc_list, start, sessions, dims,
@@ -169,8 +160,9 @@ write_input_files = function(rc_list, start, sessions, dims,
   write_leg_file(rc_list, start, dims, lid)
   write_bill_file(rc_list, start, dims)
   write_session_file(rc_list)
-  write_start_file(rc_list, sessions, dims, model,
-                   niter, beta, w)
+  params = write_start_file(rc_list, sessions, dims, model,
+                            niter, beta, w)
+  params
 }
 
 read_output_files = function(party_dict, dims, iters, nunlegs,
@@ -341,14 +333,14 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
     start = scale_func(rc_all, dims=dims, polarity=polarityn, ...)
   }
   
-  write_input_files(rc_list, start, sessions, dims, model, iters,
-                    beta, w, id)
+  params = write_input_files(rc_list, start, sessions, dims,
+                             model, iters, beta, w, id)
   
   # run DW-NOMINATE
   # change line 40 of DW-NOMINATE.FOR !!
   nomstart = file.path(getwd(), 'DW-NOMSTART.DAT')
   start_time = Sys.time()
-  .Fortran('dwnom')
+  .Fortran('dwnom', params$nomstart_in, params$weights)
   runtime = Sys.time() - start_time
   units(runtime) = 'mins'
   message(paste('DW-NOMINATE took', round(runtime, 1),
