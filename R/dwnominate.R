@@ -144,18 +144,19 @@ write_session_file = function(rc_list) {
 
 write_start_file = function(rc_list, sessions, dims, model,
                             iters, beta, w) {
-  filenames = c('rollcall_input.dat', 'rollcall_output.dat',
-      'legislator_input.dat', 'legislator_output.dat',
-      'session_info.num', 'rollcall_matrix.vt3',
-      'transposed_rollcall_matrix.vt3')
+  ## filenames = c('rollcall_input.dat', 'rollcall_output.dat',
+  ##     'legislator_input.dat', 'legislator_output.dat',
+  ##     'session_info.num', 'rollcall_matrix.vt3',
+  ##     'transposed_rollcall_matrix.vt3')
   params1 = c(dims, model, sessions, iters)
   params1s = paste(sprintf('%5d', params1), collapse='')
   betas = sprintf('%8.4f', beta)
   ws = paste(sprintf('%8.4f', w), collapse='')
-  lines = filenames
-  lines[8] = 'NOMINAL DYNAMIC-WEIGHTED MULTIDIMENSIONAL UNFOLDING '
-  lines[9] = params1s
-  lines[10] = paste0(betas, ws)
+  ## lines = filenames
+  lines = vector()
+  lines[1] = 'NOMINAL DYNAMIC-WEIGHTED MULTIDIMENSIONAL UNFOLDING '
+  lines[2] = params1s
+  lines[3] = paste0(betas, ws)
   writeLines(lines, 'DW-NOMSTART.DAT')
 }
 
