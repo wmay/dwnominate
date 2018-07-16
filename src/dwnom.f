@@ -11,9 +11,13 @@ C
 
 C     with minor changes by William May for use with R
       
-      SUBROUTINE dwnom(NOMSTART_IN, WEIGHTS_IN)
-      INTEGER NOMSTART_IN(6)
-      DOUBLE PRECISION WEIGHTS_IN(NOMSTART_IN(1) + 1)
+      SUBROUTINE dwnom(NOMSTART_IN, WEIGHTS_IN, NBILLS, ICONG_IN,
+     C     INUM_IN, DYN_IN, ZMID_IN)
+      INTEGER NOMSTART_IN(6), NBILLS
+      INTEGER ICONG_IN(NBILLS), INUM_IN(NBILLS)
+      DOUBLE PRECISION WEIGHTS_IN(NOMSTART_IN(1) + 1),
+     C     DYN_IN(NBILLS, NOMSTART_IN(1)),
+     C     ZMID_IN(NBILLS, NOMSTART_IN(1))
       dimension ISTATE(54001),IDIST(54001),IPARTY(54001),
      C          ID1(54001),LVOTE(3600),YY(150000),
      C          CUMNML(150000),ZDF(150000,4),WDERV(99),
@@ -55,7 +59,6 @@ C
       FNAME1 = 'rollcall_input.dat'
       WRITE(21,102)FNAME1
       WRITE(*,102)FNAME1
-      OPEN(1,FILE=FNAME1,STATUS='OLD')
 C
 C  READ ROLL CALL COORDINATE FILE -- OUTPUT
 C
@@ -299,9 +302,12 @@ C                     EACH CONGRESS
 C
 C  READ ROLL CALL STARTS -- HC01108.DAT
 C
+      ICONG = ICONG_IN
+      INUM = INUM_IN
+      DYN = DYN_IN
+      ZMID = ZMID_IN
       I=0
-  575 READ(1,175,END=475)ICONG(I+1),INUM(I+1),DYN(I+1,1),
-     C                   ZMID(I+1,1),DYN(I+1,2),ZMID(I+1,2)
+      DO 575 I0=1,NBILLS
       NP=MCONG(ICONG(I+1),3)
       READ(25,240)JJJJ,J,(LVOTE(JJ),JJ=1,NP)
       I=I+1
@@ -332,7 +338,7 @@ C
          ENDIF
       ENDIF
       NUMCONGT(ICONG(I))=NUMCONGT(ICONG(I))+1
-      GO TO 575
+ 575  CONTINUE
   475 WRITE(*,300)I
       WRITE(21,300)I
       NQTOT=I
@@ -972,7 +978,6 @@ C     stop
       close(28)
       close(29)
       close(40)
-      close(1)
       close(30)
       close(20)
       close(24)

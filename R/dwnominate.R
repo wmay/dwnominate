@@ -113,19 +113,25 @@ write_leg_file = function(rc_list, start, dims, lid) {
 }
 
 write_bill_file = function(rc_list, start, dims) {
-  all_lines = vector()
+  ## for now it looks like all bill info is being initialized to zero
+  all_sessions = vector()
+  all_bill_ids = vector()
+  all_dyns = matrix(nrow=0, ncol=dims)
+  all_mids = matrix(nrow=0, ncol=dims)
   for (session in 1:length(rc_list)) {
     rc = rc_list[[session]]
-    'I3,I5,4F7.3'
-    sessions = sprintf('%3d', session)
-    bill_ids = sprintf('%5d', 1:ncol(rc$votes))
-    spreadmids = paste(rep(sprintf('%7.3f', 0), 2 * dims),
-                       collapse='')
-    # the lines to be written to the file
-    lines = paste0(sessions, bill_ids, spreadmids)
-    all_lines = c(all_lines, lines)
+    nbills = ncol(rc$votes)
+    sessions = rep(session, nbills)
+    all_sessions = c(all_sessions, sessions)
+    bill_ids = 1:nbills
+    all_bill_ids = c(all_bill_ids, bill_ids)
+    dyns = matrix(0, nrow=nbills, ncol=dims)
+    all_dyns = rbind(all_dyns, dyns)
+    mids = matrix(0, nrow=nbills, ncol=dims)
+    all_mids = rbind(all_mids, mids)
   }
-  writeLines(all_lines, 'rollcall_input.dat')
+  list(icong=all_sessions, inum=all_bill_ids,
+       dyn=all_dyns, zmid=all_mids)
 }
 
 write_session_file = function(rc_list) {
@@ -158,11 +164,11 @@ write_input_files = function(rc_list, start, sessions, dims,
   write_rc_data_file(rc_list, lid)
   write_transposed_rc_data_file(rc_list)
   write_leg_file(rc_list, start, dims, lid)
-  write_bill_file(rc_list, start, dims)
+  params1 = write_bill_file(rc_list, start, dims)
   write_session_file(rc_list)
   params = write_start_file(rc_list, sessions, dims, model,
                             niter, beta, w)
-  params
+  c(params, params1)
 }
 
 read_output_files = function(party_dict, dims, iters, nunlegs,
@@ -340,7 +346,11 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
   # change line 40 of DW-NOMINATE.FOR !!
   nomstart = file.path(getwd(), 'DW-NOMSTART.DAT')
   start_time = Sys.time()
-  .Fortran('dwnom', params$nomstart_in, params$weights)
+  .Fortran('dwnom',
+           ## control file (DW-NOMSTART.DAT) params:
+           params$nomstart_in, params$weights,
+           ## bill file (rollcall_input.dat) params:
+           length(params$icong), params$icong, params$inum, params$dyn, params$zmid)
   runtime = Sys.time() - start_time
   units(runtime) = 'mins'
   message(paste('DW-NOMINATE took', round(runtime, 1),
