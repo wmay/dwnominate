@@ -12,9 +12,10 @@ C
 C     with minor changes by William May for use with R
       
       SUBROUTINE dwnom(NOMSTART_IN, WEIGHTS_IN, NBILLS, ICONG_IN,
-     C     INUM_IN, DYN_IN, ZMID_IN)
+     C     INUM_IN, DYN_IN, ZMID_IN, MCONG_IN)
       INTEGER NOMSTART_IN(6), NBILLS
-      INTEGER ICONG_IN(NBILLS), INUM_IN(NBILLS)
+      INTEGER ICONG_IN(NBILLS), INUM_IN(NBILLS),
+     C     MCONG_IN(NOMSTART_IN(4) - NOMSTART_IN(3) + 1, 3)
       DOUBLE PRECISION WEIGHTS_IN(NOMSTART_IN(1) + 1),
      C     DYN_IN(NBILLS, NOMSTART_IN(1)),
      C     ZMID_IN(NBILLS, NOMSTART_IN(1))
@@ -86,7 +87,6 @@ C
       FNAME5 = 'session_info.num'
       WRITE(21,102)FNAME5
       WRITE(*,102)FNAME5
-      OPEN(22,FILE=FNAME5,STATUS='OLD')
 C
 C  READ ROLL CALL VOTE FILE
 C
@@ -293,10 +293,8 @@ C
 C
 C  READ NHOUSE.NUM -- GIVES NUMBER OF ROLL CALLS AND LEGISLATORS FOR 
 C                     EACH CONGRESS
-      I=0
-  525 READ(22,180,END=425)(MCONG(I+1,J),J=1,3)
-      I=I+1
-      GO TO 525
+      I = NOMSTART_IN(4) - NOMSTART_IN(3) + 1
+      MCONG = MCONG_IN
   425 WRITE(*,302)I
       WRITE(21,302)I
 C
@@ -981,7 +979,6 @@ C     stop
       close(30)
       close(20)
       close(24)
-      close(22)
       close(23)
       close(25)
       close(777)

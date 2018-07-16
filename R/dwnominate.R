@@ -135,17 +135,12 @@ write_bill_file = function(rc_list, start, dims) {
 }
 
 write_session_file = function(rc_list) {
-  lines = vector()
+  mcong = matrix(nrow=0, ncol=3)
   for (session in 1:length(rc_list)) {
     rc = rc_list[[session]]
-    session_num = sprintf('%3d', session)
-    rollcalls = sprintf('%4d', rc$m)
-    legislators = sprintf('%3d', rc$n)
-
-    # the lines to be written to the file
-    lines[session] = paste(session_num, rollcalls, legislators)
+    mcong = rbind(mcong, c(session, rc$m, rc$n))
   }
-  writeLines(lines, 'session_info.num')
+  list(mcong=mcong)
 }
 
 write_start_file = function(rc_list, sessions, dims, model,
@@ -165,10 +160,10 @@ write_input_files = function(rc_list, start, sessions, dims,
   write_transposed_rc_data_file(rc_list)
   write_leg_file(rc_list, start, dims, lid)
   params1 = write_bill_file(rc_list, start, dims)
-  write_session_file(rc_list)
+  params2 = write_session_file(rc_list)
   params = write_start_file(rc_list, sessions, dims, model,
                             niter, beta, w)
-  c(params, params1)
+  c(params, params1, params2)
 }
 
 read_output_files = function(party_dict, dims, iters, nunlegs,
@@ -350,7 +345,10 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
            ## control file (DW-NOMSTART.DAT) params:
            params$nomstart_in, params$weights,
            ## bill file (rollcall_input.dat) params:
-           length(params$icong), params$icong, params$inum, params$dyn, params$zmid)
+           length(params$icong), params$icong, params$inum,
+           params$dyn, params$zmid,
+           ## session file (session_info.num) params:
+           params$mcong)
   runtime = Sys.time() - start_time
   units(runtime) = 'mins'
   message(paste('DW-NOMINATE took', round(runtime, 1),
