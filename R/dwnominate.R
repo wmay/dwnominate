@@ -56,27 +56,42 @@ write_rc_data_file = function(rc_list, lid) {
 }
 
 write_transposed_rc_data_file = function(rc_list) {
-  all_lines = vector()
+  session_rows = sapply(rc_list, function(x) ncol(x$votes))
+  session_cols = sapply(rc_list, function(x) nrow(x$votes))
+  total_rcs = sum(session_rows)
+  max_rcs = max(session_cols)
+  m1 = matrix(FALSE, nrow=total_rcs, ncol=max_rcs)
+  m9 = matrix(FALSE, nrow=total_rcs, ncol=max_rcs)
+  ## all_lines = vector()
+  start_row = 1
   for (session in 1:length(rc_list)) {
-    votes = rc_list[[session]]$votes
+    votes = t(rc_list[[session]]$votes)
     codes = rc_list[[session]]$codes
-    sessions = sprintf('%4d', session)
-    vote_ids = sprintf('%5d', 1:ncol(votes))
+    ## sessions = sprintf('%4d', session)
+    ## vote_ids = sprintf('%5d', 1:ncol(votes))
     
     votes[votes %in% codes$yea] = 1
     votes[votes %in% codes$nay] = 6
     votes[votes %in% c(codes$notInLegis, codes$missing)] = 9
 
-    # a vector of very long lists of numbers, one for each legislator
-    vote_nums =
-      apply(votes, 2, FUN=function(x) paste(x, collapse=''))
+    end_row = start_row + session_rows[session] - 1
+    end_col = session_cols[session]
+    m1[start_row:end_row, 1:end_col] = votes == 1
+    m9[start_row:end_row, 1:end_col] = votes == 9
 
-    # the lines to be written to the file
-    'I4,I5,1X,600I1'
-    lines = paste0(sessions, vote_ids, ' ', vote_nums)
-    all_lines = c(all_lines, lines)
+    start_row = end_row + 1
+
+    ## # a vector of very long lists of numbers, one for each legislator
+    ## vote_nums =
+    ##   apply(votes, 2, FUN=function(x) paste(x, collapse=''))
+
+    ## # the lines to be written to the file
+    ## 'I4,I5,1X,600I1'
+    ## lines = paste0(sessions, vote_ids, ' ', vote_nums)
+    ## all_lines = c(all_lines, lines)
   }
-  writeLines(all_lines, 'transposed_rollcall_matrix.vt3')
+  ## writeLines(all_lines, 'transposed_rollcall_matrix.vt3')
+  list(rcvotet1=m1, rcvotet9=m9)
 }
 
 write_leg_file = function(rc_list, start, dims, lid) {
@@ -157,13 +172,13 @@ write_input_files = function(rc_list, start, sessions, dims,
   # write the data files needed to run DW-NOMINATE
   message('Writing DW-NOMINATE input files...\n')
   write_rc_data_file(rc_list, lid)
-  write_transposed_rc_data_file(rc_list)
+  params3 = write_transposed_rc_data_file(rc_list)
   write_leg_file(rc_list, start, dims, lid)
   params1 = write_bill_file(rc_list, start, dims)
   params2 = write_session_file(rc_list)
   params = write_start_file(rc_list, sessions, dims, model,
                             niter, beta, w)
-  c(params, params1, params2)
+  c(params, params1, params2, params3)
 }
 
 read_output_files = function(party_dict, dims, iters, nunlegs,
@@ -348,7 +363,10 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
            length(params$icong), params$icong, params$inum,
            params$dyn, params$zmid,
            ## session file (session_info.num) params:
-           params$mcong)
+           params$mcong,
+           ## transposed rollcall file
+           nrow(params$rcvotet1), ncol(params$rcvotet1),
+           params$rcvotet1, params$rcvotet9)
   runtime = Sys.time() - start_time
   units(runtime) = 'mins'
   message(paste('DW-NOMINATE took', round(runtime, 1),

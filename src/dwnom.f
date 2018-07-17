@@ -12,10 +12,13 @@ C
 C     with minor changes by William May for use with R
       
       SUBROUTINE dwnom(NOMSTART_IN, WEIGHTS_IN, NBILLS, ICONG_IN,
-     C     INUM_IN, DYN_IN, ZMID_IN, MCONG_IN)
-      INTEGER NOMSTART_IN(6), NBILLS
+     C     INUM_IN, DYN_IN, ZMID_IN, MCONG_IN,
+     C     NROWRCT, NCOLRCT, RCVOTET1_IN, RCVOTET9_IN)
+      INTEGER NOMSTART_IN(6), NBILLS, NROWRCT, NCOLRCT
       INTEGER ICONG_IN(NBILLS), INUM_IN(NBILLS),
-     C     MCONG_IN(NOMSTART_IN(4) - NOMSTART_IN(3) + 1, 3)
+     C     MCONG_IN(NOMSTART_IN(4) - NOMSTART_IN(3) + 1, 3),
+     C     RCVOTET1_IN(NROWRCT, NCOLRCT),
+     C     RCVOTET9_IN(NROWRCT, NCOLRCT)
       DOUBLE PRECISION WEIGHTS_IN(NOMSTART_IN(1) + 1),
      C     DYN_IN(NBILLS, NOMSTART_IN(1)),
      C     ZMID_IN(NBILLS, NOMSTART_IN(1))
@@ -100,7 +103,6 @@ C
       FNAME7 = 'transposed_rollcall_matrix.vt3'
       WRITE(21,102)FNAME7
       WRITE(*,102)FNAME7
-      OPEN(25,FILE=FNAME7,STATUS='OLD')
 C
   100 FORMAT(2X,I3,2I2,I4,I5,2I1,11A1,3600I1)
 C
@@ -306,38 +308,37 @@ C
       ZMID = ZMID_IN
       I=0
       DO 575 I0=1,NBILLS
-      NP=MCONG(ICONG(I+1),3)
-      READ(25,240)JJJJ,J,(LVOTE(JJ),JJ=1,NP)
-      I=I+1
-      KYES=0
-      KNO=0
-      DO 11 JJ=1,NP
-      RCVOTET1(I,JJ)=.FALSE.
-      RCVOTET9(I,JJ)=.FALSE.
-      IF(LVOTE(JJ).GE.1.AND.LVOTE(JJ).LE.3)THEN
-         RCVOTET1(I,JJ)=.TRUE.
-         KYES=KYES+1
-      ENDIF
-      IF(LVOTE(JJ).EQ.0.OR.LVOTE(JJ).GT.6)THEN
-         RCVOTET9(I,JJ)=.TRUE.
-      ENDIF
-      IF(LVOTE(JJ).GE.4.AND.LVOTE(JJ).LE.6)THEN
-         KNO=KNO+1
-      ENDIF
-  11  CONTINUE
-      RCBAD(I)=.FALSE.
-      KRCTOT=KYES+KNO
-      KRCMIN=MIN0(KYES,KNO)
-      XMARG=0.0
-      IF(KRCTOT.GT.0)THEN
-         XMARG=FLOAT(KRCMIN)/FLOAT(KRCTOT)
-         IF(XMARG.GE..025)THEN
-            RCBAD(I)=.TRUE.
+         NP=MCONG(ICONG(I+1),3)
+         I=I+1
+         KYES=0
+         KNO=0
+         DO 11 JJ=1,NP
+            RCVOTET1(I,JJ)=.FALSE.
+            RCVOTET9(I,JJ)=.FALSE.
+            IF(RCVOTET1_IN(I,JJ).EQ.1)THEN
+               RCVOTET1(I,JJ)=.TRUE.
+               KYES=KYES+1
+            ENDIF
+            IF(RCVOTET9_IN(I,JJ).EQ.1)THEN
+               RCVOTET9(I,JJ)=.TRUE.
+            ENDIF
+            IF(RCVOTET1_IN(I,JJ).EQ.0.AND.RCVOTET9_IN(I,JJ).EQ.0)THEN
+               KNO=KNO+1
+            ENDIF
+ 11      CONTINUE
+         RCBAD(I)=.FALSE.
+         KRCTOT=KYES+KNO
+         KRCMIN=MIN0(KYES,KNO)
+         XMARG=0.0
+         IF(KRCTOT.GT.0)THEN
+            XMARG=FLOAT(KRCMIN)/FLOAT(KRCTOT)
+            IF(XMARG.GE..025)THEN
+               RCBAD(I)=.TRUE.
+            ENDIF
          ENDIF
-      ENDIF
-      NUMCONGT(ICONG(I))=NUMCONGT(ICONG(I))+1
+         NUMCONGT(ICONG(I))=NUMCONGT(ICONG(I))+1
  575  CONTINUE
-  475 WRITE(*,300)I
+ 475  WRITE(*,300)I
       WRITE(21,300)I
       NQTOT=I
 C
@@ -980,7 +981,6 @@ C     stop
       close(20)
       close(24)
       close(23)
-      close(25)
       close(777)
       end
 C
