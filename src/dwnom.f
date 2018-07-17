@@ -51,7 +51,6 @@ C     with minor changes by William May for use with R
       INTEGER*2 ITIM1,ITIM2,ITIM3,ITIM4,JTIM1,JTIM2,JTIM3,JTIM4
 C
 C
-      open(777, file='rsort.dat')
       OPEN(21,FILE='DWNOM21.DAT')
       OPEN(26,FILE='DWNOM26.DAT')
       OPEN(28,FILE='DWNOM28.DAT')
@@ -981,7 +980,6 @@ C     stop
       close(20)
       close(24)
       close(23)
-      close(777)
       end
 C
 C  ***************************************************************************
