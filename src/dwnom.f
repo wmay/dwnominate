@@ -51,8 +51,6 @@ C     with minor changes by William May for use with R
       INTEGER*2 ITIM1,ITIM2,ITIM3,ITIM4,JTIM1,JTIM2,JTIM3,JTIM4
 C
 C
-      OPEN(26,FILE='DWNOM26.DAT')
-      OPEN(28,FILE='DWNOM28.DAT')
       OPEN(29,FILE='DWNOM29.DAT')
       OPEN(40,FILE='DWNOM40.DAT')
 C
@@ -685,9 +683,6 @@ C
             KLASSONY=KLASSNY
             KLASSOYN=KLASSYN
             KLASSONN=KLASSNN
-            WRITE(28,253)II,J,KYES,KNO,KLASSOLD,
-     C                           KLASSOYY,KLASSOYN,KLASSONY,KLASSONN,
-     C                           GMPB4,(OLDD(K),OLDZ(K),K=1,NS)
             CALL RCINT2(IICONG,NEQ,NPC,NQC,KRC,KTOTP,KTOTQ,
      C           XPLOG,OLDZ,OLDD,
      C           ZDF,NDEVIT,XDEVIT)
@@ -697,9 +692,6 @@ C
             DYN(NEQ+KTOTQ,K)=OLDD(K)
   22        CONTINUE
 C
-            WRITE(28,252)KLASS,KLASSYY,KLASSYN,KLASSNY,KLASSNN,
-     C                               GMPAF,
-     C                (DYN(NEQ+KTOTQ,K),ZMID(NEQ+KTOTQ,K),K=1,NS)
             LASSB4=LASSB4+KLASSOLD
             LASSAF=LASSAF+KLASS
             LATOT=LATOT+KYES+KNO
@@ -764,24 +756,7 @@ C  ******************************************
       XTOTLOG2=XTOTLOG2+XPLOG2
       XTOTLOG3=XTOTLOG3+XPLOG3
 C
-C      WRITE(26,210)KK,KXTOT,I,ISTATE(KLOCATE),NMODEL,
-C     C            (KSTA(KLOCATE,JJ),JJ=1,7),IPARTY(KLOCATE),
-C     C            (MNAME(KLOCATE,JJ),JJ=1,11),(XBETA(1,JJ),JJ=1,NS),
-C     C            (XBETA(2,JJ),JJ=1,NS),(XBETA(3,JJ),JJ=1,NS),
-C     C            (XBETA(4,JJ),JJ=1,NS),
-C     C            EXP(XPLOG0/FLOAT(KXTOT)),EXP(XPLOG1/FLOAT(KXTOT)),
-C     C            EXP(XPLOG2/FLOAT(KXTOT)),EXP(XPLOG3/FLOAT(KXTOT))
       IF(NMODEL.EQ.0)THEN
-         WRITE(26,210)KK,KXTOT,I,ISTATE(KLOCATE),NMODEL,
-     C            (KSTA(KLOCATE,JJ),JJ=1,7),IPARTY(KLOCATE),
-     C            (MNAME(KLOCATE,JJ),JJ=1,11),
-     C            EXP(XPLOG0/FLOAT(KXTOT)),
-     C            (XBETA(1,JJ),JJ=1,NS)
-         WRITE(26,213)(SQRT(OUTX0(JJ,JJ)),JJ=1,NS)
-C
-C  OUTPUT ENTIRE MATRIX
-C
-         WRITE(26,213)((OUTX0(JJ,JIJ),JIJ=1,NS),JJ=1,NS)
 C
 C  STORE NEEDED VARIANCES AND COVARIANCES
 C
@@ -794,12 +769,6 @@ C
       ENDIF
       IF(NMODEL.EQ.1)THEN
          IF(KK.LT.5)THEN
-            WRITE(26,210)KK,KXTOT,I,ISTATE(KLOCATE),NMODEL,
-     C            (KSTA(KLOCATE,JJ),JJ=1,7),IPARTY(KLOCATE),
-     C            (MNAME(KLOCATE,JJ),JJ=1,11),
-     C            EXP(XPLOG0/FLOAT(KXTOT)),
-     C            (XBETA(1,JJ),JJ=1,NS)
-            WRITE(26,213)(SQRT(OUTX0(JJ,JJ)),JJ=1,NS)
 C
 C  STORE NEEDED VARIANCES AND COVARIANCES
 C
@@ -809,22 +778,8 @@ C
             XVAR(I,4)=OUTX0(2,2)
             XVAR(I,5)=0.0
             XVAR(I,6)=0.0
-C
-C  OUTPUT ENTIRE MATRIX
-C
-            WRITE(26,213)((OUTX0(JJ,JIJ),JIJ=1,NS),JJ=1,NS)
          ENDIF
          IF(KK.GE.5)THEN
-            WRITE(26,210)KK,KXTOT,I,ISTATE(KLOCATE),NMODEL,
-     C            (KSTA(KLOCATE,JJ),JJ=1,7),IPARTY(KLOCATE),
-     C            (MNAME(KLOCATE,JJ),JJ=1,11),
-     C            EXP(XPLOG1/FLOAT(KXTOT)),
-     C            (XBETA(1,JJ),JJ=1,NS),(XBETA(2,JJ),JJ=1,NS)
-            WRITE(26,213)(SQRT(OUTX1(JJ,JJ)),JJ=1,2*NS)
-C
-C  OUTPUT ENTIRE MATRIX
-C
-            WRITE(26,213)((OUTX1(JJ,JIJ),JIJ=1,2*NS),JJ=1,2*NS)
 C
 C  STORE NEEDED VARIANCES AND COVARIANCES
 C
@@ -834,69 +789,6 @@ C
             XVAR(I,4)=OUTX1(2,2)
             XVAR(I,5)=OUTX1(4,4)
             XVAR(I,6)=OUTX1(2,4)
-         ENDIF
-      ENDIF
-      IF(NMODEL.EQ.2)THEN
-         IF(KK.LT.5)THEN
-            WRITE(26,210)KK,KXTOT,I,ISTATE(KLOCATE),NMODEL,
-     C            (KSTA(KLOCATE,JJ),JJ=1,7),IPARTY(KLOCATE),
-     C            (MNAME(KLOCATE,JJ),JJ=1,11),
-     C            EXP(XPLOG0/FLOAT(KXTOT)),
-     C            (XBETA(1,JJ),JJ=1,NS)
-            WRITE(26,213)(SQRT(OUTX0(JJ,JJ)),JJ=1,NS)
-         ENDIF
-         IF(KK.EQ.5)THEN
-            WRITE(26,210)KK,KXTOT,I,ISTATE(KLOCATE),NMODEL,
-     C            (KSTA(KLOCATE,JJ),JJ=1,7),IPARTY(KLOCATE),
-     C            (MNAME(KLOCATE,JJ),JJ=1,11),
-     C            EXP(XPLOG1/FLOAT(KXTOT)),
-     C            (XBETA(1,JJ),JJ=1,NS),(XBETA(2,JJ),JJ=1,NS)
-            WRITE(26,213)(SQRT(OUTX1(JJ,JJ)),JJ=1,2*NS)
-         ENDIF
-         IF(KK.GE.6)THEN
-            WRITE(26,210)KK,KXTOT,I,ISTATE(KLOCATE),NMODEL,
-     C            (KSTA(KLOCATE,JJ),JJ=1,7),IPARTY(KLOCATE),
-     C            (MNAME(KLOCATE,JJ),JJ=1,11),
-     C            EXP(XPLOG2/FLOAT(KXTOT)),
-     C            (XBETA(1,JJ),JJ=1,NS),(XBETA(2,JJ),JJ=1,NS),
-     C            (XBETA(3,JJ),JJ=1,NS)
-            WRITE(26,213)(SQRT(OUTX2(JJ,JJ)),JJ=1,3*NS)
-         ENDIF
-      ENDIF
-      IF(NMODEL.EQ.3)THEN
-         IF(KK.LT.5)THEN
-            WRITE(26,210)KK,KXTOT,I,ISTATE(KLOCATE),NMODEL,
-     C            (KSTA(KLOCATE,JJ),JJ=1,7),IPARTY(KLOCATE),
-     C            (MNAME(KLOCATE,JJ),JJ=1,11),
-     C            EXP(XPLOG0/FLOAT(KXTOT)),
-     C            (XBETA(1,JJ),JJ=1,NS)
-            WRITE(26,213)(SQRT(OUTX0(JJ,JJ)),JJ=1,NS)
-         ENDIF
-         IF(KK.EQ.5)THEN
-            WRITE(26,210)KK,KXTOT,I,ISTATE(KLOCATE),NMODEL,
-     C            (KSTA(KLOCATE,JJ),JJ=1,7),IPARTY(KLOCATE),
-     C            (MNAME(KLOCATE,JJ),JJ=1,11),
-     C            EXP(XPLOG1/FLOAT(KXTOT)),
-     C            (XBETA(1,JJ),JJ=1,NS),(XBETA(2,JJ),JJ=1,NS)
-            WRITE(26,213)(SQRT(OUTX1(JJ,JJ)),JJ=1,2*NS)
-         ENDIF
-         IF(KK.EQ.6)THEN
-            WRITE(26,210)KK,KXTOT,I,ISTATE(KLOCATE),NMODEL,
-     C            (KSTA(KLOCATE,JJ),JJ=1,7),IPARTY(KLOCATE),
-     C            (MNAME(KLOCATE,JJ),JJ=1,11),
-     C            EXP(XPLOG2/FLOAT(KXTOT)),
-     C            (XBETA(1,JJ),JJ=1,NS),(XBETA(2,JJ),JJ=1,NS),
-     C            (XBETA(3,JJ),JJ=1,NS)
-            WRITE(26,213)(SQRT(OUTX2(JJ,JJ)),JJ=1,3*NS)
-         ENDIF
-         IF(KK.GE.7)THEN
-            WRITE(26,210)KK,KXTOT,I,ISTATE(KLOCATE),NMODEL,
-     C            (KSTA(KLOCATE,JJ),JJ=1,7),IPARTY(KLOCATE),
-     C            (MNAME(KLOCATE,JJ),JJ=1,11),
-     C            EXP(XPLOG3/FLOAT(KXTOT)),
-     C            (XBETA(1,JJ),JJ=1,NS),(XBETA(2,JJ),JJ=1,NS),
-     C            (XBETA(3,JJ),JJ=1,NS),(XBETA(4,JJ),JJ=1,NS)
-            WRITE(26,213)(SQRT(OUTX3(JJ,JJ)),JJ=1,4*NS)
          ENDIF
       ENDIF
   48  CONTINUE
@@ -949,8 +841,6 @@ C     call gettim(itim1,itim2,itim3,itim4)
 c$$$      write(*,1000)itim1,itim2,itim3,itim4
 c$$$      write(*,1001)jtim1,jtim2,jtim3,jtim4
 C     stop
-      close(26)
-      close(28)
       close(29)
       close(40)
       close(30)
@@ -1993,10 +1883,6 @@ C
 C  CALCULATE STEPSIZE IN .01 UNITS
 C
       STEP=.01/SQRT(SUMA)
-C      
-C
-C      WRITE(28,203)NEP,IIII,XPLOG,GMP,
-C     C              (XBETA(1,K),K=1,NS),(XXX(K),K=1,NS),STEP
 C
 C
 C  SEARCH ALONG VECTOR IN BEST DIRECTION
@@ -2077,11 +1963,6 @@ C
       XXXSAVE(KK,K)=XXX(K)
   222 CONTINUE
       YLOG(KK)=XPLOG
-C
-C      WRITE(28,205)NEP,NEPCONG,IIII,KK,NMODEL,YLOG(KK),YGMP(KK),
-C     C       (YGAMMA(KK,K),K=1,NS),(XBETASV(1,K),K=1,NS),
-C     C        (XXX(K),K=1,NS),XINC
-C
       XINC=XINC+STEP
   212 CONTINUE
 C
@@ -2093,9 +1974,6 @@ C
 C  FIND MAXIMUM ON BEST DIRECTION THROUGH THE SPACE
 C
       CALL RSORT(YGMP,NNINC,LLL)
-C      WRITE(28,205)NEP,NEPCONG,IIII,LLL(NNINC),NMODEL,YLOG(LLL(NNINC)),
-C     C             YGMP(NNINC),(YGAMMA(LLL(NNINC),K),K=1,NS),
-C     C             (XBETA(1,K),K=1,NS),(XXXSAVE(LLL(NNINC),K),K=1,NS)
       DO 224 K=1,NS
       XBETA(1,K)=YGAMMA(LLL(NNINC),K)
       XBETASV(1,K)=XBETA(1,K)
