@@ -97,39 +97,38 @@ write_transposed_rc_data_file = function(rc_list) {
 write_leg_file = function(rc_list, start, dims, lid) {
   ksta = vector()
   lnames = vector()
-  all_lines = vector()
+  all_sessions = vector()
+  all_leg_ids = vector()
+  all_state_nums = vector()
+  all_districts = vector()
+  all_parties = vector()
+  all_coords = matrix(nrow=0, ncol=dims)
   coordcols = paste0('coord', 1:dims, 'D')
   for (session in 1:length(rc_list)) {
     rc = rc_list[[session]]
     rcl = rc$legis.data
-    'I4,I6,I3,I2,1X,7A1,1X,I4,1X,11A1,2F7.3,I5'
-    sessions = format_column(rcl, 'sessionID', '%4d', session)
-    leg_ids = sprintf('%6d', rcl[, lid])
-    state_num = format_column(rcl, 'icpsrState', '%3d', 0)
-    district = format_column(rcl, 'cd', '%2d', 0)
-    state_name = format_column(rcl, 'state', '%-7s', 'NA')
+    n_rcl = nrow(rcl)
+    all_sessions = c(all_sessions, rep(session, n_rcl))
+    all_leg_ids = c(all_leg_ids, rcl[, lid])
+    all_state_nums = c(all_state_nums,
+                       ifelse(is.na(rcl$icpsrState), 0, rcl$icpsrState))
+    all_districts = c(all_districts, ifelse(is.na(rcl$cd), 0, rcl$cd))
     ksta = c(ksta, as.character(rcl$state))
-    parties = format_column(rcl, 'party', '%4d', 0)
-    leg_names = sprintf('%-11.11s', fix_string(rownames(rc$votes)))
+    all_parties = c(all_parties, ifelse(is.na(rcl$party), 0, rcl$party))
     lnames = c(lnames, rownames(rc$votes))
-    # find the corresponding starting coordinates for each legislator
     matches = match(rcl[, lid], start$legislators[, lid])
     coords = as.matrix(start$legislators[matches, coordcols])
     # DW-NOMINATE hates NA's
     coords[is.na(coords)] = 0
-    coords = sprintf('%7.3f', coords)
-    coords = matrix(coords, ncol=dims)
-    coords = apply(coords, 1, paste0, collapse='') # finally!
-
-    # the lines to be written to the file
-    'I4,I6,I3,I2,1X,7A1,1X,I4,1X,11A1,2F7.3,I5'
-    lines = paste0(sessions, leg_ids, state_num, district, ' ',
-                   state_name, ' ', parties, ' ', leg_names,
-                   coords)
-    all_lines = c(all_lines, lines)
+    all_coords = rbind(all_coords, coords)
   }
-  writeLines(all_lines, 'legislator_input.dat')
-  list(ksta=ksta, lname=lnames)
+  list(ksta=ksta, lname=lnames,
+       ncong=as.integer(all_sessions),
+       id1=as.integer(all_leg_ids),
+       istate=as.integer(all_state_nums),
+       idist=as.integer(all_districts),
+       iparty=as.integer(all_parties),
+       xdata=all_coords)
 }
 
 write_bill_file = function(rc_list, start, dims) {
@@ -371,7 +370,11 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
            params$mcong,
            ## transposed rollcall file
            nrow(params$rcvotet1), ncol(params$rcvotet1),
-           params$rcvotet1, params$rcvotet9)
+           params$rcvotet1, params$rcvotet9,
+           ## legislator input file
+           length(params$ncong), params$ncong, params$id1,
+           params$istate, params$idist, params$iparty,
+           params$xdata)
   runtime = Sys.time() - start_time
   units(runtime) = 'mins'
   message(paste('DW-NOMINATE took', round(runtime, 1),
