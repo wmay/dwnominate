@@ -50,9 +50,6 @@ C     with minor changes by William May for use with R
      C             FTITLE
       INTEGER*2 ITIM1,ITIM2,ITIM3,ITIM4,JTIM1,JTIM2,JTIM3,JTIM4
 C
-C
-      OPEN(40,FILE='DWNOM40.DAT')
-C
 C  READ ROLL CALL COORDINATE FILE -- INPUT
 C
       FNAME1 = 'rollcall_input.dat'
@@ -581,7 +578,6 @@ C
 C
               XPCT1=(FLOAT(JCH+JCL)/FLOAT(JCH+JEH+JCL+JEL))*100.0
 C              WRITE(*,312)IICONG,NEQ,NPC,JCH,JEH,JEL,JCL,WS(1),XPCT1
-              WRITE(40,312)IICONG,NEQ,NPC,JCH,JEH,JEL,JCL,WS(1),XPCT1
 C
               IVOT=2
               KCCUT=6
@@ -591,7 +587,6 @@ C
 C
               XPCT2=(FLOAT(JCH+JCL)/FLOAT(JCH+JEH+JCL+JEL))*100.0
 C              WRITE(*,312)IICONG,NEQ,NPC,JCH,JEH,JEL,JCL,WS(2),XPCT2
-              WRITE(40,312)IICONG,NEQ,NPC,JCH,JEH,JEL,JCL,WS(2),XPCT2
               IF(XPCT1.GE.XPCT2)THEN
                   MCUTS(1,1)=1
                   MCUTS(1,2)=6
@@ -630,10 +625,6 @@ C
  4445          CONTINUE
                CALL CUTPLANE(NEQ,NPC,NRCALL,NS,XMAT,ZVEC,WS,
      C                MCUTS,LERROR,IFIXX,KTT,KT,LDATA)
-               WRITE(40,203)IICONG,NEQ,KYES,KNO,KTT,KT,
-     C                    MCUTS(1,1),MCUTS(1,2),
-     C                    (ZVEC(1,J2001),J2001=1,NS),WS(1),
-     C                    WS(2),WS(3)
 C
 C  GET MIDPOINT AND SPREADS FROM CUTPLANE IF FIRST GLOBAL ITERATION
 C
@@ -664,10 +655,6 @@ C
  4448                CONTINUE
                   ENDIF
                ENDIF
-C               WRITE(40,203)IICONG,NEQ,KYES,KNO,KTT,KT,
-C     C                    MCUTS(1,1),MCUTS(1,2),
-C     C                    (ZVEC(1,J2001),J2001=1,NS),WS(1),
-C     C                    (OLDD(K),K=1,NS),(OLDZ(K),K=1,NS)
             ENDIF
 C
 C       GET INITIAL LOG-LIKELIHOOD
@@ -836,7 +823,6 @@ C     call gettim(itim1,itim2,itim3,itim4)
 c$$$      write(*,1000)itim1,itim2,itim3,itim4
 c$$$      write(*,1001)jtim1,jtim2,jtim3,jtim4
 C     stop
-      close(40)
       close(30)
       close(20)
       close(24)
