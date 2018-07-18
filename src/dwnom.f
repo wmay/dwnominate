@@ -51,7 +51,6 @@ C     with minor changes by William May for use with R
       INTEGER*2 ITIM1,ITIM2,ITIM3,ITIM4,JTIM1,JTIM2,JTIM3,JTIM4
 C
 C
-      OPEN(29,FILE='DWNOM29.DAT')
       OPEN(40,FILE='DWNOM40.DAT')
 C
 C  READ ROLL CALL COORDINATE FILE -- INPUT
@@ -697,10 +696,6 @@ C
             LATOT=LATOT+KYES+KNO
          ENDIF
       ENDIF
-      WRITE(29,250)II,J,KMISS,KYES,KNO,KYESR,KNOR,
-     C                  KYESD,KNOD,
-     C                  KYESNR,KNONR,KYESSR,KNOSR,
-     C                  KYESND,KNOND,KYESSD,KNOSD
   3   CONTINUE
       KTOTP=KTOTP+NPC
       KTOTQ=KTOTQ+NQC
@@ -841,7 +836,6 @@ C     call gettim(itim1,itim2,itim3,itim4)
 c$$$      write(*,1000)itim1,itim2,itim3,itim4
 c$$$      write(*,1001)jtim1,jtim2,jtim3,jtim4
 C     stop
-      close(29)
       close(40)
       close(30)
       close(20)
