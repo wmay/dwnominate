@@ -33,9 +33,7 @@ write_rc_data_file = function(rc_list, lid) {
     leg_ids = sprintf('%6d', rcl[, lid])
     state_num = format_column(rcl, 'icpsrState', '%3d', 0)
     district = format_column(rcl, 'cd', '%2d', 0)
-    state_name = format_column(rcl, 'state', '%-7s', 'NA')
     parties = format_column(rcl, 'party', '%4d', 0)
-    leg_names = sprintf('%-11.11s', fix_string(rownames(votes)))
     
     votes[votes %in% codes$yea] = 1
     votes[votes %in% codes$nay] = 6
@@ -46,9 +44,9 @@ write_rc_data_file = function(rc_list, lid) {
       apply(votes, 1, FUN=function(x) paste(x, collapse=''))
 
     # the lines to be written to the file
-    'I4,I6,I3,I2,1X,7A1,1X,I4,1X,11A1,3600I1'
-    lines = paste0(sessions, leg_ids, state_num, district, ' ',
-        state_name, ' ', parties, ' ', leg_names, vote_nums)
+    'I4,I6,I3,I2,I4,3600I1'
+    lines = paste0(sessions, leg_ids, state_num, district,
+        parties, vote_nums)
     all_lines = c(all_lines,  lines)
   }
   
