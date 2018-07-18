@@ -15,14 +15,20 @@ C     with minor changes by William May for use with R
      C     INUM_IN, DYN_IN, ZMID_IN, MCONG_IN,
      C     NROWRCT, NCOLRCT, RCVOTET1_IN, RCVOTET9_IN,
      C     NLEGS, NCONG_IN, ID1_IN, ISTATE_IN, IDIST_IN,
-     C     IPARTY_IN, XDATA_IN)
-      INTEGER NOMSTART_IN(6), NBILLS, NROWRCT, NCOLRCT, NLEGS
+     C     IPARTY_IN, XDATA_IN, NROWRC, NCOLRC, JD1_IN, JSTATE_IN,
+     C     JDIST_IN, JPARTY_IN, RCVOTE1_IN, RCVOTE9_IN)
+      INTEGER NOMSTART_IN(6), NBILLS, NROWRCT, NCOLRCT, NLEGS,
+     C     NROWRC, NCOLRC
       INTEGER ICONG_IN(NBILLS), INUM_IN(NBILLS),
      C     MCONG_IN(NOMSTART_IN(4) - NOMSTART_IN(3) + 1, 3),
      C     RCVOTET1_IN(NROWRCT, NCOLRCT),
      C     RCVOTET9_IN(NROWRCT, NCOLRCT),
      C     NCONG_IN(NLEGS), ID1_IN(NLEGS), ISTATE_IN(NLEGS),
-     C     IDIST_IN(NLEGS), IPARTY_IN(NLEGS)
+     C     IDIST_IN(NLEGS), IPARTY_IN(NLEGS),
+     C     JD1_IN(NLEGS), JSTATE_IN(NLEGS),
+     C     JDIST_IN(NLEGS), JPARTY_IN(NLEGS),
+     C     RCVOTE1_IN(NROWRC, NCOLRC),
+     C     RCVOTE9_IN(NROWRC, NCOLRC)
       DOUBLE PRECISION WEIGHTS_IN(NOMSTART_IN(1) + 1),
      C     DYN_IN(NBILLS, NOMSTART_IN(1)),
      C     ZMID_IN(NBILLS, NOMSTART_IN(1)),
@@ -84,7 +90,6 @@ C  READ ROLL CALL VOTE FILE
 C
       FNAME6 = 'rollcall_matrix.vt3'
       WRITE(*,102)FNAME6
-      OPEN(23,FILE=FNAME6,STATUS='OLD')
 C
 C  READ TRANSPOSED ROLL CALL VOTE FILE
 C
@@ -340,8 +345,10 @@ C     COORDINATES
 C
 C      IF(KHIT.LT.25)GO TO 550
       NQ=MCONG(NCONG(I+1),2)
-      READ(23,200,END=450)JJJJ,JD1,JSTATE,JDIST,
-     C            JPARTY,(LVOTE(JJ),JJ=1,NQ)
+      JD1 = JD1_IN(I + 1)
+      JSTATE = JSTATE_IN(I + 1)
+      JDIST = JDIST_IN(I + 1)
+      JPARTY = JPARTY_IN(I + 1)
       I=I+1
 C
 C  ERROR CHECKS
@@ -379,10 +386,10 @@ C
       DO 1 JJ=1,NQ
       RCVOTE1(I,JJ)=.FALSE.
       RCVOTE9(I,JJ)=.FALSE.
-      IF(LVOTE(JJ).GE.1.AND.LVOTE(JJ).LE.3)THEN
+      IF(RCVOTE1_IN(I,JJ).EQ.1)THEN
          RCVOTE1(I,JJ)=.TRUE.
       ENDIF
-      IF(LVOTE(JJ).EQ.0.OR.LVOTE(JJ).GT.6)THEN
+      IF(RCVOTE9_IN(I,JJ).EQ.1)THEN
          RCVOTE9(I,JJ)=.TRUE.
       ENDIF
   1   CONTINUE
@@ -829,7 +836,6 @@ c$$$      write(*,1001)jtim1,jtim2,jtim3,jtim4
 C     stop
       close(30)
       close(24)
-      close(23)
       end
 C
 C  ***************************************************************************

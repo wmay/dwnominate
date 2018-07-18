@@ -23,50 +23,28 @@ format_column = function(df, name, format, alternative=NULL) {
 }
 
 write_rc_data_file = function(rc_list, lid) {
-  all_lines = vector()
+  session_rows = sapply(rc_list, function(x) nrow(x$votes))
+  session_cols = sapply(rc_list, function(x) ncol(x$votes))
+  total_rcs = sum(session_rows)
+  max_rcs = max(session_cols)
+  m1 = matrix(FALSE, nrow=total_rcs, ncol=max_rcs)
+  m9 = matrix(FALSE, nrow=total_rcs, ncol=max_rcs)
+  
+  all_leg_ids = vector()
+  all_state_num = vector()
+  all_district = vector()
+  all_parties = vector()
+  start_row = 1
   for (session in 1:length(rc_list)) {
     rc = rc_list[[session]]
     rcl = rc$legis.data
     votes = rc$votes
     codes = rc$codes
-    sessions = format_column(rcl, 'sessionID', '%4d', session)
-    leg_ids = sprintf('%6d', rcl[, lid])
-    state_num = format_column(rcl, 'icpsrState', '%3d', 0)
-    district = format_column(rcl, 'cd', '%2d', 0)
-    parties = format_column(rcl, 'party', '%4d', 0)
-    
-    votes[votes %in% codes$yea] = 1
-    votes[votes %in% codes$nay] = 6
-    votes[votes %in% c(codes$notInLegis, codes$missing)] = 9
-    
-    # a vector of very long lists of numbers, one for each legislator
-    vote_nums =
-      apply(votes, 1, FUN=function(x) paste(x, collapse=''))
-
-    # the lines to be written to the file
-    'I4,I6,I3,I2,I4,3600I1'
-    lines = paste0(sessions, leg_ids, state_num, district,
-        parties, vote_nums)
-    all_lines = c(all_lines,  lines)
-  }
-  
-  writeLines(all_lines, 'rollcall_matrix.vt3')
-}
-
-write_transposed_rc_data_file = function(rc_list) {
-  session_rows = sapply(rc_list, function(x) ncol(x$votes))
-  session_cols = sapply(rc_list, function(x) nrow(x$votes))
-  total_rcs = sum(session_rows)
-  max_rcs = max(session_cols)
-  m1 = matrix(FALSE, nrow=total_rcs, ncol=max_rcs)
-  m9 = matrix(FALSE, nrow=total_rcs, ncol=max_rcs)
-  ## all_lines = vector()
-  start_row = 1
-  for (session in 1:length(rc_list)) {
-    votes = t(rc_list[[session]]$votes)
-    codes = rc_list[[session]]$codes
-    ## sessions = sprintf('%4d', session)
-    ## vote_ids = sprintf('%5d', 1:ncol(votes))
+    all_leg_ids = c(all_leg_ids, rcl[, lid])
+    all_state_num = c(all_state_num,
+                      ifelse(is.na(rcl$icpsrState), 0, rcl$icpsrState))
+    all_district = c(all_district, ifelse(is.na(rcl$cd), 0, rcl$cd))
+    all_parties = c(all_parties, ifelse(is.na(rcl$party), 0, rcl$party))
     
     votes[votes %in% codes$yea] = 1
     votes[votes %in% codes$nay] = 6
@@ -78,17 +56,38 @@ write_transposed_rc_data_file = function(rc_list) {
     m9[start_row:end_row, 1:end_col] = votes == 9
 
     start_row = end_row + 1
-
-    ## # a vector of very long lists of numbers, one for each legislator
-    ## vote_nums =
-    ##   apply(votes, 2, FUN=function(x) paste(x, collapse=''))
-
-    ## # the lines to be written to the file
-    ## 'I4,I5,1X,600I1'
-    ## lines = paste0(sessions, vote_ids, ' ', vote_nums)
-    ## all_lines = c(all_lines, lines)
   }
-  ## writeLines(all_lines, 'transposed_rollcall_matrix.vt3')
+  list(jjjj=NA,
+       jd1=as.integer(all_leg_ids),
+       jstate=as.integer(all_state_num),
+       jdist=as.integer(all_district),
+       jparty=as.integer(all_parties),
+       rcvote1=m1, rcvote9=m9)
+}
+
+write_transposed_rc_data_file = function(rc_list) {
+  session_rows = sapply(rc_list, function(x) ncol(x$votes))
+  session_cols = sapply(rc_list, function(x) nrow(x$votes))
+  total_rcs = sum(session_rows)
+  max_rcs = max(session_cols)
+  m1 = matrix(FALSE, nrow=total_rcs, ncol=max_rcs)
+  m9 = matrix(FALSE, nrow=total_rcs, ncol=max_rcs)
+  start_row = 1
+  for (session in 1:length(rc_list)) {
+    votes = t(rc_list[[session]]$votes)
+    codes = rc_list[[session]]$codes
+    
+    votes[votes %in% codes$yea] = 1
+    votes[votes %in% codes$nay] = 6
+    votes[votes %in% c(codes$notInLegis, codes$missing)] = 9
+
+    end_row = start_row + session_rows[session] - 1
+    end_col = session_cols[session]
+    m1[start_row:end_row, 1:end_col] = votes == 1
+    m9[start_row:end_row, 1:end_col] = votes == 9
+
+    start_row = end_row + 1
+  }
   list(rcvotet1=m1, rcvotet9=m9)
 }
 
@@ -173,14 +172,14 @@ write_input_files = function(rc_list, start, sessions, dims,
                              model, niter, beta, w, lid) {
   # write the data files needed to run DW-NOMINATE
   message('Writing DW-NOMINATE input files...\n')
-  write_rc_data_file(rc_list, lid)
+  params5 = write_rc_data_file(rc_list, lid)
   params3 = write_transposed_rc_data_file(rc_list)
   params4 = write_leg_file(rc_list, start, dims, lid)
   params1 = write_bill_file(rc_list, start, dims)
   params2 = write_session_file(rc_list)
   params = write_start_file(rc_list, sessions, dims, model,
                             niter, beta, w)
-  c(params, params1, params2, params3, params4)
+  c(params, params1, params2, params3, params4, params5)
 }
 
 read_output_files = function(party_dict, dims, iters, nunlegs,
@@ -372,7 +371,11 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
            ## legislator input file
            length(params$ncong), params$ncong, params$id1,
            params$istate, params$idist, params$iparty,
-           params$xdata)
+           params$xdata,
+           ## rollcall file
+           nrow(params$rcvote1), ncol(params$rcvote1),
+           params$jd1, params$jstate, params$jdist,
+           params$jparty, params$rcvote1, params$rcvote9)
   runtime = Sys.time() - start_time
   units(runtime) = 'mins'
   message(paste('DW-NOMINATE took', round(runtime, 1),
