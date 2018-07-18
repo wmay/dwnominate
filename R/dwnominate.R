@@ -95,6 +95,8 @@ write_transposed_rc_data_file = function(rc_list) {
 }
 
 write_leg_file = function(rc_list, start, dims, lid) {
+  ksta = vector()
+  lnames = vector()
   all_lines = vector()
   coordcols = paste0('coord', 1:dims, 'D')
   for (session in 1:length(rc_list)) {
@@ -106,8 +108,10 @@ write_leg_file = function(rc_list, start, dims, lid) {
     state_num = format_column(rcl, 'icpsrState', '%3d', 0)
     district = format_column(rcl, 'cd', '%2d', 0)
     state_name = format_column(rcl, 'state', '%-7s', 'NA')
+    ksta = c(ksta, as.character(rcl$state))
     parties = format_column(rcl, 'party', '%4d', 0)
     leg_names = sprintf('%-11.11s', fix_string(rownames(rc$votes)))
+    lnames = c(lnames, rownames(rc$votes))
     # find the corresponding starting coordinates for each legislator
     matches = match(rcl[, lid], start$legislators[, lid])
     coords = as.matrix(start$legislators[matches, coordcols])
@@ -125,6 +129,7 @@ write_leg_file = function(rc_list, start, dims, lid) {
     all_lines = c(all_lines, lines)
   }
   writeLines(all_lines, 'legislator_input.dat')
+  list(ksta=ksta, lname=lnames)
 }
 
 write_bill_file = function(rc_list, start, dims) {
@@ -173,12 +178,12 @@ write_input_files = function(rc_list, start, sessions, dims,
   message('Writing DW-NOMINATE input files...\n')
   write_rc_data_file(rc_list, lid)
   params3 = write_transposed_rc_data_file(rc_list)
-  write_leg_file(rc_list, start, dims, lid)
+  params4 = write_leg_file(rc_list, start, dims, lid)
   params1 = write_bill_file(rc_list, start, dims)
   params2 = write_session_file(rc_list)
   params = write_start_file(rc_list, sessions, dims, model,
                             niter, beta, w)
-  c(params, params1, params2, params3)
+  c(params, params1, params2, params3, params4)
 }
 
 read_output_files = function(party_dict, dims, iters, nunlegs,
@@ -191,21 +196,21 @@ read_output_files = function(party_dict, dims, iters, nunlegs,
   ses = paste0('se', 1:dims, 'D')
   vars = paste0('var', 1:dims, 'D')
   if (dims == 1) {
-    legnames = c('session', 'ID', 'stateID', 'district', 'state',
-                 'partyID', 'name', coords, 'loglikelihood',
+    legnames = c('session', 'ID', 'stateID', 'district',
+                 'partyID', coords, 'loglikelihood',
                  'loglikelihood_check', 'numVotes', 'numVotes_check',
                  'numErrors', 'numErrors_check', 'GMP', 'GMP_check')
     fdims1 = 'F7'
   } else {
-    legnames = c('session', 'ID', 'stateID', 'district', 'state',
-                 'partyID', 'name', coords, ses, vars, 'loglikelihood',
+    legnames = c('session', 'ID', 'stateID', 'district',
+                 'partyID', coords, ses, vars, 'loglikelihood',
                  'loglikelihood_check', 'numVotes', 'numVotes_check',
                  'numErrors', 'numErrors_check', 'GMP', 'GMP_check')
     fdims1 = paste0(dims * 3, 'F7')
   }
 
-  format1 = c('I4', 'I6', 'I3', 'I2', 'X', 'A7', 'X',
-              'I4', 'X', 'A11', fdims1, '2F12', '4I5', '2F7')
+  format1 = c('I4', 'I6', 'I3', 'I2',
+              'I4', fdims1, '2F12', '4I5', '2F7')
   legs = utils::read.fortran('legislator_output.dat', format1,
                              col.names=legnames, na.strings=nas,
                              # ignore earlier iterations
@@ -377,6 +382,9 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
   nunrcs = sum(sapply(rc_list, function(x) x$m))
   results = read_output_files(party_dict, dims, iters, nunlegs,
                               nunrcs)
+  ## add states and legislator names to legislator results
+  results$legislators = cbind(params$ksta, params$lname, results$legislators)
+  names(results$legislators)[1:2] = c('state', 'name')
   results$start = start
   class(results) = 'dwnominate'
   results
