@@ -171,7 +171,7 @@ write_start_file = function(rc_list, sessions, dims, model,
 write_input_files = function(rc_list, start, sessions, dims,
                              model, niter, beta, w, lid) {
   # write the data files needed to run DW-NOMINATE
-  message('Writing DW-NOMINATE input files...\n')
+  ## message('Writing DW-NOMINATE input files...\n')
   params5 = write_rc_data_file(rc_list, lid)
   params3 = write_transposed_rc_data_file(rc_list)
   params4 = write_leg_file(rc_list, start, dims, lid)

@@ -90,9 +90,9 @@ C
   251 FORMAT(I4,I5,3I4,5F7.3/17X,I4,5F7.3)
   252 FORMAT(17X,5I4,5F7.3)
   253 FORMAT(I4,I5,7I4,5F7.3)
-  300 FORMAT(' TOTAL ROLL CALLS 01-108 ',3I7)
-  301 FORMAT(' TOTAL LEGISLATORS 01-108',3I7)
-  302 FORMAT(' NUMBER OF CONGRESSES',I6)
+  300 FORMAT(' TOTAL ROLL CALLS      ',3I7)
+  301 FORMAT(' TOTAL LEGISLATORS     ',3I7)
+  302 FORMAT(' NUMBER OF CONGRESSES  ',I7)
   303 FORMAT(4I4,6F7.3)
   304 FORMAT(' FATAL MISMATCH',I4,4I6)
   305 FORMAT(' MISMATCH ON ROLL CALL NUMBERS',3I5)
@@ -108,6 +108,8 @@ C
   317 FORMAT(' MISMATCH ON STATE CODES',3I7)
   318 FORMAT(' MISMATCH ON CONGRESSIONAL DISTRICT CODES',3I7)
   319 FORMAT(' MISMATCH ON PARTY CODES',3I7)
+ 320  FORMAT(' Estimating ', A, '...')
+ 321  FORMAT('')
  1000 format(22x,4(i2.2,'.'))
  1001 format(' ELAPSED TIME OF JOB  ',4(i2.2,'.'))
 C     This function can't be compiled!:
@@ -259,7 +261,8 @@ C
   1   CONTINUE
       NUMCONG(NCONG(I))=NUMCONG(NCONG(I))+1
  550  CONTINUE
-  450 WRITE(*,301)I
+ 450  WRITE(*,301)I
+      WRITE(*,321)
       NPTOT=I
 C
       DO 9999 IHAPPY=IHAPPY1,IHAPPY2
@@ -268,12 +271,14 @@ C  ************************************
 C     DIMENSION WEIGHT PHASE
 C  ************************************
       IF(NS.GE.2)THEN
+         WRITE(*,320)'dimension weights'
          CALL WINT(XPLOG,WDERV,NFIRST,NLAST,ZDF,NDEVIT,XDEVIT)
       ENDIF
 C
 C  ************************************
 C     BETA (1/SIGMA) PHASE
 C  ************************************
+      WRITE(*,320)'beta'
       CALL SIGMAS(XPLOG,WDERV,NFIRST,NLAST,ZDF,NDEVIT,XDEVIT)
 C
 C  ************************************
@@ -281,6 +286,7 @@ C     ROLL CALL PHASE
 C  ************************************
 C    
 C
+      WRITE(*,320)'roll call vectors'
       KTOTP=0
       KTOTQ=0
       KK=0
@@ -512,7 +518,7 @@ C
   2   CONTINUE
       YCLASS=FLOAT(LASSAF)/FLOAT(LATOT)
       YPRE=FLOAT(LPRE-LATOT+LASSAF)/FLOAT(LPRE)
-      WRITE(*,313)KK,LSCALE,LATOT,LASSB4,LASSAF,LPRE,YCLASS,YPRE
+c$$$      WRITE(*,313)KK,LSCALE,LATOT,LASSB4,LASSAF,LPRE,YCLASS,YPRE
       DO 41 I=1,NQTOT
       DO 444 J=1,NS
          DYN_OUT(I,J) = DYN(I,J)
@@ -528,6 +534,7 @@ C
 C  ******************************************
 C   LEGISLATOR PHASE
 C  ******************************************
+      WRITE(*,320)'legislator coordinates'
       NPUNIQUE=0
       NPUNIQUF=0
       NPUNIQUG=0
@@ -598,8 +605,8 @@ C
          ENDIF
       ENDIF
   48  CONTINUE
-      WRITE( *,308)NPUNIQUE,NPUNIQUF,NPUNIQUG,NPUNIQUH,NXTOT,
-     C                           XTOTLOG0,XTOTLOG1,XTOTLOG2,XTOTLOG3
+c$$$      WRITE( *,308)NPUNIQUE,NPUNIQUF,NPUNIQUG,NPUNIQUH,NXTOT,
+c$$$     C                           XTOTLOG0,XTOTLOG1,XTOTLOG2,XTOTLOG3
 C
       CALL PLOG(XPLOG,WDERV,NFIRST,NLAST,
      C                  ZDF,NDEVIT,XDEVIT)
@@ -645,7 +652,7 @@ C
          GMPB_OUT(I) = GMPB
       ENDIF
  61   CONTINUE
-      WRITE(*,202)NXTOT,SUMLOG1,SUMLOG2
+c$$$      WRITE(*,202)NXTOT,SUMLOG1,SUMLOG2
 C
  9999 CONTINUE
 C
@@ -655,6 +662,7 @@ C     call gettim(itim1,itim2,itim3,itim4)
 c$$$      write(*,1000)itim1,itim2,itim3,itim4
 c$$$      write(*,1001)jtim1,jtim2,jtim3,jtim4
 C     stop
+      WRITE(*,321)
       end
 C
 C  ***************************************************************************
@@ -723,7 +731,7 @@ C
          IF(SAVEUP.GT.SAVECURR)THEN
             SAVECURR=SAVEUP
          ENDIF
-         WRITE(*,1111)SAVECURR,SAVEUP
+c$$$         WRITE(*,1111)SAVECURR,SAVEUP
  1111 FORMAT(2F15.3)
   1      CONTINUE
       ENDIF
@@ -819,7 +827,7 @@ C
          IF(SAVEUP.GT.SAVECURR)THEN
             SAVECURR=SAVEUP
          ENDIF
-         WRITE(*,1111)SAVECURR,SAVEUP
+c$$$         WRITE(*,1111)SAVECURR,SAVEUP
  1111 FORMAT(2F15.3)
   1      CONTINUE
       ENDIF
@@ -1203,7 +1211,7 @@ C
 C      WRITE(* ,1006)KTOT,XPLOG,XXPLOG
       GMP=EXP(XXPLOG/FLOAT(KTOT))
       XCLASS=FLOAT(KLASS)/FLOAT(KTOT)
-      WRITE(*,1007)KTOT,KLASS,XXPLOG,XCLASS,GMP,(WEIGHT(JJ),JJ=1,NS+1)
+c$$$      WRITE(*,1007)KTOT,KLASS,XXPLOG,XCLASS,GMP,(WEIGHT(JJ),JJ=1,NS+1)
 C      WRITE(*,1006)KTOT,XXPLOG,(WDERV2(JJ),JJ=1,NS+1)
 C      WRITE(*,1006)KTOT,XXPLOG,(WDERV2(JJ),JJ=NS+2,2*(NS+1))
       XPLOG=XXPLOG
