@@ -18,6 +18,7 @@ C     with minor changes by William May for use with R
      C     IPARTY_IN, XDATA_IN, NROWRC, NCOLRC, JD1_IN, JSTATE_IN,
      C     JDIST_IN, JPARTY_IN, RCVOTE1_IN, RCVOTE9_IN,
      C     XDATA_OUT, SDX1_OUT, SDX2_OUT, VARX1_OUT, VARX2_OUT,
+     C     XBIGLOG_OUT, KBIGLOG_OUT,
      C     GMPA_OUT, GMPB_OUT, DYN_OUT, ZMID_OUT)
       INTEGER NOMSTART_IN(6), NBILLS, NROWRCT, NCOLRCT, NLEGS,
      C     NROWRC, NCOLRC
@@ -30,7 +31,8 @@ C     with minor changes by William May for use with R
      C     JD1_IN(NLEGS), JSTATE_IN(NLEGS),
      C     JDIST_IN(NLEGS), JPARTY_IN(NLEGS),
      C     RCVOTE1_IN(NROWRC, NCOLRC),
-     C     RCVOTE9_IN(NROWRC, NCOLRC)
+     C     RCVOTE9_IN(NROWRC, NCOLRC),
+     C     KBIGLOG_OUT(NLEGS, 4)
       DOUBLE PRECISION WEIGHTS_IN(NOMSTART_IN(1) + 1),
      C     DYN_IN(NBILLS, NOMSTART_IN(1)),
      C     ZMID_IN(NBILLS, NOMSTART_IN(1)),
@@ -38,6 +40,7 @@ C     with minor changes by William May for use with R
      C     XDATA_OUT(NLEGS, NOMSTART_IN(1)),
      C     SDX1_OUT(NLEGS), SDX2_OUT(NLEGS),
      C     VARX1_OUT(NLEGS), VARX2_OUT(NLEGS),
+     C     XBIGLOG_OUT(NLEGS, 2),
      C     GMPA_OUT(NLEGS), GMPB_OUT(NLEGS),
      C     DYN_OUT(NBILLS, NOMSTART_IN(1)),
      C     ZMID_OUT(NBILLS, NOMSTART_IN(1))
@@ -86,7 +89,6 @@ C  READ LEGISLATOR COORDINATE FILE -- OUTPUT
 C
       FNAME4 = 'legislator_output.dat'
       WRITE(*,102)FNAME4
-c$$$      OPEN(24,FILE=FNAME4)
 C
 C  READ ROLL CALL NUMBERS FILE -- *.NUM
 C
@@ -807,12 +809,12 @@ C
       SUMLOG1=SUMLOG1+XBIGLOG(I,1)
       SUMLOG2=SUMLOG2+XBIGLOG(I,2)
       IF(NS.EQ.1)THEN
-c$$$         WRITE(24,212)NCONG(I),ID1(I),ISTATE(I),IDIST(I),
-c$$$     C            IPARTY(I),
-c$$$     C            (XDATA(I,JJ),JJ=1,1),
-c$$$     C            (XBIGLOG(I,JJ),JJ=1,2),
-c$$$     C            (KBIGLOG(I,JJ),JJ=1,4),
-c$$$     C            GMPA,GMPB
+         DO 445 J=1,2
+            XBIGLOG_OUT(I, J) = XBIGLOG(I, J)
+ 445     CONTINUE
+         DO 446 J=1,4
+            KBIGLOG_OUT(I, J) = KBIGLOG(I, J)
+ 446     CONTINUE
          XDATA_OUT(I, 1) = XDATA(I, 1)
          GMPA_OUT(I) = GMPA
          GMPB_OUT(I) = GMPB
@@ -825,15 +827,13 @@ c$$$     C            GMPA,GMPB
      C           2.0*TT*XVAR(ID1(I),6)
          SDX1=SQRT(ABS(VARX1))
          SDX2=SQRT(ABS(VARX2))
-c$$$         WRITE(24,211)NCONG(I),ID1(I),ISTATE(I),IDIST(I),
-c$$$     C        IPARTY(I),
-c$$$     C        (XDATA(I,JJ),JJ=1,2),
-c$$$     C        SDX1,SDX2,VARX1,VARX2,
-c$$$     C        (XBIGLOG(I,JJ),JJ=1,2),
-c$$$     C        (KBIGLOG(I,JJ),JJ=1,4),
-c$$$     C        GMPA,GMPB
-         XDATA_OUT(I, 1) = XDATA(I, 1)
-         XDATA_OUT(I, 2) = XDATA(I, 2)
+         DO 447 J=1,2
+            XDATA_OUT(I, J) = XDATA(I, J)
+            XBIGLOG_OUT(I, J) = XBIGLOG(I, J)
+ 447     CONTINUE
+         DO 448 J=1,4
+            KBIGLOG_OUT(I, J) = KBIGLOG(I, J)
+ 448     CONTINUE
          SDX1_OUT(I) = SDX1
          SDX2_OUT(I) = SDX2
          VARX1_OUT(I) = VARX1
@@ -842,7 +842,6 @@ c$$$     C        GMPA,GMPB
          GMPB_OUT(I) = GMPB
       ENDIF
  61   CONTINUE
-c$$$      Call FLUSH(24)
       WRITE(*,202)NXTOT,SUMLOG1,SUMLOG2
 C
  9999 CONTINUE
@@ -853,7 +852,6 @@ C     call gettim(itim1,itim2,itim3,itim4)
 c$$$      write(*,1000)itim1,itim2,itim3,itim4
 c$$$      write(*,1001)jtim1,jtim2,jtim3,jtim4
 C     stop
-c$$$      close(24)
       end
 C
 C  ***************************************************************************

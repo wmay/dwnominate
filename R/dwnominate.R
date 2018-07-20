@@ -182,60 +182,39 @@ write_input_files = function(rc_list, start, sessions, dims,
   c(params, params1, params2, params3, params4, params5)
 }
 
-read_output_files = function(party_dict, dims, iters, nunlegs,
-                             nunrcs) {
-  # column names based on DW-NOMINATE fortran code and info found
-  # here: http://voteview.com/rohde.htm
-  nas = c('**', '***', '****', '*****', '******',
-          '*******', '************')
-  coords = paste0('coord', 1:dims, 'D')
-  if (dims == 1) {
-    legnames = c('session', 'ID', 'stateID', 'district',
-                 'partyID', coords, 'loglikelihood',
-                 'loglikelihood_check', 'numVotes', 'numVotes_check',
-                 'numErrors', 'numErrors_check', 'GMP', 'GMP_check')
-    fdims1 = 'F7'
+make_leg_df = function(state_names, lnames, party_dict, res) {
+  ## organize legislator data
+  ndims = res[[1]][1]
+  coords = paste0('coord', 1:ndims, 'D')
+  if (ndims == 1) {
+    leg_data = c(res[14:17], list(state_names), res[18],
+                 list(lnames), res[28], res[33:36])
+    legnames = c('session', 'ID', 'stateID', 'district', 'state', 
+                 'partyID', 'name', coords,
+                 'loglikelihood', 'loglikelihood_check', 'numVotes', 'numVotes_check',
+                 'numErrors', 'numErrors_check',
+                 'GMP', 'GMP_check')
   } else {
-    ses = paste0('se', 1:dims, 'D')
-    vars = paste0('var', 1:dims, 'D')
-    legnames = c('session', 'ID', 'stateID', 'district',
-                 'partyID', coords, ses, vars, 'loglikelihood',
-                 'loglikelihood_check', 'numVotes', 'numVotes_check',
-                 'numErrors', 'numErrors_check', 'GMP', 'GMP_check')
-    fdims1 = paste0(dims * 3, 'F7')
+    leg_data = c(res[14:17], list(state_names), res[18],
+                 list(lnames), res[28:36])
+    ses = paste0('se', 1:ndims, 'D')
+    vars = paste0('var', 1:ndims, 'D')
+    legnames = c('session', 'ID', 'stateID', 'district', 'state', 
+                 'partyID', 'name', coords, ses, vars,
+                 'loglikelihood', 'loglikelihood_check', 'numVotes', 'numVotes_check',
+                 'numErrors', 'numErrors_check',
+                 'GMP', 'GMP_check')
   }
-
-  ## format1 = c('I4', 'I6', 'I3', 'I2',
-  ##             'I4', fdims1, '2F12', '4I5', '2F7')
-  ## legs = utils::read.fortran('legislator_output.dat', format1,
-  ##                            col.names=legnames, na.strings=nas,
-  ##                            # ignore earlier iterations
-  ##                            skip=(iters[2] - iters[1]) * nunlegs)
-
-  ## legs$party = names(party_dict)[legs$partyID]
-
-  rcdims = paste0(c('midpoint', 'spread'),
-                   rep(1:dims, each=2), 'D')
-  rcnames = c('session', 'ID', rcdims)
-  fdims2 = paste0(dims * 2, 'F7')
-  format2 = c('I3', 'I5', fdims2)
-  rcs = utils::read.fortran('rollcall_output.dat', format2,
-                            col.names=rcnames, na.strings=nas,
-                            # ignore earlier iterations
-                            skip=(iters[2] - iters[1]) * nunrcs)
-
-  nas = which(rcs$spread1D == 0 & rcs$midpoint1D == 0 &
-              rcs$spread2D == 0 & rcs$midpoint2D == 0)
-  nacols = 1:(dims * 2) + 2
-  rcs[nas, nacols] = NA
-
-  ## list(legislators=legs, rollcalls=rcs)
-  list(rollcalls=rcs)
+  df = do.call(cbind.data.frame, leg_data)
+  names(df) = legnames
+  df$party = names(party_dict)[df$partyID]
+  
+  df
 }
 
 make_rc_df = function(res) {
-  ## add rollcall data to results
-  df = cbind.data.frame(res[c(4:5, 35:36)])
+  ## organize rollcall data
+  df = cbind.data.frame(res[c(4:5, 37:38)])
   ## fix df names
   ndims = res[[1]][1]
   midcols = paste0('midpoint', 1:ndims, 'D')
@@ -381,6 +360,8 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
   sdx2 = rep(0.0, nlegs)
   varx1 = rep(0.0, nlegs)
   varx2 = rep(0.0, nlegs)
+  xbiglog = matrix(0.0, nrow=nlegs, ncol=2)
+  kbiglog = matrix(0L, nrow=nlegs, ncol=4)
   gmpa = rep(0.0, nlegs)
   gmpb = rep(0.0, nlegs)
   dyn = matrix(0.0, nrow=nbills, ncol=dims)
@@ -405,57 +386,21 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
            params$jd1, params$jstate, params$jdist,
            params$jparty, params$rcvote1, params$rcvote9,
            ## legislator output objects
-           xdata, sdx1, sdx2, varx1, varx2, gmpa, gmpb,
+           xdata, sdx1, sdx2, varx1, varx2,
+           xbiglog, kbiglog, gmpa, gmpb,
            ## rollcall output objects
            dyn, zmid)
-  ## return(res)
+  
   runtime = Sys.time() - start_time
   units(runtime) = 'mins'
   message(paste('DW-NOMINATE took', round(runtime, 1),
                 'minutes.\n'))
   
-  # get the results
-  ## nunlegs = sum(sapply(rc_list, function(x) x$n))
-  ## nunrcs = sum(sapply(rc_list, function(x) x$m))
-  ## results = read_output_files(party_dict, dims, iters, nunlegs,
-  ##                             nunrcs)
-  results = list()
-  ## add legislator results
-  coords = paste0('coord', 1:dims, 'D')
-  if (dims == 1) {
-    legnames = c('session', 'ID', 'stateID', 'district',
-                 'partyID', coords,
-                 ## 'loglikelihood', 'loglikelihood_check', 'numVotes', 'numVotes_check',
-                 ## 'numErrors', 'numErrors_check',
-                 'GMP', 'GMP_check')
-    ## legs_out = list(params$ncong, params$id1, params$istate, params$idist,
-    ##                 params$iparty, xdata, gmpa, gmpb)
-    legs_out = list(params$ncong, params$id1, params$istate, params$idist,
-                    params$iparty, res[[28]], res[[33]], res[[34]])
-  } else {
-    ses = paste0('se', 1:dims, 'D')
-    vars = paste0('var', 1:dims, 'D')
-    legnames = c('session', 'ID', 'stateID', 'district',
-                 'partyID', coords, ses, vars,
-                 ## 'loglikelihood', 'loglikelihood_check', 'numVotes', 'numVotes_check',
-                 ## 'numErrors', 'numErrors_check',
-                 'GMP', 'GMP_check')
-    ## legs_out = list(params$ncong, params$id1, params$istate, params$idist,
-    ##                 params$iparty, xdata, sdx1, sdx2,
-    ##                 varx1, varx2, gmpa, gmpb)
-    legs_out = list(params$ncong, params$id1, params$istate, params$idist,
-                    params$iparty, res[[28]], res[[29]], res[[30]],
-                    res[[31]], res[[32]], res[[33]], res[[34]])
-  }
-  results$legislators = do.call(cbind.data.frame, legs_out)
-  names(results$legislators) = legnames
-  results$legislators$party = names(party_dict)[results$legislators$partyID]
-  ## add states and legislator names to legislator results
-  results$legislators = cbind(params$ksta, params$lname, results$legislators)
-  names(results$legislators)[1:2] = c('state', 'name')
-  ## add rollcall data to results
-  results$rollcalls = make_rc_df(res)
-  results$start = start
+  # organize the results
+  results = list(legislators=make_leg_df(params$ksta, params$lname,
+                                         party_dict, res),
+                 rollcalls=make_rc_df(res),
+                 start=start)
   class(results) = 'dwnominate'
   results
 }
