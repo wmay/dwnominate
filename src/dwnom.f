@@ -18,7 +18,7 @@ C     with minor changes by William May for use with R
      C     IPARTY_IN, XDATA_IN, NROWRC, NCOLRC, JD1_IN, JSTATE_IN,
      C     JDIST_IN, JPARTY_IN, RCVOTE1_IN, RCVOTE9_IN,
      C     XDATA_OUT, SDX1_OUT, SDX2_OUT, VARX1_OUT, VARX2_OUT,
-     C     GMPA_OUT, GMPB_OUT)
+     C     GMPA_OUT, GMPB_OUT, DYN_OUT, ZMID_OUT)
       INTEGER NOMSTART_IN(6), NBILLS, NROWRCT, NCOLRCT, NLEGS,
      C     NROWRC, NCOLRC
       INTEGER ICONG_IN(NBILLS), INUM_IN(NBILLS),
@@ -38,7 +38,9 @@ C     with minor changes by William May for use with R
      C     XDATA_OUT(NLEGS, NOMSTART_IN(1)),
      C     SDX1_OUT(NLEGS), SDX2_OUT(NLEGS),
      C     VARX1_OUT(NLEGS), VARX2_OUT(NLEGS),
-     C     GMPA_OUT(NLEGS), GMPB_OUT(NLEGS)
+     C     GMPA_OUT(NLEGS), GMPB_OUT(NLEGS),
+     C     DYN_OUT(NBILLS, NOMSTART_IN(1)),
+     C     ZMID_OUT(NBILLS, NOMSTART_IN(1))
       dimension ISTATE(54001),IDIST(54001),IPARTY(54001),
      C          ID1(54001),LVOTE(3600),YY(150000),
      C          CUMNML(150000),ZDF(150000,4),WDERV(99),
@@ -74,7 +76,6 @@ C  READ ROLL CALL COORDINATE FILE -- OUTPUT
 C
       FNAME2 = 'rollcall_output.dat'
       WRITE(*,102)FNAME2
-      OPEN(30,FILE=FNAME2)
 C
 C  READ LEGISLATOR COORDINATE FILE -- INPUT
 C
@@ -708,10 +709,11 @@ C
       YPRE=FLOAT(LPRE-LATOT+LASSAF)/FLOAT(LPRE)
       WRITE(*,313)KK,LSCALE,LATOT,LASSB4,LASSAF,LPRE,YCLASS,YPRE
       DO 41 I=1,NQTOT
-      WRITE(30,175)ICONG(I),INUM(I),
-     C          (DYN(I,K),ZMID(I,K),K=1,NS)
+      DO 444 J=1,NS
+         DYN_OUT(I,J) = DYN(I,J)
+         ZMID_OUT(I,J) = ZMID(I,J)
+ 444  CONTINUE
  41   CONTINUE
-c$$$      Call FLUSH(30)
 C
 C
       CALL PLOG(XPLOG,WDERV,NFIRST,NLAST,
@@ -851,7 +853,6 @@ C     call gettim(itim1,itim2,itim3,itim4)
 c$$$      write(*,1000)itim1,itim2,itim3,itim4
 c$$$      write(*,1001)jtim1,jtim2,jtim3,jtim4
 C     stop
-      close(30)
 c$$$      close(24)
       end
 C

@@ -233,6 +233,22 @@ read_output_files = function(party_dict, dims, iters, nunlegs,
   list(rollcalls=rcs)
 }
 
+make_rc_df = function(res) {
+  ## add rollcall data to results
+  df = cbind.data.frame(res[c(4:5, 35:36)])
+  ## fix df names
+  ndims = res[[1]][1]
+  midcols = paste0('midpoint', 1:ndims, 'D')
+  spreadcols = paste0('spread', 1:ndims, 'D')
+  names(df) = c('session', 'ID', rbind(midcols, spreadcols))
+  ## replace zeros with NA's
+  nas = which(df$spread1D == 0 & df$midpoint1D == 0 &
+              df$spread2D == 0 & df$midpoint2D == 0)
+  nacols = 1:(ndims * 2) + 2
+  df[nas, nacols] = NA
+  df
+}
+
 #' Run DW-NOMINATE
 #'
 #' @useDynLib dwnominate dwnom
@@ -367,6 +383,8 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
   varx2 = rep(0.0, nlegs)
   gmpa = rep(0.0, nlegs)
   gmpb = rep(0.0, nlegs)
+  dyn = matrix(0.0, nrow=nbills, ncol=dims)
+  zmid = matrix(0.0, nrow=nbills, ncol=dims)
   res = .Fortran('dwnom',
            ## control file (DW-NOMSTART.DAT) params:
            params$nomstart_in, params$weights,
@@ -386,8 +404,10 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
            nrow(params$rcvote1), ncol(params$rcvote1),
            params$jd1, params$jstate, params$jdist,
            params$jparty, params$rcvote1, params$rcvote9,
-           ## output objects
-           xdata, sdx1, sdx2, varx1, varx2, gmpa, gmpb)
+           ## legislator output objects
+           xdata, sdx1, sdx2, varx1, varx2, gmpa, gmpb,
+           ## rollcall output objects
+           dyn, zmid)
   ## return(res)
   runtime = Sys.time() - start_time
   units(runtime) = 'mins'
@@ -395,10 +415,11 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
                 'minutes.\n'))
   
   # get the results
-  nunlegs = sum(sapply(rc_list, function(x) x$n))
-  nunrcs = sum(sapply(rc_list, function(x) x$m))
-  results = read_output_files(party_dict, dims, iters, nunlegs,
-                              nunrcs)
+  ## nunlegs = sum(sapply(rc_list, function(x) x$n))
+  ## nunrcs = sum(sapply(rc_list, function(x) x$m))
+  ## results = read_output_files(party_dict, dims, iters, nunlegs,
+  ##                             nunrcs)
+  results = list()
   ## add legislator results
   coords = paste0('coord', 1:dims, 'D')
   if (dims == 1) {
@@ -428,10 +449,12 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
   }
   results$legislators = do.call(cbind.data.frame, legs_out)
   names(results$legislators) = legnames
-  legs$party = names(party_dict)[legs$partyID]
+  results$legislators$party = names(party_dict)[results$legislators$partyID]
   ## add states and legislator names to legislator results
   results$legislators = cbind(params$ksta, params$lname, results$legislators)
   names(results$legislators)[1:2] = c('state', 'name')
+  ## add rollcall data to results
+  results$rollcalls = make_rc_df(res)
   results$start = start
   class(results) = 'dwnominate'
   results
