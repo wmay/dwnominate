@@ -12,24 +12,22 @@ C
 C     with minor changes by William May for use with R
       
       SUBROUTINE dwnom(NOMSTART_IN, WEIGHTS_IN, NBILLS, ICONG_IN,
-     C     INUM_IN, DYN_IN, ZMID_IN, MCONG_IN,
+     C     DYN_IN, ZMID_IN, MCONG_IN,
      C     NROWRCT, NCOLRCT, RCVOTET1_IN, RCVOTET9_IN,
-     C     NLEGS, NCONG_IN, ID1_IN, ISTATE_IN, IDIST_IN,
-     C     IPARTY_IN, XDATA_IN, NROWRC, NCOLRC, JD1_IN, JSTATE_IN,
-     C     JDIST_IN, JPARTY_IN, RCVOTE1_IN, RCVOTE9_IN,
+     C     NLEGS, NCONG_IN, ID1_IN, ISTATE_IN,
+     C     IPARTY_IN, XDATA_IN, NROWRC, NCOLRC,
+     C     RCVOTE1_IN, RCVOTE9_IN,
      C     XDATA_OUT, SDX1_OUT, SDX2_OUT, VARX1_OUT, VARX2_OUT,
      C     XBIGLOG_OUT, KBIGLOG_OUT,
      C     GMPA_OUT, GMPB_OUT, DYN_OUT, ZMID_OUT)
       INTEGER NOMSTART_IN(6), NBILLS, NROWRCT, NCOLRCT, NLEGS,
      C     NROWRC, NCOLRC
-      INTEGER ICONG_IN(NBILLS), INUM_IN(NBILLS),
+      INTEGER ICONG_IN(NBILLS),
      C     MCONG_IN(NOMSTART_IN(4) - NOMSTART_IN(3) + 1, 3),
      C     RCVOTET1_IN(NROWRCT, NCOLRCT),
      C     RCVOTET9_IN(NROWRCT, NCOLRCT),
      C     NCONG_IN(NLEGS), ID1_IN(NLEGS), ISTATE_IN(NLEGS),
-     C     IDIST_IN(NLEGS), IPARTY_IN(NLEGS),
-     C     JD1_IN(NLEGS), JSTATE_IN(NLEGS),
-     C     JDIST_IN(NLEGS), JPARTY_IN(NLEGS),
+     C     IPARTY_IN(NLEGS),
      C     RCVOTE1_IN(NROWRC, NCOLRC),
      C     RCVOTE9_IN(NROWRC, NCOLRC),
      C     KBIGLOG_OUT(NLEGS, 4)
@@ -44,7 +42,7 @@ C     with minor changes by William May for use with R
      C     GMPA_OUT(NLEGS), GMPB_OUT(NLEGS),
      C     DYN_OUT(NBILLS, NOMSTART_IN(1)),
      C     ZMID_OUT(NBILLS, NOMSTART_IN(1))
-      dimension ISTATE(54001),IDIST(54001),IPARTY(54001),
+      dimension ISTATE(54001),IPARTY(54001),
      C          ID1(54001),LVOTE(3600),YY(150000),
      C          CUMNML(150000),ZDF(150000,4),WDERV(99),
      C          XBETA(5,5),OUTX0(99,99),DERVISH(99,99),
@@ -61,49 +59,13 @@ C     with minor changes by William May for use with R
      C               RCVOTET1(99001,660),RCVOTET9(99001,660),
      C               RCBAD(99001),LWHERE(99999,111),
      C               NUMCONG(200),MCONG(200,3),ICONG(99001),
-     C               INUM(99001),WEIGHT(99),NUMCONGT(200),
+     C               WEIGHT(99),NUMCONGT(200),
      C               NCONG(54001),KWHERE(99999,111),
      C               XBIGLOG(54001,2),KBIGLOG(54001,4)
       COMMON /MINE/ NS,NQTOT,NPTOT,KLASS,
      C              KLASSYY,KLASSNY,KLASSYN,KLASSNN
-      CHARACTER*64 FNAME1,FNAME2,FNAME3,FNAME4,FNAME5,FNAME6,FNAME7,
-     C             FTITLE
+      CHARACTER*64 FTITLE
       INTEGER*2 ITIM1,ITIM2,ITIM3,ITIM4,JTIM1,JTIM2,JTIM3,JTIM4
-C
-C  READ ROLL CALL COORDINATE FILE -- INPUT
-C
-      FNAME1 = 'rollcall_input.dat'
-      WRITE(*,102)FNAME1
-C
-C  READ ROLL CALL COORDINATE FILE -- OUTPUT
-C
-      FNAME2 = 'rollcall_output.dat'
-      WRITE(*,102)FNAME2
-C
-C  READ LEGISLATOR COORDINATE FILE -- INPUT
-C
-      FNAME3 = 'legislator_input.dat'
-      WRITE(*,102)FNAME3
-C
-C  READ LEGISLATOR COORDINATE FILE -- OUTPUT
-C
-      FNAME4 = 'legislator_output.dat'
-      WRITE(*,102)FNAME4
-C
-C  READ ROLL CALL NUMBERS FILE -- *.NUM
-C
-      FNAME5 = 'session_info.num'
-      WRITE(*,102)FNAME5
-C
-C  READ ROLL CALL VOTE FILE
-C
-      FNAME6 = 'rollcall_matrix.vt3'
-      WRITE(*,102)FNAME6
-C
-C  READ TRANSPOSED ROLL CALL VOTE FILE
-C
-      FNAME7 = 'transposed_rollcall_matrix.vt3'
-      WRITE(*,102)FNAME7
 C
   100 FORMAT(2X,I3,2I2,I4,I5,2I1,11A1,3600I1)
 C
@@ -153,7 +115,6 @@ C
 C     This function can't be compiled!:
 C     call gettim(itim1,itim2,itim3,itim4)
       
-C
 C
 C  READ TITLE OF RUN
 C
@@ -283,7 +244,6 @@ C
  902  CONTINUE
       DO 903 I=1,2*NDEVIT-1
       ZDF(I,4)=(TWOPI*EXP((-ZDF(I,1)**2)/2.0))/ZDF(I,2)
-C      WRITE(33,202)I,(ZDF(I,J),J=1,4)
  903  CONTINUE    
 C
       DO 10 I=1,200
@@ -300,7 +260,6 @@ C
 C  READ ROLL CALL STARTS -- HC01108.DAT
 C
       ICONG = ICONG_IN
-      INUM = INUM_IN
       DYN = DYN_IN
       ZMID = ZMID_IN
       I=0
@@ -343,7 +302,6 @@ C
       NCONG = NCONG_IN
       ID1 = ID1_IN
       ISTATE = ISTATE_IN
-      IDIST = IDIST_IN
       IPARTY = IPARTY_IN
       XDATA = XDATA_IN
       I=0
@@ -354,41 +312,7 @@ C     COORDINATES
 C
 C      IF(KHIT.LT.25)GO TO 550
       NQ=MCONG(NCONG(I+1),2)
-      JD1 = JD1_IN(I + 1)
-      JSTATE = JSTATE_IN(I + 1)
-      JDIST = JDIST_IN(I + 1)
-      JPARTY = JPARTY_IN(I + 1)
       I=I+1
-C
-C  ERROR CHECKS
-C
-C -- ID NUMBER
-C
-      IF(ID1(I).NE.JD1)THEN
-         WRITE(*,316)I,ID1(I),JD1
-         STOP
-      ENDIF
-C
-C -- STATE CODE
-C
-      IF(ISTATE(I).NE.JSTATE)THEN
-         WRITE(*,317)I,ID1(I),JD1
-         STOP
-      ENDIF
-C
-C -- CONGRESSIONAL DISTRICT
-C
-      IF(IDIST(I).NE.JDIST)THEN
-         WRITE(*,318)I,ID1(I),JD1
-         STOP
-      ENDIF
-C
-C -- PARTY CODE
-C
-      IF(IPARTY(I).NE.JPARTY)THEN
-         WRITE(*,319)I,ID1(I),JD1
-         STOP
-      ENDIF
 C
       LWHERE(ID1(I),NCONG(I))=.TRUE.
       KWHERE(ID1(I),NCONG(I))=I
@@ -867,7 +791,7 @@ C
      C               RCVOTET1(99001,660),RCVOTET9(99001,660),
      C               RCBAD(99001),LWHERE(99999,111),
      C               NUMCONG(200),MCONG(200,3),ICONG(99001),
-     C               INUM(99001),WEIGHT(99),NUMCONGT(200),
+     C               WEIGHT(99),NUMCONGT(200),
      C               NCONG(54001),KWHERE(99999,111),
      C               XBIGLOG(54001,2),KBIGLOG(54001,4)
       COMMON /MINE/ NS,NQTOT,NPTOT,KLASS,
@@ -963,7 +887,7 @@ C
      C               RCVOTET1(99001,660),RCVOTET9(99001,660),
      C               RCBAD(99001),LWHERE(99999,111),
      C               NUMCONG(200),MCONG(200,3),ICONG(99001),
-     C               INUM(99001),WEIGHT(99),NUMCONGT(200),
+     C               WEIGHT(99),NUMCONGT(200),
      C               NCONG(54001),KWHERE(99999,111),
      C               XBIGLOG(54001,2),KBIGLOG(54001,4)
       COMMON /MINE/ NS,NQTOT,NPTOT,KLASS,
@@ -1245,7 +1169,7 @@ C
      C               RCVOTET1(99001,660),RCVOTET9(99001,660),
      C               RCBAD(99001),LWHERE(99999,111),
      C               NUMCONG(200),MCONG(200,3),ICONG(99001),
-     C               INUM(99001),WEIGHT(99),NUMCONGT(200),
+     C               WEIGHT(99),NUMCONGT(200),
      C               NCONG(54001),KWHERE(99999,111),
      C               XBIGLOG(54001,2),KBIGLOG(54001,4)
       COMMON /MINE/ NS,NQTOT,NPTOT,KLASS,
@@ -1430,7 +1354,7 @@ C
      C               RCVOTET1(99001,660),RCVOTET9(99001,660),
      C               RCBAD(99001),LWHERE(99999,111),
      C               NUMCONG(200),MCONG(200,3),ICONG(99001),
-     C               INUM(99001),WEIGHT(99),NUMCONGT(200),
+     C               WEIGHT(99),NUMCONGT(200),
      C               NCONG(54001),KWHERE(99999,111),
      C               XBIGLOG(54001,2),KBIGLOG(54001,4)
       COMMON /MINE/ NS,NQTOT,NPTOT,KLASS,
@@ -1661,8 +1585,6 @@ C
   35        CONTINUE
          ENDIF
 C
-C         WRITE(41,200)NEP,JJ,J,(AADERV(JJI),JJI=1,NS)
-C
          DO 6 K=1,NS
          XDERV(K)=XDERV(K)+(ZGAUSS/ZDISTF)*
      C            (DCC1(K)*EXP(DC)-DBB1(K)*EXP(DB))
@@ -1708,7 +1630,7 @@ C
      C               RCVOTET1(99001,660),RCVOTET9(99001,660),
      C               RCBAD(99001),LWHERE(99999,111),
      C               NUMCONG(200),MCONG(200,3),ICONG(99001),
-     C               INUM(99001),WEIGHT(99),NUMCONGT(200),
+     C               WEIGHT(99),NUMCONGT(200),
      C               NCONG(54001),KWHERE(99999,111),
      C               XBIGLOG(54001,2),KBIGLOG(54001,4)
       COMMON /MINE/ NS,NQTOT,NPTOT,KLASS,
@@ -1769,24 +1691,18 @@ C  LINEAR MODEL
 C
       IF(KK.EQ.5)THEN
          CALL REGA(KK,2,ATIME,YYY,VVV)
-C         WRITE(33,201)NEP,KK,K,(VVV(JFX),JFX=1,4)
-C         WRITE(33,201)NEP,KK,K,(YYY(JFX),JFX=1,KK)
       ENDIF
 C
 C  QUADRATIC MODEL
 C
       IF(KK.EQ.6)THEN
          CALL REGA(KK,3,ATIME,YYY,VVV)
-C         WRITE(33,201)NEP,KK,K,(VVV(JFX),JFX=1,4)
-C         WRITE(33,201)NEP,KK,K,(YYY(JFX),JFX=1,KK)
       ENDIF
 C
 C  CUBIC MODEL
 C
       IF(KK.GE.7)THEN
          CALL REGA(KK,4,ATIME,YYY,VVV)
-C         WRITE(33,201)NEP,KK,K,(VVV(JFX),JFX=1,4)
-C         WRITE(33,201)NEP,KK,K,(YYY(JFX),JFX=1,KK)
       ENDIF
 C
       IF(KK.LT.5)THEN
@@ -1811,10 +1727,6 @@ C      XBETA(3,K)=0.0
 C      XBETA(4,K)=0.0
 C  ****
 C
-C      WRITE(44,1000)NEP,ID1(MWHERE),MWHERE,KK,
-C     C                        (LNAME(MWHERE,JJ),JJ=1,11),
-C     C                         (VVV(JJ),JJ=1,4),(YYY(JJ),JJ=1,KK)
-C      WRITE(44,1002)(ATIME(JJ,2),JJ=1,KK)
       SUM=SUM+XBETA(1,K)**2
   52  CONTINUE
 C
@@ -2478,13 +2390,7 @@ C  INVERT OUTER PRODUCT MATRIX TO GET STANDARD ERRORS
 C
 C    ***CONSTANT MODEL***
 C
-C      WRITE(33,102)NEP,NS,(OUTX0(1,J),J=1,NS)
-C      WRITE(33,102)NEP,NS,(OUTX0(2,J),J=1,NS)
       call rs(99,NS,OUTX0,wvec,1,ZMAT,fv1,fv2,ier)
-C      WRITE(33,101)NEP,NS,IER
-C      WRITE(33,102)NEP,NS,(WVEC(J),J=1,NS)
-C      WRITE(33,102)KRC,NEPCONG,(XDERV(J),J=1,NS)
-C      WRITE(33,103)(XDERV1(J),J=1,NS)
 C
 C  (X'X)-1
 C
@@ -2506,8 +2412,6 @@ C  ***LINEAR MODEL
 C
       IF(NEPCONG.GE.5)THEN
          call rs(99,2*NS,OUTX1,wvec,1,ZMAT,fv1,fv2,ier)
-C         WRITE(33,101)NEP,NS,IER
-C         WRITE(33,102)NEP,NS,(WVEC(J),J=1,2*NS)
 C
 C  (X'X)-1
 C
@@ -2527,8 +2431,6 @@ C  ***QUADRATIC MODEL
 C
       IF(NEPCONG.GE.6)THEN
          call rs(99,3*NS,OUTX2,wvec,1,ZMAT,fv1,fv2,ier)
-C         WRITE(33,101)NEP,NS,IER
-C         WRITE(33,102)NEP,NS,(WVEC(J),J=1,NS)
 C
 C  (X'X)-1
 C
@@ -2548,8 +2450,6 @@ C  ***CUBIC MODEL
 C
       IF(NEPCONG.GE.7)THEN
          call rs(99,4*NS,OUTX3,wvec,1,ZMAT,fv1,fv2,ier)
-C         WRITE(33,101)NEP,NS,IER
-C         WRITE(33,102)NEP,NS,(WVEC(J),J=1,NS)
 C
 C  (X'X)-1
 C
@@ -2595,12 +2495,6 @@ C
   2   SUM=SUM+A(I,J)*A(I,JJ)
   1   B(J,JJ)=SUM
       call rs(127,nf,B,wvec,1,ZMAT,fv1,fv2,ier)
-C      WRITE(33,101)NS,NF,IER
-C      WRITE(33,102)NS,NF,(WVEC(J),J=1,NF)
-C      WRITE(33,102)NS,NF,(B(1,J),J=1,NF)
-C      WRITE(33,102)NS,NF,(B(2,J),J=1,NF)
-C      WRITE(33,102)NS,NF,(B(3,J),J=1,NF)
-C      WRITE(33,102)NS,NF,(B(4,J),J=1,NF)
 C
 C  (X'X)-1
 C
@@ -2651,7 +2545,7 @@ C
      C               RCVOTET1(99001,660),RCVOTET9(99001,660),
      C               RCBAD(99001),LWHERE(99999,111),
      C               NUMCONG(200),MCONG(200,3),ICONG(99001),
-     C               INUM(99001),WEIGHT(99),NUMCONGT(200),
+     C               WEIGHT(99),NUMCONGT(200),
      C               NCONG(54001),KWHERE(99999,111),
      C               XBIGLOG(54001,2),KBIGLOG(54001,4)
       COMMON /MINE/ NS,NQTOT,NPTOT,KLASS,
@@ -2781,7 +2675,7 @@ C
      C               RCVOTET1(99001,660),RCVOTET9(99001,660),
      C               RCBAD(99001),LWHERE(99999,111),
      C               NUMCONG(200),MCONG(200,3),ICONG(99001),
-     C               INUM(99001),WEIGHT(99),NUMCONGT(200),
+     C               WEIGHT(99),NUMCONGT(200),
      C               NCONG(54001),KWHERE(99999,111),
      C               XBIGLOG(54001,2),KBIGLOG(54001,4)
       COMMON /MINE/ NS,NQTOT,NPTOT,KLASS,

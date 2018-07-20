@@ -182,21 +182,21 @@ write_input_files = function(rc_list, start, sessions, dims,
   c(params, params1, params2, params3, params4, params5)
 }
 
-make_leg_df = function(state_names, lnames, party_dict, res) {
+make_leg_df = function(res, params, party_dict) {
   ## organize legislator data
   ndims = res[[1]][1]
   coords = paste0('coord', 1:ndims, 'D')
   if (ndims == 1) {
-    leg_data = c(res[14:17], list(state_names), res[18],
-                 list(lnames), res[28], res[33:36])
+    leg_data = c(res[13:15], params[c('idist', 'ksta')], res[16],
+                 params['lname'], res[22], res[27:30])
     legnames = c('session', 'ID', 'stateID', 'district', 'state', 
                  'partyID', 'name', coords,
                  'loglikelihood', 'loglikelihood_check', 'numVotes', 'numVotes_check',
                  'numErrors', 'numErrors_check',
                  'GMP', 'GMP_check')
   } else {
-    leg_data = c(res[14:17], list(state_names), res[18],
-                 list(lnames), res[28:36])
+    leg_data = c(res[13:15], params[c('idist', 'ksta')], res[16],
+                 params['lname'], res[22:30])
     ses = paste0('se', 1:ndims, 'D')
     vars = paste0('var', 1:ndims, 'D')
     legnames = c('session', 'ID', 'stateID', 'district', 'state', 
@@ -208,13 +208,12 @@ make_leg_df = function(state_names, lnames, party_dict, res) {
   df = do.call(cbind.data.frame, leg_data)
   names(df) = legnames
   df$party = names(party_dict)[df$partyID]
-  
   df
 }
 
-make_rc_df = function(res) {
+make_rc_df = function(res, params) {
   ## organize rollcall data
-  df = cbind.data.frame(res[c(4:5, 37:38)])
+  df = cbind.data.frame(res[[4]], params$inum, res[[31]], res[[32]])
   ## fix df names
   ndims = res[[1]][1]
   midcols = paste0('midpoint', 1:ndims, 'D')
@@ -370,8 +369,7 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
            ## control file (DW-NOMSTART.DAT) params:
            params$nomstart_in, params$weights,
            ## bill file (rollcall_input.dat) params:
-           nbills, params$icong, params$inum,
-           params$dyn, params$zmid,
+           nbills, params$icong, params$dyn, params$zmid,
            ## session file (session_info.num) params:
            params$mcong,
            ## transposed rollcall file
@@ -379,12 +377,11 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
            params$rcvotet1, params$rcvotet9,
            ## legislator input file
            nlegs, params$ncong, params$id1,
-           params$istate, params$idist, params$iparty,
+           params$istate, params$iparty,
            params$xdata,
            ## rollcall file
            nrow(params$rcvote1), ncol(params$rcvote1),
-           params$jd1, params$jstate, params$jdist,
-           params$jparty, params$rcvote1, params$rcvote9,
+           params$rcvote1, params$rcvote9,
            ## legislator output objects
            xdata, sdx1, sdx2, varx1, varx2,
            xbiglog, kbiglog, gmpa, gmpb,
@@ -397,9 +394,8 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
                 'minutes.\n'))
   
   # organize the results
-  results = list(legislators=make_leg_df(params$ksta, params$lname,
-                                         party_dict, res),
-                 rollcalls=make_rc_df(res),
+  results = list(legislators=make_leg_df(res, params, party_dict),
+                 rollcalls=make_rc_df(res, params),
                  start=start)
   class(results) = 'dwnominate'
   results
