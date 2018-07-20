@@ -187,16 +187,16 @@ make_leg_df = function(res, params, party_dict) {
   ndims = res[[1]][1]
   coords = paste0('coord', 1:ndims, 'D')
   if (ndims == 1) {
-    leg_data = c(res[13:15], params[c('idist', 'ksta')], res[16],
-                 params['lname'], res[22], res[27:30])
+    leg_data = c(res[13:14], params[c('istate', 'idist', 'ksta', 'iparty', 'lname')],
+                 res[20], res[25:28])
     legnames = c('session', 'ID', 'stateID', 'district', 'state', 
                  'partyID', 'name', coords,
                  'loglikelihood', 'loglikelihood_check', 'numVotes', 'numVotes_check',
                  'numErrors', 'numErrors_check',
                  'GMP', 'GMP_check')
   } else {
-    leg_data = c(res[13:15], params[c('idist', 'ksta')], res[16],
-                 params['lname'], res[22:30])
+    leg_data = c(res[13:14], params[c('istate', 'idist', 'ksta', 'iparty', 'lname')],
+                 res[20:28])
     ses = paste0('se', 1:ndims, 'D')
     vars = paste0('var', 1:ndims, 'D')
     legnames = c('session', 'ID', 'stateID', 'district', 'state', 
@@ -213,7 +213,7 @@ make_leg_df = function(res, params, party_dict) {
 
 make_rc_df = function(res, params) {
   ## organize rollcall data
-  df = cbind.data.frame(res[[4]], params$inum, res[[31]], res[[32]])
+  df = cbind.data.frame(res[[4]], params$inum, res[[29]], res[[30]])
   ## fix df names
   ndims = res[[1]][1]
   midcols = paste0('midpoint', 1:ndims, 'D')
@@ -377,7 +377,6 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
            params$rcvotet1, params$rcvotet9,
            ## legislator input file
            nlegs, params$ncong, params$id1,
-           params$istate, params$iparty,
            params$xdata,
            ## rollcall file
            nrow(params$rcvote1), ncol(params$rcvote1),

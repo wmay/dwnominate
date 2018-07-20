@@ -14,8 +14,8 @@ C     with minor changes by William May for use with R
       SUBROUTINE dwnom(NOMSTART_IN, WEIGHTS_IN, NBILLS, ICONG_IN,
      C     DYN_IN, ZMID_IN, MCONG_IN,
      C     NROWRCT, NCOLRCT, RCVOTET1_IN, RCVOTET9_IN,
-     C     NLEGS, NCONG_IN, ID1_IN, ISTATE_IN,
-     C     IPARTY_IN, XDATA_IN, NROWRC, NCOLRC,
+     C     NLEGS, NCONG_IN, ID1_IN,
+     C     XDATA_IN, NROWRC, NCOLRC,
      C     RCVOTE1_IN, RCVOTE9_IN,
      C     XDATA_OUT, SDX1_OUT, SDX2_OUT, VARX1_OUT, VARX2_OUT,
      C     XBIGLOG_OUT, KBIGLOG_OUT,
@@ -26,8 +26,7 @@ C     with minor changes by William May for use with R
      C     MCONG_IN(NOMSTART_IN(4) - NOMSTART_IN(3) + 1, 3),
      C     RCVOTET1_IN(NROWRCT, NCOLRCT),
      C     RCVOTET9_IN(NROWRCT, NCOLRCT),
-     C     NCONG_IN(NLEGS), ID1_IN(NLEGS), ISTATE_IN(NLEGS),
-     C     IPARTY_IN(NLEGS),
+     C     NCONG_IN(NLEGS), ID1_IN(NLEGS),
      C     RCVOTE1_IN(NROWRC, NCOLRC),
      C     RCVOTE9_IN(NROWRC, NCOLRC),
      C     KBIGLOG_OUT(NLEGS, 4)
@@ -42,8 +41,7 @@ C     with minor changes by William May for use with R
      C     GMPA_OUT(NLEGS), GMPB_OUT(NLEGS),
      C     DYN_OUT(NBILLS, NOMSTART_IN(1)),
      C     ZMID_OUT(NBILLS, NOMSTART_IN(1))
-      dimension ISTATE(54001),IPARTY(54001),
-     C          ID1(54001),LVOTE(3600),YY(150000),
+      dimension ID1(54001),LVOTE(3600),YY(150000),
      C          CUMNML(150000),ZDF(150000,4),WDERV(99),
      C          XBETA(5,5),OUTX0(99,99),DERVISH(99,99),
      C          OUTX1(99,99),OUTX2(99,99),OUTX3(99,99),
@@ -301,8 +299,6 @@ C  READ PSEUDO-DYNAMIC STARTS FROM BLACK BOX -- HL01108.SRT
 C
       NCONG = NCONG_IN
       ID1 = ID1_IN
-      ISTATE = ISTATE_IN
-      IPARTY = IPARTY_IN
       XDATA = XDATA_IN
       I=0
       DO 550 I0=1,NLEGS
@@ -378,19 +374,7 @@ C
       DO 3 J=1,NQ
       NEQ=J
       KYES=0
-      KYESD=0
-      KYESND=0
-      KYESSD=0
-      KYESR=0
-      KYESNR=0
-      KYESSR=0
       KNO=0
-      KNOD=0
-      KNOSD=0
-      KNOND=0
-      KNOR=0
-      KNOSR=0
-      KNONR=0
       KMISS=0
       DO 4 I=1,NPC
       LL(I)=I
@@ -399,10 +383,6 @@ C
       DO 4444 K=1,NS
       XMAT(I,K)=XDATA(I+KTOTP,K)
  4444 CONTINUE
-      ISOUTH=0
-      IF(ISTATE(I+KTOTP).GE.40.AND.ISTATE(I+KTOTP).LE.49)ISOUTH=1
-      IF(ISTATE(I+KTOTP).EQ.51.OR.ISTATE(I+KTOTP).EQ.53.OR.
-     C                           ISTATE(I+KTOTP).EQ.54)ISOUTH=1
       IF(RCVOTE9(I+KTOTP,J).NEQV.RCVOTET9(J+KTOTQ,I))THEN
          WRITE(*,306)II,J,I
          STOP
@@ -422,24 +402,6 @@ C
          IF(RCVOTE1(I+KTOTP,J).EQV..TRUE.)THEN
             KYES=KYES+1
             LDATA(I,1)=1
-            IF(IPARTY(I+KTOTP).EQ.KPTY1(II))THEN
-               KYESD=KYESD+1
-               IF(ISOUTH.EQ.0)THEN
-                  KYESND=KYESND+1
-               ENDIF
-               IF(ISOUTH.EQ.1)THEN
-                  KYESSD=KYESSD+1
-               ENDIF
-            ENDIF
-            IF(IPARTY(I+KTOTP).EQ.KPTY2(II))THEN
-               KYESR=KYESR+1
-               IF(ISOUTH.EQ.0)THEN
-                  KYESNR=KYESNR+1
-               ENDIF
-               IF(ISOUTH.EQ.1)THEN
-                  KYESSR=KYESSR+1
-               ENDIF
-            ENDIF
          ENDIF
 C
 C  IF NO
@@ -447,24 +409,6 @@ C
          IF(RCVOTE1(I+KTOTP,J).EQV..FALSE.)THEN
             KNO=KNO+1
             LDATA(I,1)=6
-            IF(IPARTY(I+KTOTP).EQ.KPTY1(II))THEN
-               KNOD=KNOD+1
-               IF(ISOUTH.EQ.0)THEN
-                  KNOND=KNOND+1
-               ENDIF
-               IF(ISOUTH.EQ.1)THEN
-                  KNOSD=KNOSD+1
-               ENDIF
-            ENDIF
-            IF(IPARTY(I+KTOTP).EQ.KPTY2(II))THEN
-               KNOR=KNOR+1
-               IF(ISOUTH.EQ.0)THEN
-                  KNONR=KNONR+1
-               ENDIF
-               IF(ISOUTH.EQ.1)THEN
-                  KNOSR=KNOSR+1
-               ENDIF
-            ENDIF
          ENDIF
       ENDIF
   4   CONTINUE
