@@ -1,8 +1,8 @@
 # an interface to Keith Poole's DW-NOMINATE FORTRAN77 program.
 
 # limitations:
-# 600 legislators per session
-# 3600 votes per session
+# 660 legislators per session
+# 2901 votes per session
 
 
 # get legislator names from rollcall objects
@@ -27,6 +27,12 @@ write_rc_data_file = function(rc_list, lid) {
   session_cols = sapply(rc_list, function(x) ncol(x$votes))
   total_rcs = sum(session_rows)
   max_rcs = max(session_cols)
+  if (max_rcs > 2901) {
+    stop('Cannot include more than 2901 roll call votes per session')
+  }
+  if (total_rcs > 54001) {
+    stop('Cannot include more than 54001 total legislator/session combinations')
+  }
   m1 = matrix(FALSE, nrow=total_rcs, ncol=max_rcs)
   m9 = matrix(FALSE, nrow=total_rcs, ncol=max_rcs)
   
@@ -70,6 +76,12 @@ write_transposed_rc_data_file = function(rc_list) {
   session_cols = sapply(rc_list, function(x) nrow(x$votes))
   total_rcs = sum(session_rows)
   max_rcs = max(session_cols)
+  if (max_rcs > 660) {
+    stop('Cannot include more than 660 legislators per session')
+  }
+  if (total_rcs > 99001) {
+    stop('Cannot include more than 99001 total roll call votes')
+  }
   m1 = matrix(FALSE, nrow=total_rcs, ncol=max_rcs)
   m9 = matrix(FALSE, nrow=total_rcs, ncol=max_rcs)
   start_row = 1
