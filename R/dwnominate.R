@@ -213,15 +213,15 @@ make_leg_df = function(res, params, party_dict) {
 
 make_rc_df = function(res, params) {
   ## organize rollcall data
-  df = cbind.data.frame(res[[4]], params$inum, res[[29]], res[[30]])
+  df = cbind.data.frame(res[[4]], params$inum, res[[30]], res[[29]])
   ## fix df names
   ndims = res[[1]][1]
   midcols = paste0('midpoint', 1:ndims, 'D')
   spreadcols = paste0('spread', 1:ndims, 'D')
-  names(df) = c('session', 'ID', rbind(midcols, spreadcols))
+  est_cols = c(midcols, spreadcols)
+  names(df) = c('session', 'ID', est_cols)
   ## replace zeros with NA's
-  nas = which(df$spread1D == 0 & df$midpoint1D == 0 &
-              df$spread2D == 0 & df$midpoint2D == 0)
+  nas = which(apply(df[, est_cols], 1, function(x) all(x == 0)))
   nacols = 1:(ndims * 2) + 2
   df[nas, nacols] = NA
   df
