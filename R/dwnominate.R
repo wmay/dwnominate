@@ -10,6 +10,14 @@ get_leg_names = function(x) row.names(x$legis.data)
 
 fix_string = function(string) gsub("[^A-Za-z ()'-]", '', string)
 
+zero_if_missing = function(a, n) {
+  if (is.null(a)) {
+    rep(0, n)
+  } else {
+    ifelse(is.na(a), 0, a)
+  }
+}
+
 format_column = function(df, name, format, alternative=NULL) {
   if (name %in% names(df)) {
     if (class(df[, name]) == 'character') {
@@ -44,13 +52,13 @@ write_rc_data_file = function(rc_list, lid) {
   for (session in 1:length(rc_list)) {
     rc = rc_list[[session]]
     rcl = rc$legis.data
+    n_rcl = nrow(rcl)
     votes = rc$votes
     codes = rc$codes
     all_leg_ids = c(all_leg_ids, rcl[, lid])
-    all_state_num = c(all_state_num,
-                      ifelse(is.na(rcl$icpsrState), 0, rcl$icpsrState))
-    all_district = c(all_district, ifelse(is.na(rcl$cd), 0, rcl$cd))
-    all_parties = c(all_parties, ifelse(is.na(rcl$party), 0, rcl$party))
+    all_state_num = c(all_state_num, zero_if_missing(rcl$icpsrState, n_rcl))
+    all_district = c(all_district, zero_if_missing(rcl$cd, n_rcl))
+    all_parties = c(all_parties, zero_if_missing(rcl$party, n_rcl))
     
     votes[votes %in% codes$yea] = 1
     votes[votes %in% codes$nay] = 6
@@ -119,11 +127,10 @@ write_leg_file = function(rc_list, start, dims, lid) {
     n_rcl = nrow(rcl)
     all_sessions = c(all_sessions, rep(session, n_rcl))
     all_leg_ids = c(all_leg_ids, rcl[, lid])
-    all_state_nums = c(all_state_nums,
-                       ifelse(is.na(rcl$icpsrState), 0, rcl$icpsrState))
-    all_districts = c(all_districts, ifelse(is.na(rcl$cd), 0, rcl$cd))
-    ksta = c(ksta, as.character(rcl$state))
-    all_parties = c(all_parties, ifelse(is.na(rcl$party), 0, rcl$party))
+    all_state_nums = c(all_state_nums, zero_if_missing(rcl$icpsrState, n_rcl))
+    all_districts = c(all_districts, zero_if_missing(rcl$cd, n_rcl))
+    ksta = c(ksta, as.character(zero_if_missing(rcl$state, n_rcl)))
+    all_parties = c(all_parties, zero_if_missing(rcl$party, n_rcl))
     lnames = c(lnames, rownames(rc$votes))
     matches = match(rcl[, lid], start$legislators[, lid])
     coords = as.matrix(start$legislators[matches, coordcols])
