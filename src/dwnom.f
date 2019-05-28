@@ -119,16 +119,16 @@ C
 C  READ TITLE OF RUN
 C
       FTITLE = 'NOMINAL DYNAMIC-WEIGHTED MULTIDIMENSIONAL UNFOLDING '
-      WRITE(*,102)FTITLE
       NS = NOMSTARTIN(1)
       NMODEL = NOMSTARTIN(2)
       NFIRST = NOMSTARTIN(3)
       NLAST = NOMSTARTIN(4)
       IHAPPY1 = NOMSTARTIN(5)
       IHAPPY2 = NOMSTARTIN(6)
-      WRITE(*,103)NS,NMODEL,NFIRST,NLAST,IHAPPY1,IHAPPY2
+      call intpr(FTITLE, -1, (/NS,NMODEL,NFIRST,NLAST,IHAPPY1,IHAPPY2/),
+     C     6)
       WEIGHT = WEIGHTSIN
-      WRITE(*,104)WEIGHT(NS+1),(WEIGHT(K),K=2,NS)
+      call realpr('', 0, (/WEIGHT(NS+1),(WEIGHT(K),K=2,NS)/), NS)
 C
 C      NS=2
 C      NMODEL=0
@@ -190,7 +190,7 @@ C  READ NHOUSE.NUM -- GIVES NUMBER OF ROLL CALLS AND LEGISLATORS FOR
 C                     EACH CONGRESS
       I = NOMSTARTIN(4) - NOMSTARTIN(3) + 1
       MCONG = MCONGIN
-  425 WRITE(*,302)I
+ 425  call intpr('NUMBER OF CONGRESSES', -1, I, 1)
 C
 C  READ ROLL CALL STARTS -- HC01108.DAT
 C
@@ -229,7 +229,7 @@ C
          ENDIF
          NUMCONGT(ICONG(I))=NUMCONGT(ICONG(I))+1
  575  CONTINUE
- 475  WRITE(*,300)I
+ 475  call intpr('TOTAL ROLL CALLS', -1, I, 1)
       NQTOT=I
 C
 C  READ PSEUDO-DYNAMIC STARTS FROM BLACK BOX -- HL01108.SRT
@@ -261,8 +261,9 @@ C
   1   CONTINUE
       NUMCONG(NCONG(I))=NUMCONG(NCONG(I))+1
  550  CONTINUE
- 450  WRITE(*,301)I
+ 450  call intpr('TOTAL LEGISLATORS', -1, I, 1)
       WRITE(*,321)
+      call intpr(' ', 1, 0, 0)
       NPTOT=I
 C
       DO 9999 IHAPPY=IHAPPY1,IHAPPY2
@@ -271,14 +272,14 @@ C  ************************************
 C     DIMENSION WEIGHT PHASE
 C  ************************************
       IF(NS.GE.2)THEN
-         WRITE(*,320)'dimension weights'
+         call intpr('Estimating dimension weights...', -1, 0, 0)
          CALL WINT(XPLOG,WDERV,NFIRST,NLAST,ZDF,NDEVIT,XDEVIT)
       ENDIF
 C
 C  ************************************
 C     BETA (1/SIGMA) PHASE
 C  ************************************
-      WRITE(*,320)'beta'
+      call intpr('Estimating beta...', -1, 0, 0)
       CALL SIGMAS(XPLOG,WDERV,NFIRST,NLAST,ZDF,NDEVIT,XDEVIT)
 C
 C  ************************************
@@ -286,7 +287,7 @@ C     ROLL CALL PHASE
 C  ************************************
 C    
 C
-      WRITE(*,320)'roll call vectors'
+      call intpr('Estimating roll call vectors...', -1, 0, 0)
       KTOTP=0
       KTOTQ=0
       KK=0
@@ -534,7 +535,7 @@ C
 C  ******************************************
 C   LEGISLATOR PHASE
 C  ******************************************
-      WRITE(*,320)'legislator coordinates'
+      call intpr('Estimating legislator coordinates...', -1, 0, 0)
       NPUNIQUE=0
       NPUNIQUF=0
       NPUNIQUG=0
