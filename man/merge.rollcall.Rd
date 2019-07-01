@@ -4,7 +4,8 @@
 \alias{merge.rollcall}
 \title{Merge rollcall objects}
 \usage{
-\method{merge}{rollcall}(x = NULL, y = NULL, rc_list = NULL, by = NULL)
+\method{merge}{rollcall}(x = NULL, y = NULL, rc_list = NULL,
+  by = NULL)
 }
 \arguments{
 \item{x}{An object of class \code{dwnominate()}.}

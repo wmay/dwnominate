@@ -4,9 +4,9 @@
 \alias{dwnominate}
 \title{Run DW-NOMINATE}
 \usage{
-dwnominate(rc_list, id = NULL, start = NULL, sessions = NULL, dims = 2,
-  model = 1, niter = 4, beta = 5.9539, w = 0.3463, polarity = NULL,
-  ...)
+dwnominate(rc_list, id = NULL, start = NULL, sessions = NULL,
+  dims = 2, model = 1, niter = 4, beta = 5.9539, w = 0.3463,
+  polarity = NULL, ...)
 }
 \arguments{
 \item{rc_list}{A list of \code{rollcall} objects from the
