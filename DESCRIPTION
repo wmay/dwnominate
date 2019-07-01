@@ -3,7 +3,9 @@ Type: Package
 Title: Compare legislator ideology over time, based on rollcall votes
 Version: 1.1
 Date: 2019-06-30
-Authors@R: person("William", "May", email = "williamcmay@live.com", role = c("aut", "cre"))
+Authors@R: c(
+    person("William", "May", email = "williamcmay@live.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-3201-1885")),
+    person("Keith", "Poole", role = "aut"))
 Maintainer: William May <williamcmay@live.com>
 Description: Interface to Keith Poole's DW-NOMINATE Fortran program.
 Depends:
