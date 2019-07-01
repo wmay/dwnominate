@@ -11,7 +11,6 @@ Depends:
 Imports:
     basicspace,
     pscl,
-    oc,
     wnominate
 License: MIT
 Encoding: UTF-8

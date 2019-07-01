@@ -132,7 +132,7 @@ write_leg_file = function(rc_list, start, dims, lid) {
     ksta = c(ksta, as.character(zero_if_missing(rcl$state, n_rcl)))
     all_parties = c(all_parties, zero_if_missing(rcl$party, n_rcl))
     lnames = c(lnames, rownames(rc$votes))
-    matches = match(rcl[, lid], start$legislators[, lid])
+    matches = match(rcl[, lid], row.names(start$legislators))
     coords = as.matrix(start$legislators[matches, coordcols])
     # DW-NOMINATE hates NA's
     coords[is.na(coords)] = 0
@@ -246,6 +246,34 @@ make_rc_df = function(res, params) {
   df
 }
 
+## a convenient wrapper around wnominate that automatically finds
+## valid polarity arguments
+auto_wnominate = function(rc, ...) {
+  wnom_args = list(...)
+  ## get the minimum number of votes
+  if ('minvotes' %in% names(wnom_args)) {
+    wnom_minvotes = wnom_args$minvotes
+  } else {
+    wnom_minvotes = 20
+  }
+  if ('dims' %in% names(wnom_args)) {
+    wnom_dims = wnom_args$dims
+  } else {
+    wnom_dims = 2
+  }
+  ## get the first legislator with at least the minimum number of
+  ## votes
+  vote_codes = c(rc$codes$yea, rc$codes$nay)
+  vmat = rc$votes
+  vmat[!vmat %in% vote_codes] = NA
+  leg_has_min = rowSums(!is.na(vmat)) >= wnom_minvotes
+  if (length(which(leg_has_min)) == 0) {
+    stop('No legislators meet minimum vote requirements.')
+  }
+  leg_n = which(leg_has_min)[1]
+  wnominate::wnominate(rc, polarity = rep(leg_n, wnom_dims), ...)
+}
+
 #' Run DW-NOMINATE
 #'
 #' @useDynLib dwnominate dwnom
@@ -254,10 +282,10 @@ make_rc_df = function(res, params) {
 #' @param id Column name in the rollcall objects' \code{legis.data}
 #'   data frames providing a unique legislator ID. If not specified
 #'   legislator names will be used.
-#' @param start A \code{wnominate} or \code{oc} result object (class
-#'   \code{nomObject} or \code{OCobject}) providing starting estimates
-#'   of legislator ideologies. If not provided, dwnominate will run
-#'   \code{wnominate} or \code{oc} to get starting values.
+#' @param start A roll call scaling result of class \code{common
+#'   space}, \code{wnominate}, or \code{oc} providing starting
+#'   estimates of legislator ideologies. If not provided, dwnominate
+#'   will calculate common space scores to get starting values.
 #' @param sessions A vector of length 2 providing the first and last
 #'   sessions to include. Defaults to \code{c(1, length(rc_list))}.
 #' @param dims The number of dimensions to estimate. Can be either 1
@@ -276,8 +304,8 @@ make_rc_df = function(res, params) {
 #'   each dimension, a legislator who should have a positive
 #'   coordinate value. Legislators can be specified either by name or
 #'   ID. If unspecified the first legislator in the data is used.
-#' @param ... Arguments passed to \code{wnominate} (if dims==1) or
-#'   \code{oc} (if dims>1).
+#' @param ... Arguments passed to \code{wnominate} if starting
+#'   estimates are calculated.
 #' @return A list of class \code{dwnominate} containing: \itemize{
 #'   \item{legislators} {A data frame of legislator information}
 #'   \item{rollcalls} {A data frame of rollcall information}
@@ -331,43 +359,26 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
       party_dict[as.character(rc_list[[n]]$legis.data$party)]
   }
   get_start = is.null(start)
-  if (!is.null(start)) {
+  if (!get_start) {
     if (class(start) == 'OCobject' && start$dimensions == 1) {
-      warning("Can't use optimal classification results if estimated with only one dimension. Getting new starting estimates...")
-      get_start = T
+      stop("Can't use optimal classification results if estimated with only one dimension.")
     }
     if (start$dimensions < dims) {
-      warning('Too few dimensions in oc/wnominate object. Getting new starting estimates...')
-      get_start = T
+      stop("Dimensions in starting estimates cannot be less than 'dims'.")
     }
-  } else {
-    scale_type = ifelse(dims > 1, 'Optimal Classification', 'W-NOMINATE')
-    message(paste('Running', scale_type, 'to get starting estimates...'))
   }
   if (get_start) {
-    rc_all = merge.rollcall(rc_list=rc_list)
-    scale_func = ifelse(dims > 1, oc::oc, wnominate::wnominate)
-    if (!is.null(polarity)) {
-      if (length(polarity) != dims && length(polarity) != 1)
-        stop('polarity should have a length of 1 or dims')
-      polarityn = match(polarity, rc_all$legis.data[, id])
-      if (any(is.na(polarityn)))
-        polarityn = match(polarity, get_leg_names(rc_all))
-      if (any(is.na(polarityn)))
-        stop('polarity values must be either IDs or legislator names')
-      if (length(polarityn) == 1)
-        polarityn = rep(polarityn, dims)
-    } else {
-      polarityn = rep(1, dims)
-    }
-    # phwew.
-    start = scale_func(rc_all, dims=dims, polarity=polarityn, ...)
+    message(paste('Calculating W-NOMINATE scores for each session...'))
+    nom_list = lapply(rc_list, auto_wnominate, ...)
+    message(paste('Extracting common space scores...'))
+    start = common_space(nom_list, id, dims, polarity = polarity)
   }
   
   params = write_input_files(rc_list, start, sessions, dims,
                              model, iters, beta, w, id)
   
   # run DW-NOMINATE
+  message('Running DW-NOMINATE...')
   # change line 40 of DW-NOMINATE.FOR !!
   nomstart = file.path(getwd(), 'DW-NOMSTART.DAT')
   start_time = Sys.time()

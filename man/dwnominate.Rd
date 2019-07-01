@@ -16,10 +16,10 @@ dwnominate(rc_list, id = NULL, start = NULL, sessions = NULL,
 data frames providing a unique legislator ID. If not specified
 legislator names will be used.}
 
-\item{start}{A \code{wnominate} or \code{oc} result object (class
-\code{nomObject} or \code{OCobject}) providing starting estimates
-of legislator ideologies. If not provided, dwnominate will run
-\code{wnominate} or \code{oc} to get starting values.}
+\item{start}{A roll call scaling result of class \code{common
+space}, \code{wnominate}, or \code{oc} providing starting
+estimates of legislator ideologies. If not provided, dwnominate
+will calculate common space scores to get starting values.}
 
 \item{sessions}{A vector of length 2 providing the first and last
 sessions to include. Defaults to \code{c(1, length(rc_list))}.}
@@ -46,8 +46,8 @@ each dimension, a legislator who should have a positive
 coordinate value. Legislators can be specified either by name or
 ID. If unspecified the first legislator in the data is used.}
 
-\item{...}{Arguments passed to \code{wnominate} (if dims==1) or
-\code{oc} (if dims>1).}
+\item{...}{Arguments passed to \code{wnominate} if starting
+estimates are calculated.}
 }
 \value{
 A list of class \code{dwnominate} containing: \itemize{
