@@ -2,6 +2,7 @@
 
 S3method(merge,rollcall)
 S3method(plot,dwnominate)
+export(common_space)
 export(dwnominate)
 importFrom(graphics,grid)
 importFrom(graphics,legend)
