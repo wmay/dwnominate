@@ -440,9 +440,11 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
 #' @param ... Arguments passed to \code{plot.default()}
 #' @examples
 #' # US Senate data from voteview.com
+#' \donttest{
 #' data(senate)
 #' dwnom <- dwnominate(senate)
 #' plot(dwnom)
+#' }
 #' @importFrom graphics grid legend plot points
 #' @importFrom stats aggregate setNames
 #' @export
@@ -484,8 +486,10 @@ plot.dwnominate = function(x, ...) {
 #' wnom <- wnominate(senate[[1]], polarity = 1:2)
 #' plot(wnom)
 #'
+#' \donttest{
 #' dwnom <- dwnominate(senate)
 #' plot(dwnom)
+#' }
 'senate'
 
 

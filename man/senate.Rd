@@ -23,7 +23,9 @@ library(wnominate)
 wnom <- wnominate(senate[[1]], polarity = 1:2)
 plot(wnom)
 
+\donttest{
 dwnom <- dwnominate(senate)
 plot(dwnom)
+}
 }
 \keyword{datasets}
