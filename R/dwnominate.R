@@ -132,7 +132,11 @@ write_leg_file = function(rc_list, start, dims, lid) {
     ksta = c(ksta, as.character(zero_if_missing(rcl$state, n_rcl)))
     all_parties = c(all_parties, zero_if_missing(rcl$party, n_rcl))
     lnames = c(lnames, rownames(rc$votes))
-    matches = match(rcl[, lid], row.names(start$legislators))
+    if (class(start) == 'common space') {
+      matches = match(rcl[, lid], row.names(start$legislators))
+    } else {
+      matches = match(rcl[, lid], start$legislators[, lid])
+    }
     coords = as.matrix(start$legislators[matches, coordcols])
     # DW-NOMINATE hates NA's
     coords[is.na(coords)] = 0
