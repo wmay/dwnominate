@@ -1,4 +1,7 @@
 # dwnominate
+
+[![Build Status](https://travis-ci.org/wmay/dwnominate.svg?branch=master)](https://travis-ci.org/wmay/dwnominate)
+
 DW-NOMINATE dynamic roll call scaling in R
 
 ## Installation:
