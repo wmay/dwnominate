@@ -2,6 +2,10 @@
 .Rhistory
 .RData
 
+# compiled objects
+*.o
+*.so
+
 # for emacs
 *~
 [#]*[#]
