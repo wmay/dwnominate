@@ -6,14 +6,14 @@ DW-NOMINATE dynamic roll call scaling in R
 
 ## Installation:
 
+On MacOS, `dwnominate` installation requires the gfortran and Clang compilers provided by CRAN [here](https://cran.r-project.org/bin/macosx/tools/).
+
 From R, run:
 
 ```R
 install.packages('devtools')
 devtools::install_github('wmay/dwnominate')
 ```
-
-The fortran code disagrees with some MacOS gfortran compilers, which can be fixed by following the instructions [here](https://stackoverflow.com/questions/23916219/os-x-package-installation-depends-on-gfortran-4-8). Sometimes issues can also occur when using R GUIs. For best results run the code in a command line terminal.
 
 ## DW-NOMINATE
 Running DW-NOMINATE:
