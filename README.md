@@ -11,8 +11,8 @@ On MacOS, `dwnominate` installation requires the gfortran and Clang compilers pr
 From R, run:
 
 ```R
-install.packages('devtools')
-devtools::install_github('wmay/dwnominate')
+install.packages('remotes')
+remotes::install_github('wmay/dwnominate')
 ```
 
 ## DW-NOMINATE
