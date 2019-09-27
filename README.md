@@ -22,7 +22,7 @@ Running DW-NOMINATE:
 library(dwnominate)
 # get a list of `rollcall` objects
 data(senate)
-results = dwnominate(senate)
+results <- dwnominate(senate)
 plot(results)
 ```
 ![image](https://user-images.githubusercontent.com/4205859/28497526-9f421d4c-6f57-11e7-988d-0c4226eba992.png)
