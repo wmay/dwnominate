@@ -1,6 +1,6 @@
 Package: dwnominate
 Type: Package
-Title: Compare legislator ideology over time, based on rollcall votes
+Title: An interface to the DW-NOMINATE roll call scaling program
 Version: 1.1
 Date: 2019-06-30
 Authors@R: c(
@@ -8,7 +8,12 @@ Authors@R: c(
     person("Keith", "Poole", role = "aut"),
     person("Nolan", "McCarty", role = "aut"))
 Maintainer: William May <williamcmay@live.com>
-Description: Interface to Keith Poole's DW-NOMINATE Fortran program.
+Description: A simplified R interface to the DW-NOMINATE roll call
+    scaling program. DW-NOMINATE (Dynamic Weighted NOMINAl Three-step
+    Estimation) estimates dynamic models of legislator ideology using
+    roll call votes, and can efficiently estimate static models
+    applied to multiple legislative sessions. The results can be used
+    to measure legislative ideology and polarization over time.
 Depends:
     R (>= 2.10)
 Imports:
