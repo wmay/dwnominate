@@ -134,6 +134,9 @@ write_leg_file = function(rc_list, start, dims, lid) {
     lnames = c(lnames, rownames(rc$votes))
     if (class(start) == 'common space') {
       matches = match(rcl[, lid], row.names(start$legislators))
+    } else if (methods::is(start, 'dwnominate')) {
+      session_starts = start$legislators[start$legislators$session == session, ]
+      matches = match(rcl[, lid], session_starts[, 'ID'])
     } else {
       matches = match(rcl[, lid], start$legislators[, lid])
     }
@@ -287,9 +290,10 @@ auto_wnominate = function(rc, ...) {
 #'   data frames providing a unique legislator ID. If not specified
 #'   legislator names will be used.
 #' @param start A roll call scaling result of class \code{common
-#'   space}, \code{wnominate}, or \code{oc} providing starting
-#'   estimates of legislator ideologies. If not provided, dwnominate
-#'   will calculate common space scores to get starting values.
+#'   space}, \code{wnominate}, \code{oc}, or \code{dwnominate}
+#'   providing starting estimates of legislator ideologies. If not
+#'   provided, dwnominate will calculate common space scores to get
+#'   starting values.
 #' @param sessions A vector of length 2 providing the first and last
 #'   sessions to include. Defaults to \code{c(1, length(rc_list))}.
 #' @param dims The number of dimensions to estimate. Can be either 1
@@ -370,6 +374,9 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
     if (start$dimensions < dims) {
       stop("Dimensions in starting estimates cannot be less than 'dims'.")
     }
+    if (is.null(id) && methods::is(start, 'dwnominate')) {
+      stop("An id argument must be provided with dwnominate starting estimates.")
+    }
   }
   if (get_start) {
     message(paste('Calculating W-NOMINATE scores for each session...'))
@@ -429,6 +436,7 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
   # organize the results
   results = list(legislators=make_leg_df(res, params, party_dict),
                  rollcalls=make_rc_df(res, params),
+                 dimensions=dims,
                  start=start)
   class(results) = 'dwnominate'
   results
