@@ -3,3 +3,4 @@ warnings_are_errors: false
 os:
   - linux
   - osx
+osx_image: xcode9.2
