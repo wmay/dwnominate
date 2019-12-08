@@ -17,9 +17,10 @@ data frames providing a unique legislator ID. If not specified
 legislator names will be used.}
 
 \item{start}{A roll call scaling result of class \code{common
-space}, \code{wnominate}, or \code{oc} providing starting
-estimates of legislator ideologies. If not provided, dwnominate
-will calculate common space scores to get starting values.}
+space}, \code{wnominate}, \code{oc}, or \code{dwnominate}
+providing starting estimates of legislator ideologies. If not
+provided, dwnominate will calculate common space scores to get
+starting values.}
 
 \item{sessions}{A vector of length 2 providing the first and last
 sessions to include. Defaults to \code{c(1, length(rc_list))}.}
