@@ -15,7 +15,7 @@ if [ $TRAVIS_OS_NAME = 'osx' ]; then
     # install clang
     clang_pkg=clang-${clang_version}.0.0.pkg
     clang_path=/tmp/${clang_pkg}
-    curl -fLo /tmp/ https://cloud.r-project.org/bin/macosx/tools/${clang_pkg}
+    curl -fLo $clang_path https://cloud.r-project.org/bin/macosx/tools/${clang_pkg}
     sudo installer -pkg $clang_path -target /
     rm $clang_pkg
 
