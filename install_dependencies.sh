@@ -17,10 +17,10 @@ if [ $TRAVIS_OS_NAME = 'osx' ]; then
     clang_path=/tmp/${clang_pkg}
     curl -fLo $clang_path https://cloud.r-project.org/bin/macosx/tools/${clang_pkg}
     sudo installer -pkg $clang_path -target /
-    rm $clang_pkg
+    rm $clang_path
 
     # add clang info to .R/Makevars
-    mkdir .R
-    echo "CC = /usr/local/clang${clang_version}/bin/clang" >> .R/Makevars
-    echo "CXX = /usr/local/clang${clang_version}/bin/clang++" >> .R/Makevars
+    mkdir ~/.R
+    echo "CC = /usr/local/clang${clang_version}/bin/clang" >> ~/.R/Makevars
+    echo "CXX = /usr/local/clang${clang_version}/bin/clang++" >> ~/.R/Makevars
 fi
