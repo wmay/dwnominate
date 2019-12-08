@@ -1,9 +1,6 @@
-sudo: required
 language: r
 warnings_are_errors: false
 os:
   - linux
   - osx
 osx_image: xcode10.2
-before_install:
-  - ./install_dependencies.sh
