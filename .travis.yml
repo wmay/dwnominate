@@ -6,4 +6,4 @@ os:
   - osx
 osx_image: xcode10.2
 before_install:
-  - install_dependencies.sh
+  - ./install_dependencies.sh
