@@ -1,6 +1,9 @@
 language: r
 warnings_are_errors: false
-os:
-  - linux
-  - osx
-osx_image: xcode10.2
+jobs:
+  include:
+    - os: linux
+    - os: osx
+    # macOS 10.14 / xcode10.2 is particularly troublesome
+    - os: osx
+      osx_image: xcode10.2
