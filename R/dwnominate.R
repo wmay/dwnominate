@@ -190,7 +190,13 @@ write_start_file = function(rc_list, sessions, dims, model,
   ## Variables that would have been written to the DW-NOMSTART.DAT
   ## file if I was still creating it
   params1 = as.integer(c(dims, model, sessions, iters))
-  weights = c(1, w, beta)
+  if (dims == 1) {
+    # no second dimension weight in this case
+    weights = c(1, beta)
+  } else {
+    weights = c(1, w, beta)
+  }
+
   list(nomstart_in=params1, weights=weights)
 }
 
