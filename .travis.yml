@@ -6,7 +6,7 @@ r:
 os:
   - linux
   - osx
-osx_image: # using null for the default value
-  - null
+osx_image: # the current default
+  - xcode9.4
   # macOS 10.14 / xcode10.2 is particularly troublesome
   - xcode10.2
