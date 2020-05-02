@@ -412,6 +412,7 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
   gmpb = rep(0.0, nlegs)
   dyn = matrix(0.0, nrow=nbills, ncol=dims)
   zmid = matrix(0.0, nrow=nbills, ncol=dims)
+  weights = vector(mode = 'numeric', length = length(params$weights))
   res = .Fortran('dwnom',
            ## control file (DW-NOMSTART.DAT) params:
            params$nomstart_in, params$weights,
@@ -432,7 +433,7 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
            xdata, sdx1, sdx2, varx1, varx2,
            xbiglog, kbiglog, gmpa, gmpb,
            ## rollcall output objects
-           dyn, zmid)
+           dyn, zmid, weights)
   
   runtime = Sys.time() - start_time
   units(runtime) = 'mins'
@@ -443,6 +444,8 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
   results = list(legislators=make_leg_df(res, params, party_dict),
                  rollcalls=make_rc_df(res, params),
                  dimensions=dims,
+                 beta = tail(res[[31]], 1),
+                 weights = head(res[[31]], -1),
                  start=start)
   class(results) = 'dwnominate'
   results
