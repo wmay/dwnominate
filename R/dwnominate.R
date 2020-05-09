@@ -30,7 +30,7 @@ format_column = function(df, name, format, alternative=NULL) {
   }
 }
 
-write_rc_data_file = function(rc_list, lid) {
+write_rc_data_file = function(rc_list, lid, leg_dict) {
   session_rows = sapply(rc_list, function(x) nrow(x$votes))
   session_cols = sapply(rc_list, function(x) ncol(x$votes))
   total_rcs = sum(session_rows)
@@ -55,7 +55,7 @@ write_rc_data_file = function(rc_list, lid) {
     n_rcl = nrow(rcl)
     votes = rc$votes
     codes = rc$codes
-    all_leg_ids = c(all_leg_ids, rcl[, lid])
+    all_leg_ids = c(all_leg_ids, leg_dict[as.character(rcl[, lid])])
     all_state_num = c(all_state_num, zero_if_missing(rcl$icpsrState, n_rcl))
     all_district = c(all_district, zero_if_missing(rcl$cd, n_rcl))
     all_parties = c(all_parties, zero_if_missing(rcl$party, n_rcl))
@@ -72,7 +72,7 @@ write_rc_data_file = function(rc_list, lid) {
     start_row = end_row + 1
   }
   list(jjjj=NA,
-       jd1=as.integer(all_leg_ids),
+       jd1=all_leg_ids,
        jstate=as.integer(all_state_num),
        jdist=as.integer(all_district),
        jparty=as.integer(all_parties),
@@ -111,7 +111,7 @@ write_transposed_rc_data_file = function(rc_list) {
   list(rcvotet1=m1, rcvotet9=m9)
 }
 
-write_leg_file = function(rc_list, start, dims, lid) {
+write_leg_file = function(rc_list, start, dims, lid, leg_dict) {
   ksta = vector()
   lnames = vector()
   all_sessions = vector()
@@ -126,7 +126,7 @@ write_leg_file = function(rc_list, start, dims, lid) {
     rcl = rc$legis.data
     n_rcl = nrow(rcl)
     all_sessions = c(all_sessions, rep(session, n_rcl))
-    all_leg_ids = c(all_leg_ids, rcl[, lid])
+    all_leg_ids = c(all_leg_ids, leg_dict[as.character(rcl[, lid])])
     all_state_nums = c(all_state_nums, zero_if_missing(rcl$icpsrState, n_rcl))
     all_districts = c(all_districts, zero_if_missing(rcl$cd, n_rcl))
     ksta = c(ksta, as.character(zero_if_missing(rcl$state, n_rcl)))
@@ -147,7 +147,7 @@ write_leg_file = function(rc_list, start, dims, lid) {
   }
   list(ksta=ksta, lname=lnames,
        ncong=as.integer(all_sessions),
-       id1=as.integer(all_leg_ids),
+       id1=all_leg_ids,
        istate=as.integer(all_state_nums),
        idist=as.integer(all_districts),
        iparty=as.integer(all_parties),
@@ -201,12 +201,12 @@ write_start_file = function(rc_list, sessions, dims, model,
 }
 
 write_input_files = function(rc_list, start, sessions, dims,
-                             model, niter, beta, w, lid) {
+                             model, niter, beta, w, lid, leg_dict) {
   # write the data files needed to run DW-NOMINATE
   ## message('Writing DW-NOMINATE input files...\n')
-  params5 = write_rc_data_file(rc_list, lid)
+  params5 = write_rc_data_file(rc_list, lid, leg_dict)
   params3 = write_transposed_rc_data_file(rc_list)
-  params4 = write_leg_file(rc_list, start, dims, lid)
+  params4 = write_leg_file(rc_list, start, dims, lid, leg_dict)
   params1 = write_bill_file(rc_list, start, dims)
   params2 = write_session_file(rc_list)
   params = write_start_file(rc_list, sessions, dims, model,
@@ -214,7 +214,7 @@ write_input_files = function(rc_list, start, sessions, dims,
   c(params, params1, params2, params3, params4, params5)
 }
 
-make_leg_df = function(res, params, party_dict) {
+make_leg_df = function(res, params, party_dict, leg_dict) {
   ## organize legislator data
   ndims = res[[1]][1]
   coords = paste0('coord', 1:ndims, 'D')
@@ -240,6 +240,7 @@ make_leg_df = function(res, params, party_dict) {
   df = do.call(cbind.data.frame, leg_data)
   names(df) = legnames
   df$party = names(party_dict)[df$partyID]
+  df$ID = names(leg_dict)[df$ID]
   df
 }
 
@@ -343,15 +344,18 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
       }
     }
   }
+  # make integer ID's to make DW-NOMINATE happy
   if (is.null(id)) {
-    # make some ID's to make DW-NOMINATE happy
-    leg_names = unique(unlist(lapply(rc_list, get_leg_names)))
-    id = 'dwnomID'
+    id = 'dwnominate_tmp_ID'
     for (n in 1:length(rc_list)) {
-      rc_list[[n]]$legis.data[, id] =
-        match(get_leg_names(rc_list[[n]]), leg_names)
+      rc_list[[n]]$legis.data[, id] = get_leg_names(rc_list[[n]])
     }
+    get_names_fun = get_leg_names
+  } else {
+    get_names_fun = function(x) x$legis.data[, id]
   }
+  leg_names = unique(unlist(lapply(rc_list, get_names_fun)))
+  leg_dict = setNames(1:length(leg_names), as.character(leg_names))
   if (!dims %in% 1:2) stop('dims must be either 1 or 2')
   if (!model %in% 0:3) stop('model must be between 0 and 3')
   nrc = length(rc_list)
@@ -392,7 +396,7 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
   }
   
   params = write_input_files(rc_list, start, sessions, dims,
-                             model, iters, beta, w, id)
+                             model, iters, beta, w, id, leg_dict)
   
   # run DW-NOMINATE
   message('Running DW-NOMINATE...')
@@ -441,7 +445,7 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
                 'minutes.\n'))
   
   # organize the results
-  results = list(legislators=make_leg_df(res, params, party_dict),
+  results = list(legislators=make_leg_df(res, params, party_dict, leg_dict),
                  rollcalls=make_rc_df(res, params),
                  dimensions=dims,
                  beta = tail(res[[31]], 1),
