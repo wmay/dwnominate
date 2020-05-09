@@ -15,10 +15,9 @@
 Plot party means over time
 }
 \examples{
-# US Senate data from voteview.com
 \donttest{
-data(senate)
-dwnom <- dwnominate(senate)
-plot(dwnom)
+data(nhsen)
+results <- dwnominate(nhsen)
+plot(results)
 }
 }

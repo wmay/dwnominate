@@ -17,7 +17,6 @@ nhsen
 New Hampshire Senate roll call votes from 1999 to 2019.
 }
 \examples{
-library(pscl)
 data(nhsen)
 summary(nhsen[[1]])
 }

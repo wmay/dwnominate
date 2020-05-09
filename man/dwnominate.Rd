@@ -71,9 +71,8 @@ A list of class \code{dwnominate} containing: \itemize{
 Run DW-NOMINATE
 }
 \examples{
-# US Senate data originally from voteview.com
-data(senate)
-results <- dwnominate(senate)
+data(nhsen)
+results <- dwnominate(nhsen)
 plot(results)
 }
 \references{
