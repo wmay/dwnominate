@@ -219,28 +219,24 @@ make_leg_df = function(res, params, party_dict, leg_dict) {
   ndims = res[[1]][1]
   coords = paste0('coord', 1:ndims, 'D')
   if (ndims == 1) {
-    leg_data = c(res[13:14], params[c('istate', 'idist', 'ksta', 'iparty', 'lname')],
-                 res[20], res[25:28])
-    legnames = c('session', 'ID', 'stateID', 'district', 'state', 
-                 'partyID', 'name', coords,
-                 'loglikelihood', 'loglikelihood_check', 'numVotes', 'numVotes_check',
-                 'numErrors', 'numErrors_check',
-                 'GMP', 'GMP_check')
+    leg_data = c(res[13:14], params[c('iparty', 'lname')], res[20], res[25:28])
+    legnames = c('session', 'ID', 'party', 'name', coords, 'loglikelihood',
+                 'loglikelihood_check', 'numVotes', 'numVotes_check',
+                 'numErrors', 'numErrors_check', 'GMP', 'GMP_check')
   } else {
-    leg_data = c(res[13:14], params[c('istate', 'idist', 'ksta', 'iparty', 'lname')],
-                 res[20:28])
+    leg_data = c(res[13:14], params[c('iparty', 'lname')], res[20:28])
     ses = paste0('se', 1:ndims, 'D')
     vars = paste0('var', 1:ndims, 'D')
-    legnames = c('session', 'ID', 'stateID', 'district', 'state', 
-                 'partyID', 'name', coords, ses, vars,
-                 'loglikelihood', 'loglikelihood_check', 'numVotes', 'numVotes_check',
-                 'numErrors', 'numErrors_check',
-                 'GMP', 'GMP_check')
+    legnames = c('session', 'ID', 'party', 'name', coords, ses, vars,
+                 'loglikelihood', 'loglikelihood_check', 'numVotes',
+                 'numVotes_check', 'numErrors', 'numErrors_check', 'GMP',
+                 'GMP_check')
   }
   df = do.call(cbind.data.frame, leg_data)
   names(df) = legnames
-  df$party = names(party_dict)[df$partyID]
+  df$party = names(party_dict)[df$party]
   df$ID = names(leg_dict)[df$ID]
+  df = df[, -grep('_check$', names(df))]
   df
 }
 
