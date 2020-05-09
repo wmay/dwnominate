@@ -4,7 +4,9 @@
 \name{senate}
 \alias{senate}
 \title{Sessions 109-113 of the US Senate}
-\format{A list of rollcall objects from the pscl package}
+\format{
+A list of rollcall objects from the pscl package
+}
 \source{
 \href{http://www.voteview.com/dwnl.html}{voteview.com}
 }

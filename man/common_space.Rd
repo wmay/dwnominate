@@ -4,8 +4,7 @@
 \alias{common_space}
 \title{Calculate common space scores}
 \usage{
-common_space(nom_list, id = NULL, dims = 2, minscale = 5,
-  polarity = NULL)
+common_space(nom_list, id = NULL, dims = 2, minscale = 5, polarity = NULL)
 }
 \arguments{
 \item{nom_list}{A list of \code{nomObject} results from the

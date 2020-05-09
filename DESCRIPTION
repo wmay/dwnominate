@@ -21,5 +21,7 @@ Imports:
     wnominate
 License: MIT
 Encoding: UTF-8
-RoxygenNote: 6.1.1
-Suggests: testthat
+RoxygenNote: 7.1.0
+Suggests:
+    testthat,
+    usethis
