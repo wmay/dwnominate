@@ -7,7 +7,6 @@
 #' @source \href{http://gencourt.state.nh.us}{New Hampshire General Court}
 #'
 #' @examples
-#' library(pscl)
 #' data(nhsen)
 #' summary(nhsen[[1]])
 'nhsen'
