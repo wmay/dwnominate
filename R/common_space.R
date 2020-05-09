@@ -90,8 +90,9 @@ common_space = function(nom_list, id = NULL, dims = 2, minscale = 5,
     new_legs$c1[missing] = apply(smat[row.names(new_legs)[missing], ], 1,
                                  function(x) mean((x - scales$c) / scales$w1, na.rm = T))
     ## scale results to fit within the range [-1, 1]
-    new_legs$c1 = scale(new_legs$c1, center = mean(range(new_legs$c1)),
-                        scale = (max(new_legs$c1) - min(new_legs$c1)) / 2)
+    c1_range = range(new_legs$c1, na.rm = TRUE)
+    new_legs$c1 = scale(new_legs$c1, center = mean(c1_range),
+                        scale = diff(c1_range) / 2)
     ## reverse the scores if needed to match the polarity
     if (!is.null(polarity)) {
       if (new_legs[polarity[n], 'c1'] < median(new_legs$c1, na.rm = TRUE)) {
