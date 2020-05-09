@@ -112,7 +112,9 @@ common_space = function(nom_list, id = NULL, dims = 2, minscale = 5,
                           scale = rep(max(distances, na.rm=T), ncol(legislators)))
   
   res = list(legislators = legislators,
-             blackbox = bb, nom_list = nom_list)
+             blackbox = bb,
+             dimensions = dims,
+             nom_list = nom_list)
   class(res) = 'common space'
   res
 }
