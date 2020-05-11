@@ -13,6 +13,3 @@ osx_image: # the current default
 r_binary_packages:
   - testthat
   - usethis
-brew_packages:
-  - testthat
-  - usethis
