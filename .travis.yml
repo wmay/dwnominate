@@ -10,3 +10,9 @@ osx_image: # the current default
   - xcode9.4
   # macOS 10.14 / xcode10.2 is particularly troublesome
   - xcode10.2
+r_binary_packages:
+  - testthat
+  - usethis
+brew_packages:
+  - testthat
+  - usethis
