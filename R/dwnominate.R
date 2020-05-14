@@ -331,6 +331,8 @@ auto_wnominate = function(rc, ...) {
 #' \insertRef{poole_spatial_2005}{dwnominate}
 #' 
 #' \insertRef{poole_ideology_2011}{dwnominate}
+#' @seealso \url{https://legacy.voteview.com/dw-nominate.htm} for the original
+#'   fortran code and instructions.
 #' @examples
 #' data(nhsen)
 #' results <- dwnominate(nhsen)

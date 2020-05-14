@@ -84,3 +84,7 @@ plot(results)
 
 \insertRef{poole_ideology_2011}{dwnominate}
 }
+\seealso{
+\url{https://legacy.voteview.com/dw-nominate.htm} for the original
+  fortran code and instructions.
+}
