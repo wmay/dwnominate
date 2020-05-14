@@ -32,9 +32,10 @@ get_scale_mat = function(wnoms, id_name = NULL, dim = NULL) {
 
 #' Calculate common space scores
 #'
-#' The common space function extracts latent dimensions from a
-#' collection of roll call scaling results using the procedure
-#' outlined in Poole (1998) and Poole (2005).
+#' The common space function extracts latent dimensions from a collection of
+#' roll call scaling results using the procedure outlined in
+#' \insertCite{poole_recovering_1998;textual}{dwnominate} and
+#' \insertCite{poole_spatial_2005;textual}{dwnominate}.
 #'
 #' @param nom_list A list of \code{nomObject} results from the
 #'   \code{wnominate} package. The number of estimated dimensions in
@@ -57,13 +58,7 @@ get_scale_mat = function(wnoms, id_name = NULL, dim = NULL) {
 #'   \item{legislators} {A data frame of legislator coordinates}
 #'   \item{blackbox} {A list of blackbox results} \item{nom_list} {The
 #'   provided list of \code{wnominate} results} }
-#' @references Keith T. Poole. 1998. 'Recovering a Basic Space From a
-#'   Set of Issue Scales.' New York: Cambridge University
-#'   Press. American Journal of Political Science, Vol. 42, No. 3
-#'   (Jul., 1998), pp. 954-993
-#' 
-#' Keith T. Poole. 2005. 'Spatial Models of Parliamentary Voting.' New
-#'   York: Cambridge University Press.
+#' @references \insertAllCited{}
 #' @export
 common_space = function(nom_list, id = NULL, dims = 2, minscale = 5,
                         polarity = NULL) {

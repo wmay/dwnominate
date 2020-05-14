@@ -76,6 +76,11 @@ results <- dwnominate(nhsen)
 plot(results)
 }
 \references{
-Keith Poole. 2005. 'Spatial Models of Parliamentary
-  Voting.' New York: Cambridge University Press.
+\insertRef{poole_patterns_1991}{dwnominate}
+
+\insertRef{mccarty_income_1997}{dwnominate}
+
+\insertRef{poole_spatial_2005}{dwnominate}
+
+\insertRef{poole_ideology_2011}{dwnominate}
 }

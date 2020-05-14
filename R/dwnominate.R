@@ -4,6 +4,7 @@
 # 660 legislators per session
 # 2901 votes per session
 
+#' @importFrom Rdpack reprompt
 
 # get legislator names from rollcall objects
 get_leg_names = function(x) row.names(x$legis.data)
@@ -322,8 +323,14 @@ auto_wnominate = function(rc, ...) {
 #'   \item{rollcalls} {A data frame of rollcall information}
 #'   \item{start} {The \code{wnominate} or \code{oc} results used as
 #'   starting points for DW-NOMINATE} }
-#' @references Keith Poole. 2005. 'Spatial Models of Parliamentary
-#'   Voting.' New York: Cambridge University Press.
+#' @references
+#' \insertRef{poole_patterns_1991}{dwnominate}
+#' 
+#' \insertRef{mccarty_income_1997}{dwnominate}
+#' 
+#' \insertRef{poole_spatial_2005}{dwnominate}
+#' 
+#' \insertRef{poole_ideology_2011}{dwnominate}
 #' @examples
 #' data(nhsen)
 #' results <- dwnominate(nhsen)

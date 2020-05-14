@@ -14,10 +14,11 @@ Description: A simplified R interface to the DW-NOMINATE roll call
     applied to multiple legislative sessions. The results can be used
     to measure legislative ideology and polarization over time.
 Depends:
-    R (>= 2.10)
+    R (>= 3.2.0)
 Imports:
     basicspace,
     pscl,
+    Rdpack,
     wnominate
 License: MIT
 Encoding: UTF-8
@@ -25,3 +26,4 @@ RoxygenNote: 7.1.0
 Suggests:
     testthat,
     usethis
+RdMacros: Rdpack
