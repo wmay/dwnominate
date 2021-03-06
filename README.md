@@ -1,6 +1,5 @@
 # dwnominate
 
-[![Build Status](https://travis-ci.org/wmay/dwnominate.svg?branch=master)](https://travis-ci.org/wmay/dwnominate)
 [![R-CMD-check](https://github.com/wmay/dwnominate/workflows/R-CMD-check/badge.svg)](https://github.com/wmay/dwnominate/actions)
 [![Codecov test coverage](https://codecov.io/gh/wmay/dwnominate/branch/master/graph/badge.svg)](https://codecov.io/gh/wmay/dwnominate?branch=master)
 
