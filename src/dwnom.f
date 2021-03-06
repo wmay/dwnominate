@@ -56,7 +56,7 @@ C     with minor changes by William May for use with R
      C               XBIGLOG(54001,2),KBIGLOG(54001,4)
       COMMON /MINE/ NS,NQTOT,NPTOT,KLASS,
      C              KLASSYY,KLASSNY,KLASSYN,KLASSNN
-      CHARACTER*64 FTITLE
+      CHARACTER  FTITLE(64),outmsg(255)
       INTEGER*2 ITIM1,ITIM2,ITIM3,ITIM4,JTIM1,JTIM2,JTIM3,JTIM4
 C
   100 FORMAT(2X,I3,2I2,I4,I5,2I1,11A1,3600I1)
@@ -304,8 +304,8 @@ C
       NQC=NUMCONGT(II)
       NQ=MCONG(II,2)
       IF(NQ.NE.NQC)THEN
-         WRITE(*,305)II,NQ,NQC
-         STOP
+         WRITE(outmsg,305)II,NQ,NQC
+         call rexit(outmsg)
       ENDIF
       DO 3 J=1,NQ
       NEQ=J
@@ -320,12 +320,12 @@ C
       XMAT(I,K)=XDATA(I+KTOTP,K)
  4444 CONTINUE
       IF(RCVOTE9(I+KTOTP,J).NEQV.RCVOTET9(J+KTOTQ,I))THEN
-         WRITE(*,306)II,J,I
-         STOP
+         WRITE(outmsg,306)II,J,I
+         call rexit(outmsg)
       ENDIF
       IF(RCVOTE1(I+KTOTP,J).NEQV.RCVOTET1(J+KTOTQ,I))THEN
-         WRITE(*,307)II,J,I
-         STOP
+         WRITE(outmsg,307)II,J,I
+         call rexit(outmsg)
       ENDIF
       IF(RCVOTE9(I+KTOTP,J).EQV..TRUE.)KMISS=KMISS+1
 C
@@ -1508,6 +1508,7 @@ C
      C            YGMP(152),YYGMP(152),OUTX0(99,99),
      C            OUTX1(99,99),OUTX2(99,99),OUTX3(99,99)
       LOGICAL*1 RCVOTE1,RCVOTE9,RCVOTET1,RCVOTET9,RCBAD,LWHERE
+      CHARACTER outmsg(255)
       COMMON /XXCOM/ ZMID(99001,2),XDATA(54001,9),DYN(99001,2),
      C               RCVOTE1(54001,2901),RCVOTE9(54001,2901),
      C               RCVOTET1(99001,660),RCVOTET9(99001,660),
@@ -1800,8 +1801,8 @@ C
  665  CONTINUE
       SUM=SUM/FLOAT(NEPCONG)
       IF((SAVEGMP-GMPNOW).GT..00001)THEN
-          WRITE(*,1003)NEP
-C          STOP
+          WRITE(outmsg,1003)NEP
+          call rexit(outmsg)
       ENDIF
   666 CONTINUE
 C
@@ -1952,8 +1953,8 @@ C
  664     CONTINUE
          SUM=SUM/FLOAT(NEPCONG)
          IF((SAVEGMP-GMPNOW).GT..00001)THEN
-             WRITE(*,1003)NEP
-             STOP
+             WRITE(outmsg,1003)NEP
+             call rexit(outmsg)
          ENDIF
   766    CONTINUE
 C
@@ -2104,8 +2105,8 @@ C
  764     CONTINUE
          SUM=SUM/FLOAT(NEPCONG)
          IF((SAVEGMP-GMPNOW).GT..00001)THEN
-             WRITE(*,1003)NEP
-             STOP
+             WRITE(outmsg,1003)NEP
+             call rexit(outmsg)
          ENDIF
    79    CONTINUE
 C
@@ -2255,8 +2256,8 @@ C
  864     CONTINUE
          SUM=SUM/FLOAT(NEPCONG)
          IF((SAVEGMP-GMPNOW).GT..00001)THEN
-             WRITE(*,1003)NEP
-             STOP
+             WRITE(outmsg,1003)NEP
+             call rexit(outmsg)
          ENDIF
    89    CONTINUE
 C
