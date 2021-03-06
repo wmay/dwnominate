@@ -476,8 +476,8 @@ plot.dwnominate = function(x, ...) {
   pch = 18
   legs = x$legislators
   uniq_parties = unique(legs$party)
-  col_dict = setNames(grDevices::rainbow(length(uniq_parties)),
-      uniq_parties)
+  col_dict = setNames(palette.colors(length(uniq_parties), recycle = TRUE),
+                      uniq_parties)
   ts1 = aggregate(legs$coord1D,
       by=list(legs$session, legs$party), FUN=mean, na.rm=T)
   plot(ts1$Group.1, ts1$x, ylim=c(-1, 1), type='n',
