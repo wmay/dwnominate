@@ -256,7 +256,6 @@ C
       NUMCONG(NCONG(I))=NUMCONG(NCONG(I))+1
  550  CONTINUE
  450  call intpr('TOTAL LEGISLATORS', -1, I, 1)
-      WRITE(*,321)
       call intpr(' ', 1, 0, 0)
       NPTOT=I
 C
@@ -658,7 +657,6 @@ c$$$      write(*,1000)itim1,itim2,itim3,itim4
 c$$$      write(*,1001)jtim1,jtim2,jtim3,jtim4
 C     stop
       WEIGHTSOUT = WEIGHT(1:(NOMSTARTIN(1) + 1))
-      WRITE(*,321)
       end
 C
 C  ***************************************************************************
