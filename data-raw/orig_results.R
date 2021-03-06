@@ -6,11 +6,11 @@
 remotes::install_github('wmay/dwnominate', ref = '195d257')
 library(dwnominate)
 library(wnominate)
-load('../data/nhsen.rda')
+load('../data/nhsenate.rda')
 
 # need an integer ID field
-leg_names = unique(unlist(lapply(nhsen, function(x) x$legis.data$name)))
-nhsen = lapply(nhsen, function(x) {
+leg_names = unique(unlist(lapply(nhsenate, function(x) x$legis.data$name)))
+nhsen = lapply(nhsenate, function(x) {
   x$legis.data$ID = match(x$legis.data$name, leg_names)
   x
 })

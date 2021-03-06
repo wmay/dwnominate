@@ -16,8 +16,8 @@ Plot party means over time
 }
 \examples{
 \donttest{
-data(nhsen)
-results <- dwnominate(nhsen)
+data(nhsenate)
+results <- dwnominate(nhsenate)
 plot(results)
 }
 }

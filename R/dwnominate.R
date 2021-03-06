@@ -334,8 +334,8 @@ auto_wnominate = function(rc, ...) {
 #' @seealso \url{https://legacy.voteview.com/dw-nominate.htm} for the original
 #'   fortran code and instructions.
 #' @examples
-#' data(nhsen)
-#' results <- dwnominate(nhsen)
+#' data(nhsenate)
+#' results <- dwnominate(nhsenate)
 #' plot(results)
 #' @export
 dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
@@ -465,8 +465,8 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
 #' @param ... Arguments passed to \code{plot.default()}
 #' @examples
 #' \donttest{
-#' data(nhsen)
-#' results <- dwnominate(nhsen)
+#' data(nhsenate)
+#' results <- dwnominate(nhsenate)
 #' plot(results)
 #' }
 #' @importFrom graphics grid legend plot points
@@ -504,8 +504,8 @@ plot.dwnominate = function(x, ...) {
 #'   legislators. If not provided legislators are matched based on
 #'   name.
 #' @examples
-#' data(nhsen)
-#' combined_rcs = merge(nhsen[[1]], nhsen[[2]], by='name')
+#' data(nhsenate)
+#' combined_rcs = merge(nhsenate[[1]], nhsenate[[2]], by='name')
 #' summary(combined_rcs)
 #' @export
 merge.rollcall = function(x=NULL, y=NULL, rc_list=NULL,

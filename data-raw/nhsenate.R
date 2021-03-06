@@ -95,8 +95,8 @@ start_year = start_pg %>%
   html_text %>%
   as.integer %>%
   min
-nhsen = lapply(start_year:2019, get_year_rc, pg = start_pg)
-usethis::use_data(nhsen)
+nhsenate = lapply(start_year:2019, get_year_rc, pg = start_pg)
+usethis::use_data(nhsenate, overwrite = TRUE)
 
 
 # Old SQL Server code, just in case they get it all working:

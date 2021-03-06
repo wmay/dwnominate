@@ -21,7 +21,7 @@ name.}
 Merge x and y rollcall objects, or a list of rollcall objects.
 }
 \examples{
-data(nhsen)
-combined_rcs = merge(nhsen[[1]], nhsen[[2]], by='name')
+data(nhsenate)
+combined_rcs = merge(nhsenate[[1]], nhsenate[[2]], by='name')
 summary(combined_rcs)
 }

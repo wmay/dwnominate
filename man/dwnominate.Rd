@@ -71,8 +71,8 @@ A list of class \code{dwnominate} containing: \itemize{
 Run DW-NOMINATE
 }
 \examples{
-data(nhsen)
-results <- dwnominate(nhsen)
+data(nhsenate)
+results <- dwnominate(nhsenate)
 plot(results)
 }
 \references{
