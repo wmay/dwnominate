@@ -21,7 +21,7 @@ Running DW-NOMINATE:
 ```R
 library(dwnominate)
 # get a list of `rollcall` objects
-data(senate)
+data(nhsen)
 results <- dwnominate(senate)
 plot(results)
 ```

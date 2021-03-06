@@ -4,8 +4,7 @@
 \alias{merge.rollcall}
 \title{Merge rollcall objects}
 \usage{
-\method{merge}{rollcall}(x = NULL, y = NULL, rc_list = NULL,
-  by = NULL)
+\method{merge}{rollcall}(x = NULL, y = NULL, rc_list = NULL, by = NULL)
 }
 \arguments{
 \item{x}{An object of class \code{dwnominate()}.}
@@ -22,9 +21,7 @@ name.}
 Merge x and y rollcall objects, or a list of rollcall objects.
 }
 \examples{
-library(pscl) # for the rollcall summary method
-data(senate)
-# merge using ICPSR legislator ID's
-combined_rcs = merge(senate[[1]], senate[[2]], by='icpsrLegis')
+data(nhsen)
+combined_rcs = merge(nhsen[[1]], nhsen[[2]], by='name')
 summary(combined_rcs)
 }

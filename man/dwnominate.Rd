@@ -4,9 +4,19 @@
 \alias{dwnominate}
 \title{Run DW-NOMINATE}
 \usage{
-dwnominate(rc_list, id = NULL, start = NULL, sessions = NULL,
-  dims = 2, model = 1, niter = 4, beta = 5.9539, w = 0.3463,
-  polarity = NULL, ...)
+dwnominate(
+  rc_list,
+  id = NULL,
+  start = NULL,
+  sessions = NULL,
+  dims = 2,
+  model = 1,
+  niter = 4,
+  beta = 5.9539,
+  w = 0.3463,
+  polarity = NULL,
+  ...
+)
 }
 \arguments{
 \item{rc_list}{A list of \code{rollcall} objects from the
@@ -61,12 +71,20 @@ A list of class \code{dwnominate} containing: \itemize{
 Run DW-NOMINATE
 }
 \examples{
-# US Senate data originally from voteview.com
-data(senate)
-results <- dwnominate(senate)
+data(nhsen)
+results <- dwnominate(nhsen)
 plot(results)
 }
 \references{
-Keith Poole. 2005. 'Spatial Models of Parliamentary
-  Voting.' New York: Cambridge University Press.
+\insertRef{poole_patterns_1991}{dwnominate}
+
+\insertRef{mccarty_income_1997}{dwnominate}
+
+\insertRef{poole_spatial_2005}{dwnominate}
+
+\insertRef{poole_ideology_2011}{dwnominate}
+}
+\seealso{
+\url{https://legacy.voteview.com/dw-nominate.htm} for the original
+  fortran code and instructions.
 }

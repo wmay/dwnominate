@@ -4,6 +4,7 @@
 # 660 legislators per session
 # 2901 votes per session
 
+#' @importFrom Rdpack reprompt
 
 # get legislator names from rollcall objects
 get_leg_names = function(x) row.names(x$legis.data)
@@ -322,12 +323,19 @@ auto_wnominate = function(rc, ...) {
 #'   \item{rollcalls} {A data frame of rollcall information}
 #'   \item{start} {The \code{wnominate} or \code{oc} results used as
 #'   starting points for DW-NOMINATE} }
-#' @references Keith Poole. 2005. 'Spatial Models of Parliamentary
-#'   Voting.' New York: Cambridge University Press.
+#' @references
+#' \insertRef{poole_patterns_1991}{dwnominate}
+#' 
+#' \insertRef{mccarty_income_1997}{dwnominate}
+#' 
+#' \insertRef{poole_spatial_2005}{dwnominate}
+#' 
+#' \insertRef{poole_ideology_2011}{dwnominate}
+#' @seealso \url{https://legacy.voteview.com/dw-nominate.htm} for the original
+#'   fortran code and instructions.
 #' @examples
-#' # US Senate data originally from voteview.com
-#' data(senate)
-#' results <- dwnominate(senate)
+#' data(nhsen)
+#' results <- dwnominate(nhsen)
 #' plot(results)
 #' @export
 dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
@@ -456,11 +464,10 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
 #' @param x An object returned by \code{dwnominate()}.
 #' @param ... Arguments passed to \code{plot.default()}
 #' @examples
-#' # US Senate data from voteview.com
 #' \donttest{
-#' data(senate)
-#' dwnom <- dwnominate(senate)
-#' plot(dwnom)
+#' data(nhsen)
+#' results <- dwnominate(nhsen)
+#' plot(results)
 #' }
 #' @importFrom graphics grid legend plot points
 #' @importFrom stats aggregate setNames
@@ -486,30 +493,6 @@ plot.dwnominate = function(x, ...) {
          bg='white', horiz=T)
 }
 
-#' Sessions 109-113 of the US Senate
-#'
-#' Rollcall votes of Senators in the 109-113th sessions of the US
-#' Senate.
-#'
-#' @format A list of rollcall objects from the pscl package
-#'
-#' @source \href{http://www.voteview.com/dwnl.html}{voteview.com}
-#'
-#' @examples
-#' # US Senate data from voteview.com
-#' data(senate)
-#'
-#' library(wnominate)
-#' wnom <- wnominate(senate[[1]], polarity = 1:2)
-#' plot(wnom)
-#'
-#' \donttest{
-#' dwnom <- dwnominate(senate)
-#' plot(dwnom)
-#' }
-'senate'
-
-
 #' Merge rollcall objects
 #'
 #' Merge x and y rollcall objects, or a list of rollcall objects.
@@ -521,10 +504,8 @@ plot.dwnominate = function(x, ...) {
 #'   legislators. If not provided legislators are matched based on
 #'   name.
 #' @examples
-#' library(pscl) # for the rollcall summary method
-#' data(senate)
-#' # merge using ICPSR legislator ID's
-#' combined_rcs = merge(senate[[1]], senate[[2]], by='icpsrLegis')
+#' data(nhsen)
+#' combined_rcs = merge(nhsen[[1]], nhsen[[2]], by='name')
 #' summary(combined_rcs)
 #' @export
 merge.rollcall = function(x=NULL, y=NULL, rc_list=NULL,

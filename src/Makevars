@@ -1,10 +1,2 @@
 # allow legacy syntax
 PKG_FFLAGS=-std=legacy
-
-# replace the standard FFLAGS with SAFE_FFLAGS
-DWNOM_FFLAGS = $(R_XTRA_FFLAGS) $(PKG_FFLAGS) $(FPICFLAGS) $(SHLIB_FFLAGS) $(SAFE_FFLAGS)
-
-all: $(SHLIB)
-
-dwnom.o: dwnom.f
-	$(F77) $(DWNOM_FFLAGS) -c -o dwnom.o dwnom.f
