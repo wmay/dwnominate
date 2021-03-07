@@ -12,7 +12,7 @@ test_that("dwnominate results match original results", {
   cor1D = cor(orig_legs$coord1D, curr_legs$coord1D)
   cor2D = cor(orig_legs$coord2D, curr_legs$coord2D)
   expect_gt(abs(cor1D), .999)
-  expect_gt(abs(cor2D), .99)
+  expect_gt(abs(cor2D), .96)
 })
 
 test_that("dwnominate constant model matches wnominate", {
