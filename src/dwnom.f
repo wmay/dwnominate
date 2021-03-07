@@ -3446,7 +3446,7 @@ C
 C
       DO 115 K=1,NS
       SUMX(K)=SUMX(K+NS)
-      ZVEC(JX,K)=VVV(K,NS)
+      ZVEC(JX,K)=VVV(NS,K)
   115 CONTINUE
 C
  3908 FORMAT(I5,I3,10F7.3)
@@ -3460,7 +3460,7 @@ C
 C
       IF(IJL.GT.25)THEN
          DO 114 K=1,NS
-         ZVEC(JX,K)=VVV(K,NS)
+         ZVEC(JX,K)=VVV(NS,K)
   114    CONTINUE
       ENDIF
 C
