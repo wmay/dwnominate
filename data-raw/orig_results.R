@@ -1,12 +1,30 @@
-# Get dwnominate results from a much older version of the package. The old
-# version was pretty clunky, but I hadn't yet made any substantial changes to
-# the fortran code, so the results serve as a useful reference for unit tests.
+# Get DW-NOMINATE results from the original fortran code, to use for regression
+# testing
 
-# remotes::install_github('cran/oc') # if needed
-remotes::install_github('wmay/dwnominate', ref = '195d257')
+# I can't legally distribute the original file because it contains proprietary
+# IMSL code, so download it instead
+if (!file.exists('DW-NOMINATE/DW-NOMINATE.FOR')) {
+  dir.create('DW-NOMINATE')
+  setwd('DW-NOMINATE')
+  download.file('https://legacy.voteview.com/k7ftp/wf1/DW-NOMINATE.FOR',
+                'DW-NOMINATE.FOR')
+  # Comment `gettim` lines. gfortran can't compile them, and they only record
+  # the time anyway
+  system("sed -e '/gettim/ s/^/C/' -i DW-NOMINATE.FOR")
+  setwd('..')
+}
+if (!file.exists('DW-NOMINATE/a.out')) {
+  dir.create('DW-NOMINATE')
+  setwd('DW-NOMINATE')
+  # compile the file with gfortran
+  system("gfortran DW-NOMINATE.FOR -std=legacy")
+  setwd('..')
+}
+
 library(dwnominate)
 library(wnominate)
-load('../data/nhsenate.rda')
+source('write_files.R')
+data(nhsenate)
 
 # need an integer ID field
 leg_names = unique(unlist(lapply(nhsenate, function(x) x$legis.data$name)))
@@ -16,15 +34,31 @@ nhsen = lapply(nhsenate, function(x) {
 })
 
 nhsen_merged = dwnominate:::merge.rollcall(rc_list = nhsen)
-nhsen_wnom = wnominate(nhsen_merged, polarity = rep(1, 2))
-orig_results = dwnominate(nhsen, id = 'ID', wnom = nhsen_wnom)
+nhsen_wnom = wnominate(nhsen_merged, polarity = c(1, 1))
+# orig_results = dwnominate(nhsen, id = 'ID', wnom = nhsen_wnom)
 
-# replace the invented ID with name, for convenience later
-nhsen_wnom$legislators$ID = leg_names[nhsen_wnom$legislators$ID]
-orig_results$legislators$ID = leg_names[orig_results$legislators$ID]
+setwd('DW-NOMINATE')
+# write files
+write_input_files(nhsen, nhsen_wnom, sessions = c(1, length(nhsen)), dims = 2,
+                  model = 1, niter = c(1, 5), beta = 5.9539, w = 0.3463,
+                  lid = 'ID')
 
-usethis::use_data(nhsen_wnom, orig_results, internal = TRUE, overwrite = T)
+# run dwnominate
+system("./a.out")
 
-# clean up the mess left by the old package
-unwanted_files = list.files(pattern = '\\.[^R]+$')
+# read results
+party_dict = setNames(0, 'party')
+nlegs = sum(sapply(nhsen, function(x) x$n))
+nrcs = sum(sapply(nhsen, function(x) x$m))
+orig_results = read_output_files(party_dict, dims = 2, iters = c(1, 5),
+                                 nunlegs = nlegs, nunrcs = nrcs)
+
+setwd('..')
+
+# save both the wnominate starting values, and the original results
+usethis::use_data(nhsen_wnom, orig_results, internal = T, overwrite = T)
+
+# clean up
+unwanted_files = setdiff(list.files('DW-NOMINATE', full.names = T),
+                         'DW-NOMINATE/DW-NOMINATE.FOR')
 file.remove(unwanted_files)

@@ -51,5 +51,8 @@ po/*~
 # readme preview
 README.html
 
+# original DW-NOMINATE IO files
+data-raw/DW-NOMINATE
+
 # package check logs
 ..Rcheck
