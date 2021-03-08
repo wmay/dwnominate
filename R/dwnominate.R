@@ -369,6 +369,11 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
     sessions = c(1, nrc)
   if (any(sessions < 1) || any(sessions > nrc))
     stop('sessions must be between 1 and length(rc_list)')
+  # Iteration 1 is an OC analysis for the roll call parameters according to
+  # https://legacy.voteview.com/dw-nominate.htm. Since the code currently
+  # doesn't pass roll call parameter starting estimates to fortran, this makes
+  # sense to run. In the future when I pass the roll call inputs to fortran I
+  # should change this to start at 2.
   iters = c(1, niter + 1)
   # should check that membership overlaps
   
