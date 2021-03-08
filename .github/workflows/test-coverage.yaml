@@ -45,8 +45,8 @@ jobs:
 
       - name: Test coverage
         run: |
-	  library(covr)
-	  # add a compiler flag required for fortran coverage
-	  options(covr.flags = c(options('covr.flags')[[1]], FLIBS = "-lgcov"))
-	  codecov(quiet=FALSE)
+          library(covr)
+          # add a compiler flag required for fortran coverage
+          options(covr.flags = c(options('covr.flags')[[1]], FLIBS = "-lgcov"))
+          codecov(quiet=FALSE)
         shell: Rscript {0}
