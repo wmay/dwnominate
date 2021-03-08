@@ -56,9 +56,11 @@ get_scale_mat = function(wnoms, id_name = NULL, dim = NULL) {
 #'   recycled for all dimensions.
 #' @return A list of class \code{common space} containing: \itemize{
 #'   \item{legislators} {A data frame of legislator coordinates}
-#'   \item{blackbox} {A list of blackbox results} \item{nom_list} {The
-#'   provided list of \code{wnominate} results} }
+#'   \item{blackbox} {A list of blackbox results}
+#'   \item{nom_list} {The provided list of \code{wnominate} results} }
 #' @references \insertAllCited{}
+#' @seealso \code{\link[basicspace]{blackbox}}, which this function is basically
+#'   a wrapper around
 #' @export
 common_space = function(nom_list, id = NULL, dims = 2, minscale = 5,
                         polarity = NULL) {

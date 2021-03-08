@@ -32,8 +32,8 @@ recycled for all dimensions.}
 \value{
 A list of class \code{common space} containing: \itemize{
   \item{legislators} {A data frame of legislator coordinates}
-  \item{blackbox} {A list of blackbox results} \item{nom_list} {The
-  provided list of \code{wnominate} results} }
+  \item{blackbox} {A list of blackbox results}
+  \item{nom_list} {The provided list of \code{wnominate} results} }
 }
 \description{
 The common space function extracts latent dimensions from a collection of
@@ -43,4 +43,8 @@ roll call scaling results using the procedure outlined in
 }
 \references{
 \insertAllCited{}
+}
+\seealso{
+\code{\link[basicspace]{blackbox}}, which this function is basically
+  a wrapper around
 }
