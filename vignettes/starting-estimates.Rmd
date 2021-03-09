@@ -1,0 +1,110 @@
+---
+title: "Choosing Starting Estimates"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Choosing Starting Estimates}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: starting-estimates.bib
+link-citations: yes
+---
+
+```{r, include = FALSE}
+library(knitr)
+opts_chunk$set(collapse = TRUE, comment = "#>", cache = TRUE)
+```
+
+DW-NOMINATE uses a local optimization algorithm to get an approximate maximum
+likelihood estimate of legislator ideal points. However, the likelihood function
+is complex and can contain local maxima that aren't the global
+maximum. Therefore it's important to provide starting estimates close to the
+global maximum in order for DW-NOMINATE to find the correct results.
+
+There's currently no single best approach for creating starting estimates. The
+choice of approach depends on properties of the data.
+
+# wnominate and oc
+
+The `wnominate` and `oc` packages in R can create static ideal point estimates
+using W-NOMINATE and optimal classification methods, respectively. Neither
+package is designed to work with multiple legislative sessions, but they can be
+used for this purpose by combining the data from multiple sessions into a single
+`rollcall` object.
+
+The downside is that both W-NOMINATE and optimal classification can take much
+longer to run than DW-NOMINATE when there are many sessions. Of the two, `oc` is
+typically faster.
+
+```{r static, eval=FALSE}
+library(dwnominate)
+library(oc)
+data(nhsenate)
+
+# combine NH Senate rollcall objects
+combined_nhsenate <- dwnominate:::merge.rollcall(rc_list = nhsenate)
+# get optimal classification scores for the combined rollcalls
+starts <- oc(combined_nhsenate, polarity = c(1, 1))
+```
+
+# common_space
+
+Another strategy for deriving static scores is to calculate scores for each
+session, and combine the results into a single overall score. That's the
+approach used by the common space method.
+
+```{r common-space, eval=FALSE}
+library(dwnominate)
+library(wnominate)
+data(nhsenate)
+
+# run W-NOMINATE on every session of the NH Senate
+wnom_list <- lapply(nhsenate, wnominate, polarity = c(1, 1))
+
+starts <- common_space(wnom_list)
+```
+
+# Manual strategies
+
+@carroll_measuring_2009 [p. 265] describes the original process for creating the
+starting values:
+
+> DW-NOMINATE like its predecessor D-NOMINATE does not generate its own
+> parameter starting values because of the sheer size of the roll call data set
+> being analyzed. Good starting values are crucial to reliably performing this
+> complex nonlinear estimation. In their development of D-NOMINATE, Poole and
+> Rosenthal experimented for over 2 years until they had a satisfactory solution
+> to the problem. Essentially, they began with what they thought was a sensible
+> set of starting values and studied the estimated legislator coordinates by
+> turning them into computer animations that could be played on a VHS
+> videorecorder. In these animations, letter tokens and colors for the estimated
+> legislator coordinates were used to identify parties and regions of the United
+> States. Poole and Rosenthal then relied upon their knowledge of American
+> political history to see if the output made visual sense. If they saw
+> anomalies, they adjusted the output coordinates to correct for the anomalies
+> and then used these adjusted coordinates as new starting values. At each step
+> of this process, the fit of the model increased but it was a relatively
+> arduous task because the supercomputers of the 1980s were limited in their
+> capabilities and the animations took about a week to make on the equipment at
+> the Pittsburgh Supercomputer Center.
+>
+> The upshot of what one of us has described as "Poole and Rosenthal as the
+> outer loop of the estimation" is that the final coordinates from D-NOMINATE
+> that were released to the larger research community in 1989–90 were about as
+> close to the global maximum of the (constrained) likelihood function shown in
+> equation (10) as was practicable given the computer resources of the time.
+>
+> Consequently, when DW-NOMINATE was developed in 1996 it simply used for starts
+> the D-NOMINATE coordinates along with patched-in W-NOMINATE coordinates for
+> Congresses 100–105.
+
+@poole_spatial_2005 [p. 140] describes a simpler approach, piecing together
+common space scores estimated on subsets of the data:
+
+> I developed the CSS method in 1982, and Howard Rosenthal and I used it along
+> with a simple metric scaling method (Poole 1984, 1990; Poole and Rosenthal
+> 1997) to get starting coordinates in one and two dimensions for
+> DW-NOMINATE. We used common-space coordinates for stable periods and then
+> pieced together all the sets of starting coordinates for Congresses 1
+> to 100.
+
+# References
