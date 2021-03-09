@@ -56,3 +56,7 @@ data-raw/DW-NOMINATE
 
 # package check logs
 ..Rcheck
+
+# pkgdown
+docs
+inst/doc
