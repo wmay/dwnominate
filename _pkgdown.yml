@@ -1,0 +1,7 @@
+navbar:
+  structure:
+    left:  [home, intro, reference, articles, tutorials, faq, news]
+  components:
+    faq:
+      text: FAQ
+      href: articles/faq.html
