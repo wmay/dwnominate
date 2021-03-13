@@ -5,6 +5,17 @@ bibliography: faq.bib
 link-citations: true
 ---
 
+## Do the coordinates represent ideology?
+
+Legislator coordinates are probably a function of multiple factors, including
+ideology, pressure from party organizations, constituent demands, and
+others. @mccarty_hunt_2001 demonstrate that parties influence legislator
+coordinates.
+
+DW-NOMINATE results are sometimes informally described as ideology scores,
+disregarding the nuances. An older and more neutral term, "ideal point," is
+often used to describe the coordinates in more formal research.
+
 ## How do you interpret the dimensions?
 
 The first dimension is the most important dimension in terms of explaining
