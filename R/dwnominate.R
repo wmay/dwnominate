@@ -284,7 +284,10 @@ auto_wnominate = function(rc, ...) {
     stop('No legislators meet minimum vote requirements.')
   }
   leg_n = which(leg_has_min)[1]
-  wnominate::wnominate(rc, polarity = rep(leg_n, wnom_dims), ...)
+  capture.output({
+    res = wnominate::wnominate(rc, polarity = rep(leg_n, wnom_dims), ...)
+  })
+  res
 }
 
 #' Run DW-NOMINATE
