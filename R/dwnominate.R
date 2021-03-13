@@ -528,51 +528,47 @@ plot.dwnominate = function(x, ...) {
 
 #' Merge rollcall objects
 #'
-#' Merge x and y rollcall objects, or a list of rollcall objects.
+#' Merge a list of \code{rollcall} objects.
 #' 
-#' @param x An object of class \code{dwnominate()}.
-#' @param y An object of class \code{dwnominate()}.
-#' @param rc_list An list of object of \code{dwnominate()} objects.
+#' @param rollcalls A list of \code{rollcall} objects.
 #' @param by The column in legis.data to use as an ID for matching
 #'   legislators. If not provided legislators are matched based on
 #'   name.
 #' @examples
 #' data(nhsenate)
-#' combined_rcs = merge(nhsenate[[1]], nhsenate[[2]], by='name')
-#' summary(combined_rcs)
+#' combined_rcs <- merge_rollcalls(nhsenate, by='name')
+#' print(combined_rcs)
 #' @export
-merge.rollcall = function(x=NULL, y=NULL, rc_list=NULL,
-                          by=NULL) {
-  if (is.null(rc_list)) rc_list = list(x, y)
-  rc1 = rc_list[[1]]
+merge_rollcalls = function(rollcalls, by=NULL) {
+  rc1 = rollcalls[[1]]
   # check that the codes are the same
 
   # merge them all!
   if (is.null(by)) {
     # use legislator names as ID
-    leg_ids = lapply(rc_list, get_leg_names)
+    leg_ids = lapply(rollcalls, get_leg_names)
   } else {
-    leg_ids = lapply(rc_list, function(x) x$legis.data[, by])
+    leg_ids = lapply(rollcalls, function(x) x$legis.data[, by])
   }
   rows = unique(unlist(leg_ids))
   
-  legs0 = do.call(rbind, lapply(rc_list, function(x) x$legis.data))
-  cols = unlist(lapply(1:length(rc_list), function(x)
-    paste0('RC', x, ' ', colnames(rc_list[[x]]$votes))))
+  legs0 = do.call(rbind, lapply(rollcalls, function(x) x$legis.data))
+  cols = unlist(lapply(1:length(rollcalls), function(x)
+    paste0('RC', x, ' ', colnames(rollcalls[[x]]$votes))))
   # default vote values are notInLegis
   votes = matrix(rc1$codes$notInLegis[1],
                  nrow=length(rows), ncol=length(cols),
                  dimnames=list(rows, cols))
-  rc_bounds = cumsum(unlist(lapply(rc_list, function(x) ncol(x$votes))))
+  rc_bounds = cumsum(unlist(lapply(rollcalls, function(x) ncol(x$votes))))
   rc_bounds = c(0, rc_bounds)
-  for (n in 1:length(rc_list)) {
+  for (n in 1:length(rollcalls)) {
     if (is.null(by)) {
       rowns = match(leg_ids[[n]], rows)
     } else {
-      rowns = match(rc_list[[n]]$legis.data[, by], rows)
+      rowns = match(rollcalls[[n]]$legis.data[, by], rows)
     }
     colns = (rc_bounds[n] + 1):rc_bounds[n + 1]
-    votes[rowns, colns] = rc_list[[n]]$votes
+    votes[rowns, colns] = rollcalls[[n]]$votes
     ## # put the votes in a standard format ?
     ## codes = unlist(rc$codes)
     ## dict1 = setNames(c(1, 0, NA, 9),
@@ -582,13 +578,13 @@ merge.rollcall = function(x=NULL, y=NULL, rc_list=NULL,
     ## dict = setNames(dict1[dict2], names(dict2))
     # what to do about identical bill names?
   }
-  sources = unique(unlist(lapply(rc_list, function(x) x$source)))
+  sources = unique(unlist(lapply(rollcalls, function(x) x$source)))
   if (is.null(by)) {
     legs = legs0[match(rows, row.names(legs0)), ]
   } else {
     legs = legs0[match(rows, legs0[, by]), ]
   }
-  vote_data = do.call(rbind, lapply(rc_list, function(x) x$vote.data))
+  vote_data = do.call(rbind, lapply(rollcalls, function(x) x$vote.data))
 
   rc = pscl::rollcall(votes, yea=rc1$codes$yea,
                       nay=rc1$codes$nay,
