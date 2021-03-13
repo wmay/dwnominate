@@ -26,6 +26,7 @@ BugReports: https://github.com/wmay/dwnominate/issues
 Encoding: UTF-8
 RoxygenNote: 7.1.1
 Suggests:
+    oc,
     testthat,
     knitr,
     rmarkdown
