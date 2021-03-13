@@ -6,6 +6,7 @@
 [![R-CMD-check](https://github.com/wmay/dwnominate/workflows/R-CMD-check/badge.svg)](https://github.com/wmay/dwnominate/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/wmay/dwnominate/branch/master/graph/badge.svg)](https://codecov.io/gh/wmay/dwnominate?branch=master)
+[![DOI](https://zenodo.org/badge/48529209.svg)](https://zenodo.org/badge/latestdoi/48529209)
 
 DW-NOMINATE dynamic roll call scaling in R
 
@@ -46,4 +47,4 @@ information about DW-NOMINATE options with `?dwnominate` and
 
 ## Citing
 
-For citation information, run `citation('dwnominate')`.
+Please cite this package using the DOI provided by Zenodo.
