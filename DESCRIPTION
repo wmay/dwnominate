@@ -1,8 +1,8 @@
 Package: dwnominate
 Type: Package
 Title: An interface to the DW-NOMINATE roll call scaling program
-Version: 1.1.4
-Date: 2020-05-09
+Version: 1.2
+Date: 2021-03-13
 Authors@R: c(
     person("William", "May", email = "wmay@hey.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-3201-1885")),
     person("Nolan", "McCarty", role = "aut", comment = c(ORCID = "0000-0002-0538-1928")))
