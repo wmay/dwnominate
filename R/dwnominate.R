@@ -135,13 +135,15 @@ write_leg_file = function(rc_list, start, dims, lid, leg_dict) {
     lnames = c(lnames, rownames(rc$votes))
     if (class(start) == 'common space') {
       matches = match(rcl[, lid], row.names(start$legislators))
+      coords = as.matrix(start$legislators[matches, coordcols])
     } else if (methods::is(start, 'dwnominate')) {
       session_starts = start$legislators[start$legislators$session == session, ]
-      matches = match(rcl[, lid], session_starts[, 'ID'])
+      matches = match(rcl[, lid], session_starts[, lid])
+      coords = as.matrix(session_starts[matches, coordcols])
     } else {
       matches = match(rcl[, lid], start$legislators[, lid])
+      coords = as.matrix(start$legislators[matches, coordcols])
     }
-    coords = as.matrix(start$legislators[matches, coordcols])
     # DW-NOMINATE hates NA's
     coords[is.na(coords)] = 0
     all_coords = rbind(all_coords, coords)
