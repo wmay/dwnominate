@@ -1,7 +1,4 @@
 navbar:
-  structure:
-    left:  [home, intro, reference, articles, tutorials, faq, news]
-    right: [github]
   components:
     articles:
       text: Articles
