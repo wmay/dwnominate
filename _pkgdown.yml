@@ -3,6 +3,11 @@ navbar:
     left:  [home, intro, reference, articles, tutorials, faq, news]
     right: [github]
   components:
+    articles:
+      text: Articles
+      menu:
+      - text: Choosing Starting Estimates
+        href: articles/starting-estimates.html
     faq:
       text: FAQ
       href: articles/faq.html
