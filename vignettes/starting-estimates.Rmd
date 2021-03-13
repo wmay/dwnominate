@@ -21,15 +21,19 @@ maximum. Therefore it's important to provide starting estimates close to the
 global maximum in order for DW-NOMINATE to find the correct results.
 
 There's currently no single best approach for creating starting estimates. The
-choice of approach depends on properties of the data.
+choice of approach depends on properties of the data. In legislatures with large
+amounts of membership overlap between sessions and stable dimensions, static
+estimates can be straightforward to calculate and work well. When that's not the
+case, some manual intervention may be required. If the results of previous
+scaling estimates are available, those can also be used.
 
-# wnominate and oc
+# W-NOMINATE and optimal classification
 
 The `wnominate` and `oc` packages in R can create static ideal point estimates
 using W-NOMINATE and optimal classification methods, respectively. Neither
 package is designed to work with multiple legislative sessions, but they can be
-used for this purpose by combining the data from multiple sessions into a single
-`rollcall` object.
+used for this purpose by combining the voting data from multiple sessions into a
+single `rollcall` object.
 
 The downside is that both W-NOMINATE and optimal classification can take much
 longer to run than DW-NOMINATE when there are many sessions. Of the two, `oc` is
@@ -41,16 +45,18 @@ library(oc)
 data(nhsenate)
 
 # combine NH Senate rollcall objects
-combined_nhsenate <- dwnominate:::merge.rollcall(rc_list = nhsenate)
+combined_nhsenate <- merge_rollcalls(nhsenate)
 # get optimal classification scores for the combined rollcalls
 starts <- oc(combined_nhsenate, polarity = c(1, 1))
 ```
 
-# common_space
+# Common space scores
 
 Another strategy for deriving static scores is to calculate scores for each
-session, and combine the results into a single overall score. That's the
-approach used by the common space method.
+session individually, and combine the results into a single overall
+score. That's the approach used by the common space method. This method is more
+computationally efficient than running W-NOMINATE on the combined set of
+rollcalls.
 
 ```{r common-space, eval=FALSE}
 library(dwnominate)
@@ -59,14 +65,34 @@ data(nhsenate)
 
 # run W-NOMINATE on every session of the NH Senate
 wnom_list <- lapply(nhsenate, wnominate, polarity = c(1, 1))
-
+# extract common space scores
 starts <- common_space(wnom_list)
 ```
 
 # Manual strategies
 
-@carroll_measuring_2009 [p. 265] describes the original process for creating the
-starting values:
+Poole and Rosenthal's original D-NOMINATE paper describes some of the
+difficulties they encountered creating starting estimates
+[-@poole_patterns_1991, p. 277]:
+
+> In actual practice a legislator votes on only a small slice of all roll calls
+> in the history of a House of Congress, so there is very substantial "missing"
+> data. "Missing" data is not a problem so long as there is, as in modern times,
+> substantial overlap in careers. But when the membership of either House shifts
+> very rapidly, the results become sensitive to the starts. The problem is
+> greatest for the House in the nineteenth century. With large amounts of
+> missing data, Poole's procedure provided poor starts to D-NOMINATE.
+>
+> Our approach to this problem was to watch animated videos of the scaling
+> results. When rapid movement induced a "twist" in the position of senators, we
+> investigated multiplying second dimension starts for certain years (in the
+> nineteenth century only) by -1 -- thereby flipping polarity. The result was to
+> have a very slight improvement in the overall geometric mean probability and
+> to substantially reduce the magnitudes of estimated trend coefficients in the
+> period in question.
+
+@carroll_measuring_2009 [p. 265] further describes this process and how it
+related to starting values for the original DW-NOMINATE scores:
 
 > DW-NOMINATE like its predecessor D-NOMINATE does not generate its own
 > parameter starting values because of the sheer size of the roll call data set
@@ -106,5 +132,14 @@ common space scores estimated on subsets of the data:
 > DW-NOMINATE. We used common-space coordinates for stable periods and then
 > pieced together all the sets of starting coordinates for Congresses 1
 > to 100.
+
+# Using existing scores
+
+Rather than generating custom starting estimates, it can be easier to use the
+results of previous scalings when these are available. For the US Congress,
+[Voteview.com](https://voteview.com/) provides results of the DW-NOMINATE
+constant model [@lewis_voteview_2021; @boche_new_2018]. For US state
+legislatures, NPAT scores are available [@shor_individual_2020;
+@shor_ideological_2011].
 
 # References
