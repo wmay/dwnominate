@@ -1,0 +1,67 @@
+---
+title: "Frequently Asked Questions"
+author: "William May"
+bibliography: faq.bib
+link-citations: true
+---
+
+## Do the coordinates represent ideology?
+
+Legislator coordinates are probably a function of multiple factors, including
+ideology, pressure from party organizations, constituent demands, and
+others. @mccarty_hunt_2001 demonstrate that parties influence legislator
+coordinates.
+
+DW-NOMINATE results are sometimes informally described as ideology scores,
+disregarding the nuances. An older and more neutral term, "ideal point," is
+often used to describe the coordinates in more formal research.
+
+## How do you interpret the dimensions?
+
+The first dimension is the most important dimension in terms of explaining
+votes, the second dimension is the second most important, and so on.
+
+When applied to US legislatures, the first dimension is usually described as an
+economic or liberal-conservative dimension, while the second dimension has
+different meanings at different times.
+
+@aldrich_polarization_2014 show that, in the presence of party polarization
+along multiple dimensions, the main dimension will be a composite of dimensions
+that split the parties; it's not necessarily a single political dimension.
+
+## Do scores reflect party loyalty?
+
+Measuring party loyalty in a spatial model requires both a legislator's
+coordinates and the coordinates of the party, so that a relative distance can be
+calculated. But parties aren't assigned scores by DW-NOMINATE (in fact, parties
+are not included in the model at all), so DW-NOMINATE scores by themselves are
+agnostic with regard to party loyalty.
+
+Ted Cruz is a good counterexample to claims that scores reflect party
+loyalty. Cruz is reported to be widely disliked by his fellow Republican
+legislators, but, because he disagrees from a more extreme position, DW-NOMINATE
+places him even farther right than most other Republicans. In this case a more
+extreme score indicates *less* party loyalty.
+
+Poole and Rosenthal sometimes speak loosely of a "party loyalty dimension"
+[-@poole_ideology_2011, p. 54-55; -@poole_patterns_1991, p. 235]. A more
+accurate term would be "party disagreement dimension."
+
+## Why is Bernie Sanders/Alexandria Ocasio-Cortez/etc. not where I expect?
+
+Sometimes legislators deviate from the spatial model of voting assumed by
+DW-NOMINATE. In this case their scores will have relatively large standard
+errors and may not be accurate. This is a limitaton of DW-NOMINATE. In
+particular, DW-NOMINATE doesn't include the concept of a protest vote.
+
+Jeff Lewis at Voteview examines this issue in more detail in his articles
+[here](https://voteview.com/articles/ocasio_cortez) and
+[here](https://voteview.com/articles/Ocasio-Cortez_Omar_Pressley_Tlaib).
+
+## Why are some scores outside the unit circle?
+
+DW-NOMINATE constrains the results so that the mean of each legislator's scores
+lies within the unit circle. An extreme legislator with a score that changes
+over time can move outside of the unit circle for part of his or her career.
+
+## References

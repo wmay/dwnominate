@@ -6,17 +6,25 @@ nhsen_wnom = dwnominate:::nhsen_wnom
 orig_legs = dwnominate:::orig_results$legislators
 
 test_that("dwnominate results match original results", {
-  # given the same data and starting estimates, dwnominate should generate
-  # results very close to the original results from a very old version of
-  # dwnominate
+  # Given the same data and starting estimates, dwnominate should generate
+  # results very close to the results from the original, command line version of
+  # DW-NOMINATE. The only practical difference is that IMSL and EISPACK routines
+  # have been replaced with LAPACK, leading to slightly different results.
+  # The original version's input files round the starting estimates to 3 digits,
+  # so for comparison these should also be rounded.
+  nhsen_wnom_rounded = nhsen_wnom
+  nhsen_wnom_rounded$legislators = within(nhsen_wnom_rounded$legislators, {
+    coord1D = round(coord1D, 3)
+    coord2D = round(coord2D, 3)
+  })
   capture.output({
-    res <- suppressMessages(dwnominate(nhsenate, 'name', nhsen_wnom))
+    res <- suppressMessages(dwnominate(nhsenate, 'name', nhsen_wnom_rounded))
   })
   curr_legs = res$legislators
   cor1D = cor(orig_legs$coord1D, curr_legs$coord1D)
   cor2D = cor(orig_legs$coord2D, curr_legs$coord2D)
   expect_gt(abs(cor1D), .999)
-  expect_gt(abs(cor2D), .98)
+  expect_gt(abs(cor2D), .99)
 })
 
 test_that("dwnominate constant model matches wnominate", {
