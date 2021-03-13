@@ -32,6 +32,10 @@ legislators, but, because he disagrees from a more extreme position, DW-NOMINATE
 places him even farther right than most other Republicans. In this case a more
 extreme score indicates *less* party loyalty.
 
+Poole and Rosenthal sometimes speak loosely of a "party loyalty dimension"
+[-@poole_ideology_2011, p. 54-55; -@poole_patterns_1991, p. 235]. A more
+accurate term would be "party disagreement dimension."
+
 ## Why is Bernie Sanders/Alexandria Ocasio-Cortez/etc. not where I expect?
 
 Sometimes legislators deviate from the spatial model of voting assumed by
