@@ -21,6 +21,8 @@ Imports:
     Rdpack,
     wnominate
 License: MIT
+URL: https://github.com/wmay/dwnominate
+BugReports: https://github.com/wmay/dwnominate/issues
 Encoding: UTF-8
 RoxygenNote: 7.1.0
 Suggests:
