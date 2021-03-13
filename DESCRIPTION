@@ -20,7 +20,7 @@ Imports:
     pscl,
     Rdpack,
     wnominate
-License: MIT
+License: MIT + file LICENSE
 URL: https://github.com/wmay/dwnominate
 BugReports: https://github.com/wmay/dwnominate/issues
 Encoding: UTF-8
