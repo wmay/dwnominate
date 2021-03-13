@@ -289,17 +289,46 @@ auto_wnominate = function(rc, ...) {
 
 #' Run DW-NOMINATE
 #'
+#' Estimate legislator ideal points using the DW-NOMINATE roll call scaling
+#' procedure featured in \insertCite{poole_ideology_2011;textual}{dwnominate}.
+#'
+#' DW-NOMINATE was introduced in
+#' \insertCite{mccarty_income_1997;textual}{dwnominate}. It's an extension of
+#' the older, one-dimensional D-NOMINATE model
+#' \insertCite{poole_patterns_1991}{dwnominate} that can analyze multiple
+#' dimensions using the "weighted" distance model first used by W-NOMINATE.
+#'
+#' The model assumes that legislators have Guassian utility functions centered
+#' around their ideal points, along with an additional roll call-specific random
+#' utility that makes the voting decisions probabilistic rather than
+#' deterministic.
+#'
+#' The returned values are a maximum likelihood estimate of the model parameters
+#' (with minor exceptions around the boundary of the space). DW-NOMINATE uses a
+#' three-step estimation procedure similar to expectation maximization to find
+#' the maximum likelihood. The estimation procedure is a local optimization
+#' algorithm, but the likelihood function is not globally convex, so the results
+#' can be sensitive to starting estimates. Users must provide reasonable
+#' starting values to get correct results.
+#' \insertCite{@ @poole_spatial_2005, p. 130-141;textual}{dwnominate},
+#' \insertCite{@ @poole_patterns_1991, p. 277;textual}{dwnominate}, and
+#' \insertCite{@ @carroll_measuring_2009, p. 265;textual}{dwnominate} all
+#' contain further discussion of the starting estimates.
+#'
+#' A fairly complete technical description of the procedure is available in
+#' \insertCite{poole_spatial_2005;textual}{dwnominate}.
+#'
 #' @useDynLib dwnominate dwnom
 #' @param rc_list A list of \code{rollcall} objects from the
 #'   \code{pscl} package, in chronological order.
 #' @param id Column name in the rollcall objects' \code{legis.data}
 #'   data frames providing a unique legislator ID. If not specified
 #'   legislator names will be used.
-#' @param start A roll call scaling result of class \code{common
-#'   space}, \code{wnominate}, \code{oc}, or \code{dwnominate}
-#'   providing starting estimates of legislator ideologies. If not
-#'   provided, dwnominate will calculate common space scores to get
-#'   starting values.
+#' @param start A roll call scaling result of class \code{common space},
+#'   \code{wnominate}, \code{oc}, or \code{dwnominate} providing starting
+#'   estimates of legislator ideologies. If not provided, dwnominate will
+#'   calculate common space scores to get starting values. See the "details"
+#'   section for more information about providing starting values.
 #' @param sessions A vector of length 2 providing the first and last
 #'   sessions to include. Defaults to \code{c(1, length(rc_list))}.
 #' @param dims The number of dimensions to estimate. Can be either 1
@@ -325,16 +354,10 @@ auto_wnominate = function(rc, ...) {
 #'   \item{rollcalls} {A data frame of rollcall information}
 #'   \item{start} {The \code{wnominate} or \code{oc} results used as
 #'   starting points for DW-NOMINATE} }
-#' @references
-#' \insertRef{poole_patterns_1991}{dwnominate}
-#' 
-#' \insertRef{mccarty_income_1997}{dwnominate}
-#' 
-#' \insertRef{poole_spatial_2005}{dwnominate}
-#' 
-#' \insertRef{poole_ideology_2011}{dwnominate}
+#' @references \insertAllCited{}
 #' @seealso \url{https://legacy.voteview.com/dw-nominate.htm} for the original
-#'   fortran code and instructions.
+#'   fortran code and instructions. \code{\link{common_space}} to help generate
+#'   starting estimates.
 #' @examples
 #' data(nhsenate)
 #' results <- dwnominate(nhsenate)
