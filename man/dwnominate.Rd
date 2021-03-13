@@ -89,11 +89,9 @@ three-step estimation procedure similar to expectation maximization to find
 the maximum likelihood. The estimation procedure is a local optimization
 algorithm, but the likelihood function is not globally convex, so the results
 can be sensitive to starting estimates. Users must provide reasonable
-starting values to get correct results.
-\insertCite{@ @poole_spatial_2005, p. 130-141;textual}{dwnominate},
-\insertCite{@ @poole_patterns_1991, p. 277;textual}{dwnominate}, and
-\insertCite{@ @carroll_measuring_2009, p. 265;textual}{dwnominate} all
-contain further discussion of the starting estimates.
+starting values to get correct results. See
+\code{vignette("starting-estimates", package = "dwnominate")} for more
+discussion of the starting estimates.
 
 A fairly complete technical description of the procedure is available in
 \insertCite{poole_spatial_2005;textual}{dwnominate}.
