@@ -119,7 +119,7 @@ C
       NLAST = NOMSTARTIN(4)
       IHAPPY1 = NOMSTARTIN(5)
       IHAPPY2 = NOMSTARTIN(6)
-      call intpr(FTITLE, -1, (/NS,NMODEL,NFIRST,NLAST,IHAPPY1,IHAPPY2/),
+      call intpr(FTITLE, 52, (/NS,NMODEL,NFIRST,NLAST,IHAPPY1,IHAPPY2/),
      C     6)
       WEIGHT(1:(NS+1)) = WEIGHTSIN
       call realpr('', 0, (/WEIGHT(NS+1),(WEIGHT(K),K=2,NS)/), NS)
