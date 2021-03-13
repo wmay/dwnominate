@@ -26,6 +26,5 @@ BugReports: https://github.com/wmay/dwnominate/issues
 Encoding: UTF-8
 RoxygenNote: 7.1.0
 Suggests:
-    testthat,
-    usethis
+    testthat
 RdMacros: Rdpack
