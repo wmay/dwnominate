@@ -22,6 +22,12 @@ C     with minor changes by William May for use with R
      C     RCBAD(99001),LWHERE(99999,200)
       save
       end module xxcom_mod
+
+      module mine_mod
+      COMMON /MINE/ NS,NQTOT,NPTOT,KLASS,
+     C              KLASSYY,KLASSNY,KLASSYN,KLASSNN
+      save
+      end module mine_mod
       
       SUBROUTINE dwnom(NOMSTARTIN, WEIGHTSIN, NBILLS, ICONGIN, DYNIN,
      $     ZMIDIN, MCONGIN, NROWRCT, NCOLRCT, RCVOTET1IN, RCVOTET9IN,
@@ -30,6 +36,7 @@ C     with minor changes by William May for use with R
      $     XBIGLOGOUT, KBIGLOGOUT, GMPAOUT, GMPBOUT, DYNOUT, ZMIDOUT,
      $     WEIGHTSOUT)
       use xxcom_mod
+      use mine_mod
       INTEGER NOMSTARTIN(6), NBILLS, NROWRCT, NCOLRCT, NLEGS,
      C     NROWRC, NCOLRC
       INTEGER ICONGIN(NBILLS),
@@ -58,8 +65,6 @@ C     with minor changes by William May for use with R
      C          LDATA(1001,2901),LL(2901),YSS(2901),
      C          KA(2901),
      C          XVAR(99999,10)
-      COMMON /MINE/ NS,NQTOT,NPTOT,KLASS,
-     C              KLASSYY,KLASSNY,KLASSYN,KLASSNN
       CHARACTER*255 FTITLE,outmsg
 C
   100 FORMAT(2X,I3,2I2,I4,I5,2I1,11A1,3600I1)
@@ -659,10 +664,8 @@ C  ***************************************************************************
 C
       SUBROUTINE SIGMAS(XPLOG,WDERV,NFIRST,NLAST,ZDF,NDEVIT,XDEVIT)
       use xxcom_mod
+      use mine_mod
       DIMENSION WDERV(99),ZDF(150000,4)
-      COMMON /MINE/ NS,NQTOT,NPTOT,KLASS,
-     C              KLASSYY,KLASSNY,KLASSYN,KLASSNN
-C
       NINC=15
       XINC=.1
 C
@@ -747,10 +750,8 @@ C  ***************************************************************************
 C
       SUBROUTINE WINT(XPLOG,WDERV,NFIRST,NLAST,ZDF,NDEVIT,XDEVIT)
       use xxcom_mod
+      use mine_mod
       DIMENSION WDERV(99),ZDF(150000,4)
-      COMMON /MINE/ NS,NQTOT,NPTOT,KLASS,
-     C              KLASSYY,KLASSNY,KLASSYN,KLASSNN
-C
       NINC=15
       XINC=.01
 C
@@ -1020,10 +1021,9 @@ C
       SUBROUTINE PLOG(XPLOG,WDERV,NFIRST,NLAST,
      C                  ZDF,NDEVIT,XDEVIT)
       use xxcom_mod
+      use mine_mod
       DIMENSION DYES(99),DNO(99),DCC(99),DBB(99),
      C          WDERV(99),ZDF(150000,4),WDERV2(99)
-      COMMON /MINE/ NS,NQTOT,NPTOT,KLASS,
-     C              KLASSYY,KLASSNY,KLASSYN,KLASSNN
  1001 FORMAT(I4,F5.2,F10.7)
  1002 FORMAT(' LOG-L',2I10,10F8.5)
  1003 FORMAT(4I4,3F15.3)
@@ -1193,14 +1193,13 @@ C
      C                  NFIRST,NLAST,
      C                  ZDF,NDEVIT,XDEVIT,NMODEL)
       use xxcom_mod
+      use mine_mod
       DIMENSION DYES(99),DNO(99),DYES1(99),DNO1(99),
      C          DCC(99),DBB(99),DCC1(99),DBB1(99),XDERV(99),
      C          XDERV1(99),XDERV2(99),XDERV3(99),
      C          ATIME(152,127),MARK(99,3),XMARK(99,3),
      C          XBETA(5,5),ZDF(150000,4),OUTX0(99,99),AADERV(99),
      C          OUTX1(99,99),OUTX2(99,99),OUTX3(99,99)
-      COMMON /MINE/ NS,NQTOT,NPTOT,KLASS,
-     C              KLASSYY,KLASSNY,KLASSYN,KLASSNN
   100 FORMAT(8F7.3)
   200 FORMAT(I6,2I5,2F13.5)
  1001 FORMAT(I4,F5.2,F10.7)
@@ -1458,6 +1457,7 @@ C
      C                 ZDF,NDEVIT,XDEVIT,KXTOT,XBETA,OUTX0,
      C                 OUTX1,OUTX2,OUTX3,DERVISH)
       use xxcom_mod
+      use mine_mod
       DIMENSION ATIME(152,127),ZDF(150000,4),
      C            YYY(152),VVV(152),ID1(54001),XMARK(99,3),
      C            XDERV(99),XDERV1(99),XDERV2(99),XDERV3(99),
@@ -1467,8 +1467,6 @@ C
      C            YGMP(152),YYGMP(152),OUTX0(99,99),
      C            OUTX1(99,99),OUTX2(99,99),OUTX3(99,99),WORK(26*99)
       CHARACTER outmsg(255)
-      COMMON /MINE/ NS,NQTOT,NPTOT,KLASS,
-     C              KLASSYY,KLASSNY,KLASSYN,KLASSNN
   101 FORMAT(' PERFORMANCE INDEX EIGENVALUE/VECTOR ROUTINE=',3I6)
   102 FORMAT(2I6,30F10.4)
   103 FORMAT(12X,30F10.4)
@@ -2381,11 +2379,10 @@ C
      C               XPLOG,OLDZ,OLDD,DDERV,ZDERV,
      C               ZDF,NDEVIT,XDEVIT)
       use xxcom_mod
+      use mine_mod
       DIMENSION ZDF(150000,4),DYES(99),DNO(99),DYES1(99),DNO1(99),
      C          DCC(99),DBB(99),DCC1(99),DBB1(99),ZDERV(99),
      C          DDERV(99),OLDZ(99),OLDD(99)
-      COMMON /MINE/ NS,NQTOT,NPTOT,KLASS,
-     C              KLASSYY,KLASSNY,KLASSYN,KLASSNN
   100 FORMAT(8F7.3)
  1001 FORMAT(I4,F5.2,F10.7)
  1002 FORMAT(' R-C ',I3,3I5,F7.3,F13.5,2F10.4,2F7.3)
@@ -2502,12 +2499,11 @@ C
      C                             XPLOG,OLDZ,OLDD,
      C                             ZDF,NDEVIT,XDEVIT)
       use xxcom_mod
+      use mine_mod
       DIMENSION ZDF(150000,4),DDERVX(99),ZDERVX(99),OLDZ(99),
      C          OLDD(99),DZSAVE(66),XXX(66),YGAMMA(50,66),
      C          XXXSAVE(50,66),YLOG(50),LLL(50),YGMP(50),
      C          YYGMP(50)
-      COMMON /MINE/ NS,NQTOT,NPTOT,KLASS,
-     C              KLASSYY,KLASSNY,KLASSYN,KLASSNN
   203 FORMAT(I5,2I4,8X,I2,F12.5,20F10.4)
   205 FORMAT(I6,2I5,5X,F12.5,20F10.4)
   206 FORMAT(I5,4I4,I2,F12.5,20F10.4)
