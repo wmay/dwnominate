@@ -56,7 +56,6 @@ C     with minor changes by William May for use with R
       COMMON /MINE/ NS,NQTOT,NPTOT,KLASS,
      C              KLASSYY,KLASSNY,KLASSYN,KLASSNN
       CHARACTER*255 FTITLE,outmsg
-      INTEGER*2 ITIM1,ITIM2,ITIM3,ITIM4,JTIM1,JTIM2,JTIM3,JTIM4
 C
   100 FORMAT(2X,I3,2I2,I4,I5,2I1,11A1,3600I1)
 C
@@ -104,10 +103,6 @@ C
  320  FORMAT(' Estimating ', A, '...')
  321  FORMAT('')
  1000 format(22x,4(i2.2,'.'))
- 1001 format(' ELAPSED TIME OF JOB  ',4(i2.2,'.'))
-C     This function can't be compiled!:
-C     call gettim(itim1,itim2,itim3,itim4)
-      
 C
 C  READ TITLE OF RUN
 C
@@ -649,12 +644,6 @@ c$$$      WRITE(*,202)NXTOT,SUMLOG1,SUMLOG2
 C
  9999 CONTINUE
 C
-C     This function can't be compiled!:
-C     call gettim(itim1,itim2,itim3,itim4)
-      
-c$$$      write(*,1000)itim1,itim2,itim3,itim4
-c$$$      write(*,1001)jtim1,jtim2,jtim3,jtim4
-C     stop
       WEIGHTSOUT = WEIGHT(1:(NOMSTARTIN(1) + 1))
       end
 C
