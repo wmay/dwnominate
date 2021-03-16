@@ -23,8 +23,8 @@ C     with minor changes by William May for use with R
       end module xxcom_mod
 
       module mine_mod
-      COMMON /MINE/ NS,NQTOT,NPTOT,KLASS,
-     C              KLASSYY,KLASSNY,KLASSYN,KLASSNN
+      integer NS, NQTOT, NPTOT, KLASS, KLASSYY, KLASSNY, KLASSYN,
+     $     KLASSNN
       save
       end module mine_mod
       
