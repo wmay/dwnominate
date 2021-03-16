@@ -27,6 +27,41 @@ C     with minor changes by William May for use with R
      $     KLASSNN
       save
       end module mine_mod
+
+C     This module contains precomputed values related to the normal
+C     distribution
+      module zdf_mod
+        integer:: ndevit = 50001
+        real:: XDEVIT = 10000.0
+        dimension ZDF(150000,4)
+        save
+      contains
+C     READ IN CUMULATIVE NORMAL DISTRIBUTION FUNCTION
+        subroutine init_zdf
+          dimension YY(150000), CUMNML(150000)
+          DO 501 I=1,NDEVIT
+             YY(I)=FLOAT(I-1)/XDEVIT
+             X=(FLOAT(I-1)/XDEVIT)/SQRT(2.0)
+             XX=ERF(X)
+             XX=XX/2.0 +.5
+             CUMNML(I)=XX
+ 501      CONTINUE
+          TWOPI=1.0/SQRT(2.0*3.1415926536)
+          DO 901 I=1,NDEVIT
+             ZDF(I,1)=YY(NDEVIT+1-I)*(-1.0)
+             ZDF(I,2)=1.0-CUMNML(NDEVIT+1-I)
+             ZDF(I,3)=ALOG(ZDF(I,2))
+ 901      CONTINUE
+          DO 902 I=2,NDEVIT
+             ZDF(I-1+NDEVIT,1)=YY(I)
+             ZDF(I-1+NDEVIT,2)=CUMNML(I)
+             ZDF(I-1+NDEVIT,3)=ALOG(ZDF(I-1+NDEVIT,2))
+ 902      CONTINUE
+          DO 903 I=1,2*NDEVIT-1
+             ZDF(I,4)=(TWOPI*EXP((-ZDF(I,1)**2)/2.0))/ZDF(I,2)
+ 903      CONTINUE    
+        end subroutine init_zdf
+      end module zdf_mod
       
       SUBROUTINE dwnom(NOMSTARTIN, WEIGHTSIN, NBILLS, ICONGIN, DYNIN,
      $     ZMIDIN, MCONGIN, NROWRCT, NCOLRCT, RCVOTET1IN, RCVOTET9IN,
@@ -36,6 +71,7 @@ C     with minor changes by William May for use with R
      $     WEIGHTSOUT)
       use xxcom_mod
       use mine_mod
+      use zdf_mod
       INTEGER NOMSTARTIN(6), NBILLS, NROWRCT, NCOLRCT, NLEGS,
      C     NROWRC, NCOLRC
       INTEGER ICONGIN(NBILLS),
@@ -54,8 +90,7 @@ C     with minor changes by William May for use with R
      C     XBIGLOGOUT(NLEGS, 2), GMPAOUT(NLEGS), GMPBOUT(NLEGS),
      C     DYNOUT(NBILLS, NOMSTARTIN(1)),
      C     ZMIDOUT(NBILLS, NOMSTARTIN(1)), WEIGHTSOUT(NOMSTARTIN(1) + 1)
-      dimension ID1(54001),LVOTE(3600),YY(150000),
-     C          CUMNML(150000),ZDF(150000,4),WDERV(99),
+      dimension ID1(54001),LVOTE(3600),WDERV(99),
      C          XBETA(5,5),OUTX0(99,99),DERVISH(99,99),
      C          OUTX1(99,99),OUTX2(99,99),OUTX3(99,99),
      C          OLDZ(99),OLDD(99),DDERVX(99),ZDERVX(99),
@@ -112,6 +147,8 @@ C
  320  FORMAT(' Estimating ', A, '...')
  321  FORMAT('')
  1000 format(22x,4(i2.2,'.'))
+C     set up normal distribution values
+      call init_zdf
 C
 C  READ TITLE OF RUN
 C
@@ -147,36 +184,6 @@ C
       LWHERE(I,J)=.FALSE.
   47  CONTINUE
   46  CONTINUE
-C
-C
-C  READ IN CUMULATIVE NORMAL DISTRIBUTION FUNCTION
-C
-C
-      ndevit=50001
-      XDEVIT=10000.0
-C
-      DO 501 I=1,NDEVIT
-      YY(I)=FLOAT(I-1)/XDEVIT
-      X=(FLOAT(I-1)/XDEVIT)/SQRT(2.0)
-      XX=ERF(X)
-      XX=XX/2.0 +.5
-      CUMNML(I)=XX
- 501  CONTINUE
-C
-      TWOPI=1.0/SQRT(2.0*3.1415926536)
-      DO 901 I=1,NDEVIT
-      ZDF(I,1)=YY(NDEVIT+1-I)*(-1.0)
-      ZDF(I,2)=1.0-CUMNML(NDEVIT+1-I)
-      ZDF(I,3)=ALOG(ZDF(I,2))
- 901  CONTINUE
-      DO 902 I=2,NDEVIT
-      ZDF(I-1+NDEVIT,1)=YY(I)
-      ZDF(I-1+NDEVIT,2)=CUMNML(I)
-      ZDF(I-1+NDEVIT,3)=ALOG(ZDF(I-1+NDEVIT,2))
- 902  CONTINUE
-      DO 903 I=1,2*NDEVIT-1
-      ZDF(I,4)=(TWOPI*EXP((-ZDF(I,1)**2)/2.0))/ZDF(I,2)
- 903  CONTINUE    
 C
       DO 10 I=1,200
       NUMCONG(I)=0
