@@ -8,8 +8,7 @@ C                        1 OCTOBER 2004
 C                 
 C ***********************************************************************
 C
-
-C     with minor changes by William May for use with R
+C     (Edited/rewritten by William May for use with R)
       
       module xxcom_mod
       real ZMID(99001,2), XDATA(54001,9), DYN(99001,2), WEIGHT(99),
