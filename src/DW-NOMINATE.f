@@ -971,8 +971,8 @@ C
       use xxcom_mod
       use mine_mod
       use zdf_mod
-      DIMENSION DYES(99),DNO(99),DCC(99),DBB(99),
-     C          WDERV(99),WDERV2(99)
+      DIMENSION DYES(NS),DNO(NS),DCC(NS),DBB(NS),
+     C          WDERV(2*NS+2),WDERV2(2*NS+2)
  1001 FORMAT(I4,F5.2,F10.7)
  1002 FORMAT(' LOG-L',2I10,10F8.5)
  1003 FORMAT(4I4,3F15.3)
