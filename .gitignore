@@ -47,6 +47,7 @@ po/*~
 # compiled objects
 *.o
 *.so
+*.mod
 
 # readme preview
 README.html
