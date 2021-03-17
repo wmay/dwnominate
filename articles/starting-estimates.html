@@ -103,7 +103,7 @@
 <p>The <code>wnominate</code> and <code>oc</code> packages in R can create static ideal point estimates using W-NOMINATE and optimal classification methods, respectively. Neither package is designed to work with multiple legislative sessions, but they can be used for this purpose by combining the voting data from multiple sessions into a single <code>rollcall</code> object.</p>
 <p>The downside is that both W-NOMINATE and optimal classification can take much longer to run than DW-NOMINATE when there are many sessions. Of the two, <code>oc</code> is typically faster.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/wmay/dwnominate">dwnominate</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://wmay.github.io/dwnominate">dwnominate</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">oc</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">nhsenate</span><span class="op">)</span>
 
@@ -117,7 +117,7 @@
 <a href="#common-space-scores" class="anchor"></a>Common space scores</h1>
 <p>Another strategy for deriving static scores is to calculate scores for each session individually, and combine the results into a single overall score. That’s the approach used by the common space method. This method is more computationally efficient than running W-NOMINATE on the combined set of rollcalls.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/wmay/dwnominate">dwnominate</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://wmay.github.io/dwnominate">dwnominate</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">wnominate</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">nhsenate</span><span class="op">)</span>
 
