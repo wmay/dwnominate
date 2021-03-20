@@ -36,22 +36,23 @@ install.packages('remotes')
 remotes::install_github('wmay/dwnominate')
 ```
 
-## DW-NOMINATE
-Running DW-NOMINATE:
+## Running DW-NOMINATE
+
+DW-NOMINATE is run via the `dwnominate` function, which takes as its main
+argument a list of `rollcall` objects from the
+[pscl](https://cran.r-project.org/package=pscl) package. The package includes
+data from the New Hampshire State Senate for use in examples.
 
 ```{r example, results='hide', message=FALSE}
 library(dwnominate)
-# get a list of `rollcall` objects
-data(nhsenate)
+data(nhsenate) # a list of `rollcall` objects
 results <- dwnominate(nhsenate)
 plot(results)
 ```
 
-`dwnominate()` takes as its main argument a list of `rollcall` objects from the
-[`pscl`](https://cran.r-project.org/web/packages/pscl/index.html) package. The
-results are returned as a `dwnominate` object with estimates of legislator and
-roll call coordinates. Get detailed information about DW-NOMINATE options with
-`?dwnominate` and `help(package=dwnominate)`.
+The results are returned as a `dwnominate` object with estimates of legislator
+and roll call coordinates. Get detailed information about DW-NOMINATE options
+with `?dwnominate` and `help(package=dwnominate)`.
 
 ## Citation
 
