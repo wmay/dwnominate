@@ -51,6 +51,7 @@ estimates of legislator and roll call coordinates. Get detailed
 information about DW-NOMINATE options with `?dwnominate` and
 `help(package=dwnominate)`.
 
-## Citing
+## Citation
 
-Please cite this package using the DOI provided by Zenodo.
+Please use the citation provided by Zenodo:
+[![DOI](https://zenodo.org/badge/48529209.svg)](https://zenodo.org/badge/latestdoi/48529209)
