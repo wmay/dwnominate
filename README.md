@@ -10,13 +10,19 @@ coverage](https://codecov.io/gh/wmay/dwnominate/branch/master/graph/badge.svg)](
 
 DW-NOMINATE dynamic roll call scaling in R
 
-## Installation:
+## Installation
 
-On MacOS, `dwnominate` installation requires the gfortran and Clang
-compilers provided by CRAN
-[here](https://cran.r-project.org/bin/macosx/tools/).
+Installation requires a Fortran compiler as well as BLAS and LAPACK
+libraries. On Windows these are conveniently available as part of
+[Rtools](https://cran.r-project.org/bin/windows/Rtools/). MacOS includes
+BLAS and LAPACK, so it only requires installing a Fortran compiler. I
+recommend following the advice provided by CRAN
+[here](https://cran.r-project.org/bin/macosx/tools/). On Linux these
+will be installed with the `r-base-dev` library (or the equivalent for
+your distribution).
 
-From R, run:
+Once the dependencies are satisfied, the package can be installed from R
+by running:
 
 ``` r
 install.packages('remotes')
