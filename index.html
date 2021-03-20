@@ -93,33 +93,33 @@
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#dwnominate" class="anchor"></a>dwnominate</h1></div>
 
-<p>DW-NOMINATE dynamic roll call scaling in R</p>
+<p><code>dwnominate</code> provides a simplified R interface to the DW-NOMINATE roll call scaling program, based on the Fortran source code available at <a href="https://legacy.voteview.com/dw-nominate.htm">Keith Poole’s website</a>.</p>
+<p>DW-NOMINATE (<em>D</em>ynamic <em>W</em>eighted <em>NOMINA</em>l <em>T</em>hree-step <em>E</em>stimation) estimates dynamic models of legislator ideology using roll call votes, and can efficiently estimate static ideology models across multiple legislative sessions. The results can be used to measure legislative ideology and polarization over time.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation:</h2>
-<p>On MacOS, <code>dwnominate</code> installation requires the gfortran and Clang compilers provided by CRAN <a href="https://cran.r-project.org/bin/macosx/tools/">here</a>.</p>
-<p>From R, run:</p>
+<a href="#installation" class="anchor"></a>Installation</h2>
+<p>Installation requires a Fortran compiler as well as BLAS and LAPACK libraries. On Windows these are conveniently available as part of <a href="https://cran.r-project.org/bin/windows/Rtools/">Rtools</a>. MacOS includes BLAS and LAPACK, so it only requires installing a Fortran compiler. I recommend following the advice provided by CRAN <a href="https://cran.r-project.org/bin/macosx/tools/">here</a>. On Linux these will be installed with the <code>r-base-dev</code> library (or the equivalent for your distribution).</p>
+<p>Once the dependencies are satisfied, the package can be installed from R by running:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">'remotes'</span><span class="op">)</span>
 <span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">'wmay/dwnominate'</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="dw-nominate" class="section level2">
+<div id="running-dw-nominate" class="section level2">
 <h2 class="hasAnchor">
-<a href="#dw-nominate" class="anchor"></a>DW-NOMINATE</h2>
-<p>Running DW-NOMINATE:</p>
+<a href="#running-dw-nominate" class="anchor"></a>Running DW-NOMINATE</h2>
+<p>DW-NOMINATE is run via the <code>dwnominate</code> function, which takes as its main argument a list of <code>rollcall</code> objects from the <a href="https://cran.r-project.org/package=pscl">pscl</a> package. The package includes data from the New Hampshire State Senate for use in examples.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://wmay.github.io/dwnominate">dwnominate</a></span><span class="op">)</span>
-<span class="co"># get a list of `rollcall` objects</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">nhsenate</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">nhsenate</span><span class="op">)</span> <span class="co"># a list of `rollcall` objects</span>
 <span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dwnominate.html">dwnominate</a></span><span class="op">(</span><span class="va">nhsenate</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-example-1.png"><!-- --></p>
-<p><code><a href="reference/dwnominate.html">dwnominate()</a></code> takes as its main argument a list of <code>rollcall</code> objects from the <a href="https://cran.r-project.org/web/packages/pscl/index.html"><code>pscl</code></a> package. The results are returned as a <code>dwnominate</code> object with estimates of legislator and roll call coordinates. Get detailed information about DW-NOMINATE options with <code><a href="reference/dwnominate.html">?dwnominate</a></code> and <code><a href="https://wmay.github.io/dwnominate/reference">help(package=dwnominate)</a></code>.</p>
+<p>The results are returned as a <code>dwnominate</code> object with estimates of legislator and roll call coordinates. Get detailed information about DW-NOMINATE options with <code><a href="reference/dwnominate.html">?dwnominate</a></code> and <code><a href="https://wmay.github.io/dwnominate/reference">help(package=dwnominate)</a></code>.</p>
 </div>
-<div id="citing" class="section level2">
+<div id="citation" class="section level2">
 <h2 class="hasAnchor">
-<a href="#citing" class="anchor"></a>Citing</h2>
-<p>Please cite this package using the DOI provided by Zenodo.</p>
+<a href="#citation" class="anchor"></a>Citation</h2>
+<p>Please use the citation provided by Zenodo: <a href="https://zenodo.org/badge/latestdoi/48529209"><img src="https://zenodo.org/badge/48529209.svg" alt="DOI"></a></p>
 </div>
 </div>
   </div>
