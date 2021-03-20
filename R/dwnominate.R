@@ -297,9 +297,8 @@ auto_wnominate = function(rc, ...) {
 #'
 #' DW-NOMINATE was introduced in
 #' \insertCite{mccarty_income_1997;textual}{dwnominate}. It's an extension of
-#' the older, one-dimensional D-NOMINATE model
-#' \insertCite{poole_patterns_1991}{dwnominate} that can analyze multiple
-#' dimensions using the "weighted" distance model first used by W-NOMINATE.
+#' the older D-NOMINATE program \insertCite{poole_patterns_1991}{dwnominate}
+#' that uses the "weighted" distance model first used by W-NOMINATE.
 #'
 #' The model assumes that legislators have Guassian utility functions centered
 #' around their ideal points, along with an additional roll call-specific random
