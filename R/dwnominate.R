@@ -124,7 +124,8 @@ write_leg_file = function(rc_list, start, dims, lid, leg_dict) {
   coordcols = paste0('coord', 1:dims, 'D')
   for (session in 1:length(rc_list)) {
     rc = rc_list[[session]]
-    rcl = rc$legis.data
+    # can't use tibbles, only regular data frames
+    rcl = as.data.frame(rc$legis.data)
     n_rcl = nrow(rcl)
     all_sessions = c(all_sessions, rep(session, n_rcl))
     all_leg_ids = c(all_leg_ids, leg_dict[as.character(rcl[, lid])])
