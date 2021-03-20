@@ -8,7 +8,15 @@
 coverage](https://codecov.io/gh/wmay/dwnominate/branch/master/graph/badge.svg)](https://codecov.io/gh/wmay/dwnominate?branch=master)
 [![DOI](https://zenodo.org/badge/48529209.svg)](https://zenodo.org/badge/latestdoi/48529209)
 
-DW-NOMINATE dynamic roll call scaling in R
+`dwnominate` provides a simplified R interface to the DW-NOMINATE roll
+call scaling program, based on the Fortran source code available at
+[Keith Poole’s website](https://legacy.voteview.com/dw-nominate.htm).
+
+DW-NOMINATE (*D*ynamic *W*eighted *NOMINA*l *T*hree-step *E*stimation)
+estimates dynamic models of legislator ideology using roll call votes,
+and can efficiently estimate static ideology models across multiple
+legislative sessions. The results can be used to measure legislative
+ideology and polarization over time.
 
 ## Installation
 
