@@ -4,8 +4,16 @@ Title: An interface to the DW-NOMINATE roll call scaling program
 Version: 1.2
 Date: 2021-03-13
 Authors@R: c(
-    person("William", "May", email = "wmay@hey.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-3201-1885")),
-    person("Nolan", "McCarty", role = "aut", comment = c(ORCID = "0000-0002-0538-1928")))
+    person("William", "May", email = "wmay@hey.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-3201-1885")),
+    person("Nolan", "McCarty", role = "aut",
+           comment = c(ORCID = "0000-0002-0538-1928")),
+    person("The University of Tennessee and The University of Tennessee Research Foundation",
+           role = "cph", comment = "Copyright holder of LAPACK"),
+    person("The University of California Berkeley", role = "cph",
+           comment = "Copyright holder of LAPACK"),
+    person("The University of Colorado Denver", role = "cph",
+           comment = "Copyright holder of LAPACK"))
 Maintainer: William May <wmay@hey.com>
 Description: A simplified R interface to the DW-NOMINATE roll call
     scaling program. DW-NOMINATE (Dynamic Weighted NOMINAl Three-step

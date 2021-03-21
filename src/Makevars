@@ -1,3 +1,4 @@
 # allow legacy syntax
 PKG_FFLAGS=-std=legacy
-PKG_LIBS=$(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
+SOURCES = $(wildcard *.f lapack/*.f)
+OBJECTS = $(SOURCES:.f=.o)
