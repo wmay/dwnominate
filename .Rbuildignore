@@ -5,3 +5,4 @@
 ^docs$
 ^pkgdown$
 ^vignettes/articles$
+^appveyor\.yml$
