@@ -15,7 +15,7 @@ C     (Edited/rewritten by William May for use with R)
      $     XBIGLOG(54001,2)
       integer NUMCONG(200), MCONG(200,3), ICONG(99001), NUMCONGT(200),
      $     NCONG(54001), KWHERE(99999,200), KBIGLOG(54001,4)
-      logical RCVOTE1(54001,2901), RCVOTE9(54001,2901),
+      logical*1 RCVOTE1(54001,2901), RCVOTE9(54001,2901),
      $     RCVOTET1(99001,660), RCVOTET9(99001,660), RCBAD(99001),
      $     LWHERE(99999,200)
       save
