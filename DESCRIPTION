@@ -9,6 +9,8 @@ Authors@R: c(
     person("Nolan", "McCarty", role = "aut",
            comment = c(ORCID = "0000-0002-0538-1928",
 	               "Author of the original Fortran code")),
+    person("Keith T.", "Poole", role = "cph",
+           comment = "Copyright holder of the original Fortran code"),
     person("The University of Tennessee and The University of Tennessee Research Foundation",
            role = "cph", comment = "Copyright holder of LAPACK"),
     person("The University of California Berkeley", role = "cph",
