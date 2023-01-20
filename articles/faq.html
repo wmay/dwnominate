@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,23 +33,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">dwnominate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -61,13 +57,10 @@
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-<li>
-  <a href="../articles/faq.html">FAQ</a>
-</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/wmay/dwnominate/">
+  <a href="https://github.com/wmay/dwnominate/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -86,59 +79,59 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Frequently Asked Questions</h1>
-                        <h4 class="author">William May</h4>
+                        <h4 data-toc-skip class="author">William May</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/wmay/dwnominate/blob/master/vignettes/faq.Rmd"><code>vignettes/faq.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/wmay/dwnominate/blob/HEAD/vignettes/faq.Rmd" class="external-link"><code>vignettes/faq.Rmd</code></a></small>
       <div class="hidden name"><code>faq.Rmd</code></div>
 
     </div>
 
     
     
-<div id="do-the-coordinates-represent-ideology" class="section level2">
-<h2 class="hasAnchor">
-<a href="#do-the-coordinates-represent-ideology" class="anchor"></a>Do the coordinates represent ideology?</h2>
+<div class="section level2">
+<h2 id="do-the-coordinates-represent-ideology">Do the coordinates represent ideology?<a class="anchor" aria-label="anchor" href="#do-the-coordinates-represent-ideology"></a>
+</h2>
 <p>Legislator coordinates are probably a function of multiple factors, including ideology, pressure from party organizations, constituent demands, and others. <span class="citation">McCarty, Poole, and Rosenthal (<a href="#ref-mccarty_hunt_2001" role="doc-biblioref">2001</a>)</span> demonstrate that parties influence legislator coordinates.</p>
 <p>DW-NOMINATE results are sometimes informally described as ideology scores, disregarding the nuances. An older and more neutral term, “ideal point,” is often used to describe the coordinates in more formal research.</p>
 </div>
-<div id="how-do-you-interpret-the-dimensions" class="section level2">
-<h2 class="hasAnchor">
-<a href="#how-do-you-interpret-the-dimensions" class="anchor"></a>How do you interpret the dimensions?</h2>
+<div class="section level2">
+<h2 id="how-do-you-interpret-the-dimensions">How do you interpret the dimensions?<a class="anchor" aria-label="anchor" href="#how-do-you-interpret-the-dimensions"></a>
+</h2>
 <p>The first dimension is the most important dimension in terms of explaining votes, the second dimension is the second most important, and so on.</p>
 <p>When applied to US legislatures, the first dimension is usually described as an economic or liberal-conservative dimension, while the second dimension has different meanings at different times.</p>
 <p><span class="citation">Aldrich, Montgomery, and Sparks (<a href="#ref-aldrich_polarization_2014" role="doc-biblioref">2014</a>)</span> show that, in the presence of party polarization along multiple dimensions, the main dimension will be a composite of dimensions that split the parties; it’s not necessarily a single political dimension.</p>
 </div>
-<div id="do-scores-reflect-party-loyalty" class="section level2">
-<h2 class="hasAnchor">
-<a href="#do-scores-reflect-party-loyalty" class="anchor"></a>Do scores reflect party loyalty?</h2>
+<div class="section level2">
+<h2 id="do-scores-reflect-party-loyalty">Do scores reflect party loyalty?<a class="anchor" aria-label="anchor" href="#do-scores-reflect-party-loyalty"></a>
+</h2>
 <p>Measuring party loyalty in a spatial model requires both a legislator’s coordinates and the coordinates of the party, so that a relative distance can be calculated. But parties aren’t assigned scores by DW-NOMINATE (in fact, parties are not included in the model at all), so DW-NOMINATE scores by themselves are agnostic with regard to party loyalty.</p>
 <p>Ted Cruz is a good counterexample to claims that scores reflect party loyalty. Cruz is reported to be widely disliked by his fellow Republican legislators, but, because he disagrees from a more extreme position, DW-NOMINATE places him even farther right than most other Republicans. In this case a more extreme score indicates <em>less</em> party loyalty.</p>
 <p>Poole and Rosenthal sometimes speak loosely of a “party loyalty dimension” <span class="citation">(<a href="#ref-poole_ideology_2011" role="doc-biblioref">2011</a>, 54–55, <a href="#ref-poole_patterns_1991" role="doc-biblioref">1991</a>, 235)</span>. A more accurate term would be “party disagreement dimension.”</p>
 </div>
-<div id="why-is-bernie-sandersalexandria-ocasio-cortezetc--not-where-i-expect" class="section level2">
-<h2 class="hasAnchor">
-<a href="#why-is-bernie-sandersalexandria-ocasio-cortezetc--not-where-i-expect" class="anchor"></a>Why is Bernie Sanders/Alexandria Ocasio-Cortez/etc. not where I expect?</h2>
+<div class="section level2">
+<h2 id="why-is-bernie-sandersalexandria-ocasio-cortezetc--not-where-i-expect">Why is Bernie Sanders/Alexandria Ocasio-Cortez/etc. not where I expect?<a class="anchor" aria-label="anchor" href="#why-is-bernie-sandersalexandria-ocasio-cortezetc--not-where-i-expect"></a>
+</h2>
 <p>Sometimes legislators deviate from the spatial model of voting assumed by DW-NOMINATE. In this case their scores will have relatively large standard errors and may not be accurate. This is a limitaton of DW-NOMINATE. In particular, DW-NOMINATE doesn’t include the concept of a protest vote.</p>
-<p>Jeff Lewis at Voteview examines this issue in more detail in his articles <a href="https://voteview.com/articles/ocasio_cortez">here</a> and <a href="https://voteview.com/articles/Ocasio-Cortez_Omar_Pressley_Tlaib">here</a>.</p>
+<p>Jeff Lewis at Voteview examines this issue in more detail in his articles <a href="https://voteview.com/articles/ocasio_cortez" class="external-link">here</a> and <a href="https://voteview.com/articles/Ocasio-Cortez_Omar_Pressley_Tlaib" class="external-link">here</a>.</p>
 </div>
-<div id="why-are-some-scores-outside-the-unit-circle" class="section level2">
-<h2 class="hasAnchor">
-<a href="#why-are-some-scores-outside-the-unit-circle" class="anchor"></a>Why are some scores outside the unit circle?</h2>
+<div class="section level2">
+<h2 id="why-are-some-scores-outside-the-unit-circle">Why are some scores outside the unit circle?<a class="anchor" aria-label="anchor" href="#why-are-some-scores-outside-the-unit-circle"></a>
+</h2>
 <p>DW-NOMINATE constrains the results so that the mean of each legislator’s scores lies within the unit circle. An extreme legislator with a score that changes over time can move outside of the unit circle for part of his or her career.</p>
 </div>
-<div id="references" class="section level2 unnumbered">
-<h2 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h2>
+<div class="section level2 unnumbered">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
 <div id="refs" class="references">
 <div id="ref-aldrich_polarization_2014">
-<p>Aldrich, John H., Jacob M. Montgomery, and David B. Sparks. 2014. “Polarization and Ideology: Partisan Sources of Low Dimensionality in Scaled Roll Call Analyses.” <em>Political Analysis</em> 22 (4): 435–56. <a href="https://doi.org/10.1093/pan/mpt048">https://doi.org/10.1093/pan/mpt048</a>.</p>
+<p>Aldrich, John H., Jacob M. Montgomery, and David B. Sparks. 2014. “Polarization and Ideology: Partisan Sources of Low Dimensionality in Scaled Roll Call Analyses.” <em>Political Analysis</em> 22 (4): 435–56. <a href="https://doi.org/10.1093/pan/mpt048" class="external-link">https://doi.org/10.1093/pan/mpt048</a>.</p>
 </div>
 <div id="ref-mccarty_hunt_2001">
-<p>McCarty, Nolan, Keith T. Poole, and Howard Rosenthal. 2001. “The Hunt for Party Discipline in Congress.” <em>American Political Science Review</em> 95 (3): 673–87. <a href="https://doi.org/10.1017/S0003055401003069">https://doi.org/10.1017/S0003055401003069</a>.</p>
+<p>McCarty, Nolan, Keith T. Poole, and Howard Rosenthal. 2001. “The Hunt for Party Discipline in Congress.” <em>American Political Science Review</em> 95 (3): 673–87. <a href="https://doi.org/10.1017/S0003055401003069" class="external-link">https://doi.org/10.1017/S0003055401003069</a>.</p>
 </div>
 <div id="ref-poole_patterns_1991">
-<p>Poole, Keith T., and Howard Rosenthal. 1991. “Patterns of Congressional Voting.” <em>American Journal of Political Science</em> 35 (1): 228–78. <a href="https://doi.org/10.2307/2111445">https://doi.org/10.2307/2111445</a>.</p>
+<p>Poole, Keith T., and Howard Rosenthal. 1991. “Patterns of Congressional Voting.” <em>American Journal of Political Science</em> 35 (1): 228–78. <a href="https://doi.org/10.2307/2111445" class="external-link">https://doi.org/10.2307/2111445</a>.</p>
 </div>
 <div id="ref-poole_ideology_2011">
 <p>Poole, Keith T., and Howard L. Rosenthal. 2011. <em>Ideology and Congress</em>. Transaction Publishers.</p>
@@ -158,11 +151,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by William May, Nolan McCarty.</p>
+  <p></p>
+<p>Developed by William May, Nolan McCarty.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
@@ -170,6 +165,8 @@
 
   
 
+
+  
 
   </body>
 </html>
