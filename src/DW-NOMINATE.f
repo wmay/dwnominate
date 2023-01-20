@@ -150,7 +150,7 @@ C  READ NHOUSE.NUM -- GIVES NUMBER OF ROLL CALLS AND LEGISLATORS FOR
 C                     EACH CONGRESS
       I = NOMSTARTIN(4) - NOMSTARTIN(3) + 1
       MCONG(1:size(MCONGIN, 1), 1:3) = MCONGIN
- 425  call intpr('NUMBER OF CONGRESSES', -1, I, 1)
+ 425  call intpr('NUMBER OF CONGRESSES', -1, (/I/), 1)
 C
 C  READ ROLL CALL STARTS -- HC01108.DAT
 C
@@ -189,7 +189,7 @@ C
          ENDIF
          NUMCONGT(ICONG(I))=NUMCONGT(ICONG(I))+1
  575  CONTINUE
- 475  call intpr('TOTAL ROLL CALLS', -1, I, 1)
+ 475  call intpr('TOTAL ROLL CALLS', -1, (/I/), 1)
       NQTOT=I
 C
 C  READ PSEUDO-DYNAMIC STARTS FROM BLACK BOX -- HL01108.SRT
@@ -221,8 +221,8 @@ C
   1   CONTINUE
       NUMCONG(NCONG(I))=NUMCONG(NCONG(I))+1
  550  CONTINUE
- 450  call intpr('TOTAL LEGISLATORS', -1, I, 1)
-      call intpr(' ', 1, 0, 0)
+ 450  call intpr('TOTAL LEGISLATORS', -1, (/I/), 1)
+      call intpr(' ', 1, (/0/), 0)
       NPTOT=I
 C
       DO 9999 IHAPPY=IHAPPY1,IHAPPY2
@@ -231,14 +231,14 @@ C  ************************************
 C     DIMENSION WEIGHT PHASE
 C  ************************************
       IF(NS.GE.2)THEN
-         call intpr('Estimating dimension weights...', -1, 0, 0)
+         call intpr('Estimating dimension weights...', -1, (/0/), 0)
          CALL WINT(XPLOG,NFIRST,NLAST)
       ENDIF
 C
 C  ************************************
 C     BETA (1/SIGMA) PHASE
 C  ************************************
-      call intpr('Estimating beta...', -1, 0, 0)
+      call intpr('Estimating beta...', -1, (/0/), 0)
       CALL SIGMAS(XPLOG,NFIRST,NLAST)
 C
 C  ************************************
@@ -246,7 +246,7 @@ C     ROLL CALL PHASE
 C  ************************************
 C    
 C
-      call intpr('Estimating roll call vectors...', -1, 0, 0)
+      call intpr('Estimating roll call vectors...', -1, (/0/), 0)
       KTOTP=0
       KTOTQ=0
       KK=0
@@ -488,7 +488,7 @@ C
 C  ******************************************
 C   LEGISLATOR PHASE
 C  ******************************************
-      call intpr('Estimating legislator coordinates...', -1, 0, 0)
+      call intpr('Estimating legislator coordinates...', -1, (/0/), 0)
       NPUNIQUE=0
       NPUNIQUF=0
       NPUNIQUG=0
