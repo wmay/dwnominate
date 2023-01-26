@@ -1,4 +1,6 @@
 navbar:
+  structure:
+    left: [intro, reference, articles, tutorials, faq, news]
   components:
     articles:
       text: Articles
