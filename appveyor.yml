@@ -15,7 +15,7 @@ cache:
 
 environment:
   NOT_CRAN: true
-  DOWNLOAD_FILE_METHOD: wininet
+  DOWNLOAD_FILE_METHOD: libcurl
 
 build_script:
   - travis-tool.sh install_deps
