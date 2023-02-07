@@ -41,6 +41,5 @@ Suggests:
     testthat,
     knitr,
     rmarkdown
-Remotes: wmay/oc
 RdMacros: Rdpack
 VignetteBuilder: knitr
