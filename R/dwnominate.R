@@ -21,7 +21,7 @@ zero_if_missing = function(a, n) {
 
 format_column = function(df, name, format, alternative=NULL) {
   if (name %in% names(df)) {
-    if (class(df[, name]) == 'character') {
+    if (inherits(df[, name], 'character')) {
       sprintf(format, fix_string(df[, name]))
     } else {
       sprintf(format, df[, name])
@@ -134,7 +134,7 @@ write_leg_file = function(rc_list, start, dims, lid, leg_dict) {
     ksta = c(ksta, as.character(zero_if_missing(rcl$state, n_rcl)))
     all_parties = c(all_parties, zero_if_missing(rcl$party, n_rcl))
     lnames = c(lnames, rownames(rc$votes))
-    if (class(start) == 'common space') {
+    if (inherits(start, 'common space')) {
       matches = match(rcl[, lid], row.names(start$legislators))
       coords = as.matrix(start$legislators[matches, coordcols])
     } else if (inherits(start, 'dwnominate')) {
@@ -417,7 +417,7 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
   }
   get_start = is.null(start)
   if (!get_start) {
-    if (class(start) == 'OCobject' && start$dimensions == 1) {
+    if (inherits(start, 'OCobject') && start$dimensions == 1) {
       stop("Can't use optimal classification results if estimated with only one dimension.")
     }
     if (start$dimensions < dims) {
