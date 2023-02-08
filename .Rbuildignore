@@ -4,5 +4,6 @@
 ^docs$
 ^pkgdown$
 ^vignettes/articles$
+^vignettes/[^/]*_cache$
 ^README\.Rmd$
 ^data-raw$
