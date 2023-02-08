@@ -137,7 +137,7 @@ write_leg_file = function(rc_list, start, dims, lid, leg_dict) {
     if (class(start) == 'common space') {
       matches = match(rcl[, lid], row.names(start$legislators))
       coords = as.matrix(start$legislators[matches, coordcols])
-    } else if (methods::is(start, 'dwnominate')) {
+    } else if (inherits(start, 'dwnominate')) {
       session_starts = start$legislators[start$legislators$session == session, ]
       matches = match(rcl[, lid], session_starts[, lid])
       coords = as.matrix(session_starts[matches, coordcols])
@@ -419,7 +419,7 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
     if (start$dimensions < dims) {
       stop("Dimensions in starting estimates cannot be less than 'dims'.")
     }
-    if (is.null(id) && methods::is(start, 'dwnominate')) {
+    if (is.null(id) && inherits(start, 'dwnominate')) {
       stop("An id argument must be provided with dwnominate starting estimates.")
     }
   }
