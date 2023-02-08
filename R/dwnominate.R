@@ -361,9 +361,11 @@ auto_wnominate = function(rc, ...) {
 #'   fortran code and instructions. \code{\link{common_space}} to help generate
 #'   starting estimates.
 #' @examples
+#' \donttest{
 #' data(nhsenate)
 #' results <- dwnominate(nhsenate)
 #' plot(results)
+#' }
 #' @importFrom utils head tail
 #' @export
 dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,

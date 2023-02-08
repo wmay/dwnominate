@@ -96,9 +96,11 @@ A fairly complete technical description of the procedure is available in
 \insertCite{poole_spatial_2005;textual}{dwnominate}.
 }
 \examples{
+\donttest{
 data(nhsenate)
 results <- dwnominate(nhsenate)
 plot(results)
+}
 }
 \references{
 \insertAllCited{}
