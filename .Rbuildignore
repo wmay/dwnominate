@@ -1,8 +1,6 @@
-\.travis\.yml
 ^\.github$
 ^codecov\.yml$
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
 ^vignettes/articles$
-^appveyor\.yml$
