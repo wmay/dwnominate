@@ -1,6 +1,11 @@
 ---
 title: "Frequently Asked Questions"
 author: "William May"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Frequently Asked Questions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 bibliography: faq.bib
 link-citations: true
 ---
