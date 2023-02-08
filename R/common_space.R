@@ -61,6 +61,7 @@ get_scale_mat = function(wnoms, id_name = NULL, dim = NULL) {
 #' @references \insertAllCited{}
 #' @seealso \code{\link[basicspace]{blackbox}}, which this function is basically
 #'   a wrapper around
+#' @importFrom stats median
 #' @export
 common_space = function(nom_list, id = NULL, dims = 2, minscale = 5,
                         polarity = NULL) {

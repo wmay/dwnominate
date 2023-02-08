@@ -262,6 +262,7 @@ make_rc_df = function(res, params) {
 
 ## a convenient wrapper around wnominate that automatically finds
 ## valid polarity arguments
+#' @importFrom utils capture.output
 auto_wnominate = function(rc, ...) {
   wnom_args = list(...)
   ## get the minimum number of votes
@@ -363,6 +364,7 @@ auto_wnominate = function(rc, ...) {
 #' data(nhsenate)
 #' results <- dwnominate(nhsenate)
 #' plot(results)
+#' @importFrom utils head tail
 #' @export
 dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
                       dims=2, model=1, niter=4, beta=5.9539,
@@ -501,6 +503,7 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
 #' plot(results)
 #' }
 #' @importFrom graphics grid legend plot points
+#' @importFrom grDevices palette.colors
 #' @importFrom stats aggregate setNames
 #' @export
 plot.dwnominate = function(x, ...) {
