@@ -11,7 +11,7 @@ A list of \code{\link[pscl]{rollcall}} objects from the pscl package
 \href{http://gencourt.state.nh.us}{New Hampshire General Court}
 }
 \usage{
-nhsenate
+data(nhsenate)
 }
 \description{
 New Hampshire Senate roll call votes from 1999 to 2019.
