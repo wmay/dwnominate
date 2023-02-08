@@ -4,3 +4,5 @@
 ^docs$
 ^pkgdown$
 ^vignettes/articles$
+^README\.Rmd$
+^data-raw$
