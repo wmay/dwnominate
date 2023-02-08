@@ -320,7 +320,7 @@ auto_wnominate = function(rc, ...) {
 #' A fairly complete technical description of the procedure is available in
 #' \insertCite{poole_spatial_2005;textual}{dwnominate}.
 #'
-#' @useDynLib dwnominate dwnom
+#' @useDynLib dwnominate, .registration = TRUE
 #' @param rc_list A list of \code{rollcall} objects from the
 #'   \code{pscl} package, in chronological order.
 #' @param id Column name in the rollcall objects' \code{legis.data}
