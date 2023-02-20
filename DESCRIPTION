@@ -1,6 +1,6 @@
 Package: dwnominate
 Type: Package
-Title: An interface to the DW-NOMINATE roll call scaling program
+Title: An Interface to the DW-NOMINATE Roll Call Scaling Program
 Version: 1.2
 Date: 2021-03-13
 Authors@R: c(
