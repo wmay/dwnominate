@@ -46,5 +46,4 @@ jobs:
 
       - uses: r-lib/actions/check-r-package@v2
         with:
-          error-on: '"error"'
           upload-snapshots: true
