@@ -10,20 +10,13 @@ Authors@R: c(
            comment = c(ORCID = "0000-0002-0538-1928",
 	               "Author of the original Fortran code")),
     person("Keith T.", "Poole", role = "cph",
-           comment = "Copyright holder of the original Fortran code"),
-    person("The University of Tennessee and The University of Tennessee Research Foundation",
-           role = "cph", comment = "Copyright holder of LAPACK"),
-    person("The University of California Berkeley", role = "cph",
-           comment = "Copyright holder of LAPACK"),
-    person("The University of Colorado Denver", role = "cph",
-           comment = "Copyright holder of LAPACK"))
-Maintainer: William May <wmay@hey.com>
-Description: A simplified R interface to the DW-NOMINATE roll call
-    scaling program. DW-NOMINATE (Dynamic Weighted NOMINAl Three-step
-    Estimation) estimates dynamic models of legislator ideology using
-    roll call votes, and can efficiently estimate static models
-    applied to multiple legislative sessions. The results can be used
-    to measure legislative ideology and polarization over time.
+           comment = "Copyright holder of the original Fortran code"))
+Description: An R interface to the DW-NOMINATE roll call scaling
+    program. DW-NOMINATE (Dynamic Weighted NOMINAl Three-step Estimation)
+    estimates dynamic models of legislator ideology using roll call votes, and
+    can efficiently estimate static models applied to multiple legislative
+    sessions. The results can be used to measure legislative ideology and
+    polarization over time.    
 Depends:
     R (>= 3.2.0)
 Imports:

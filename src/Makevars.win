@@ -1,7 +1,0 @@
-SOURCES = $(wildcard lapack/*.f *.f)
-OBJECTS = $(SOURCES:.f=.o)
-
-all: $(SHLIB)
-
-clean:
-	@-rm -f *.o lapack/*.o *.mod *.dll
