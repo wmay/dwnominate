@@ -335,9 +335,10 @@ auto_wnominate = function(rc, ...) {
 #'   sessions to include. Defaults to \code{c(1, length(rc_list))}.
 #' @param dims The number of dimensions to estimate. Can be either 1
 #'   or 2.
-#' @param model The degree of the polynomial representing changes in
-#'   legislator ideology over time. \code{0} is constant, \code{1} is
-#'   linear, \code{2} is quadratic and \code{3} is cubic.
+#' @param model The degree of the polynomial representing changes in legislator
+#'   ideology over time. \code{0} is constant, \code{1} is linear, \code{2} is
+#'   quadratic and \code{3} is cubic. If \code{model} > 0, a minimum of
+#'   \code{model} + 4 sessions is required.
 #' @param niter Number of iterations. 4 iterations are typically
 #'   enough for the results to converge.
 #' @param beta Starting estimate of the parameter representing the
@@ -427,7 +428,17 @@ dwnominate = function(rc_list, id=NULL, start=NULL, sessions=NULL,
       stop("An id argument must be provided with dwnominate starting estimates.")
     }
   }
+  if (model > 0 && nrc < model + 4) {
+    model_names = c("constant", "linear", "quadratic", "cubic")
+    orig_model = model_names[model + 1]
+    model = max(0, nrc - 4)
+    new_model = model_names[model + 1]
+    warning("Too few sessions for ", orig_model, " model, setting model to ",
+            new_model)
+  }
   if (get_start) {
+    if (nrc < 5)
+      stop("At least 5 sessions are required to automatically create starting values")
     message(paste('Calculating W-NOMINATE scores for each session...'))
     nom_list = lapply(rc_list, auto_wnominate, ...)
     message(paste('Extracting common space scores...'))
